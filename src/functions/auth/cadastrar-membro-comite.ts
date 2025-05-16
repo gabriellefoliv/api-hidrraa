@@ -34,6 +34,13 @@ export async function cadastrarMembroComite({
     },
   })
 
+  await prisma.avaliador_cbh.create({
+    data: {
+      codCBH,
+      codAvaliador: usuario.codUsuario,
+    },
+  })
+
   return {
     codUsuario: usuario.codUsuario,
   }

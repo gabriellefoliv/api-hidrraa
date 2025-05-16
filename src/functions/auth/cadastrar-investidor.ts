@@ -36,7 +36,7 @@ export async function cadastrarInvestidor({
       email,
       senha: hashedPassword,
       codCBH,
-      Perfil: 'entidade_executora',
+      Perfil: 'investidor',
     },
   })
 
