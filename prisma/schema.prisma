@@ -1,0 +1,273 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model aporte {
+  codAporte        Int            @id @default(autoincrement())
+  dataInvestimento DateTime       @db.DateTime(0)
+  bc_valor         Int
+  validadoAGEVAP   Boolean        @default(false)
+  codInvestidor    Int
+  codCBH           Int
+  investidor_esg   investidor_esg @relation(fields: [codInvestidor], references: [codInvestidor], map: "aporte_ibfk_1")
+  cbh              cbh            @relation(fields: [codCBH], references: [codCBH], map: "aporte_ibfk_2")
+
+  @@index([codCBH], map: "codCBH")
+  @@index([codInvestidor], map: "codInvestidor")
+}
+
+model avaliacao {
+  codAvaliacao  Int           @id @default(autoincrement())
+  dataIni       DateTime      @db.DateTime(0)
+  dataFim       DateTime      @db.DateTime(0)
+  bc_aprovado   Boolean
+  bc_valorPagto Float         @db.Float
+  codProjeto    Int
+  codAvaliador  Int
+  projeto       projeto       @relation(fields: [codProjeto], references: [codProjeto], map: "avaliacao_ibfk_1")
+  avaliador_cbh avaliador_cbh @relation(fields: [codAvaliador], references: [codAvaliador], map: "avaliacao_ibfk_2")
+
+  @@index([codAvaliador], map: "codAvaliador")
+  @@index([codProjeto], map: "codProjeto")
+}
+
+model avaliacao_item {
+  codAvalItem     Int           @id @default(autoincrement())
+  nota            Float         @db.Float
+  parecer         String        @db.VarChar(255)
+  codCriterioAval Int
+  criterio_aval   criterio_aval @relation(fields: [codCriterioAval], references: [codCriterioAval], map: "avaliacao_item_ibfk_1")
+
+  @@index([codCriterioAval], map: "codCriterioAval")
+}
+
+model avaliador_cbh {
+  codAvaliador   Int              @unique
+  codCBH         Int
+  avaliacao      avaliacao[]
+  cbh            cbh              @relation(fields: [codCBH], references: [codCBH], map: "avaliador_cbh_ibfk_1")
+  execucao_marco execucao_marco[]
+
+  @@id([codAvaliador, codCBH])
+  @@index([codAvaliador], map: "codAvaliador")
+  @@index([codCBH], map: "codCBH")
+}
+
+model cbh {
+  codCBH           Int                @id @default(autoincrement())
+  nome             String             @db.VarChar(255)
+  aporte           aporte[]
+  avaliador_cbh    avaliador_cbh[]
+  comite_investido comite_investido[]
+  microbacia       microbacia[]
+  produtor_rural   produtor_rural[]
+  usuario          usuario[]
+}
+
+model comite_investido {
+  codCBH         Int
+  codInvestidor  Int
+  investidor_esg investidor_esg @relation(fields: [codInvestidor], references: [codInvestidor], map: "comite_investido_ibfk_1")
+  cbh            cbh            @relation(fields: [codCBH], references: [codCBH], map: "comite_investido_ibfk_2")
+
+  @@id([codCBH, codInvestidor])
+  @@index([codCBH], map: "codCBH")
+  @@index([codInvestidor], map: "codInvestidor")
+}
+
+model criterio_aval {
+  codCriterioAval Int              @id @default(autoincrement())
+  descricao       String           @db.VarChar(255)
+  peso            Float            @db.Float
+  avaliacao_item  avaliacao_item[]
+}
+
+model entidadeexecutora {
+  codEntExec            Int                     @id @default(autoincrement())
+  nome                  String                  @db.VarChar(255)
+  cnpjcpf               Int
+  especialidade         String                  @db.VarChar(255)
+  contato               Int
+  pagto_marco_concluido pagto_marco_concluido[]
+  projeto               projeto?
+}
+
+model evidencia_apresentada {
+  codEvidenciaApresentada Int                 @id @default(autoincrement())
+  caminhoArquivo          String              @db.VarChar(255)
+  dataUpload              DateTime            @db.DateTime(0)
+  codExecucaoMarco        Int
+  codEvidenciaDemandada   Int
+  execucao_marco          execucao_marco      @relation(fields: [codExecucaoMarco], references: [codExecucaoMarco], map: "evidencia_apresentada_ibfk_1")
+  evidencia_demandada     evidencia_demandada @relation(fields: [codEvidenciaDemandada], references: [codEvidenciaDemandada], map: "evidencia_apresentada_ibfk_2")
+
+  @@index([codEvidenciaDemandada], map: "codEvidenciaDemandada")
+  @@index([codExecucaoMarco], map: "codExecucaoMarco")
+}
+
+model evidencia_demandada {
+  codEvidenciaDemandada Int                     @id @default(autoincrement())
+  descricao             String                  @db.VarChar(255)
+  tipoArquivo           String                  @db.VarChar(255)
+  codMarcoRecomendado   Int
+  evidencia_apresentada evidencia_apresentada[]
+  marco_recomendado     marco_recomendado       @relation(fields: [codMarcoRecomendado], references: [codMarcoRecomendado], map: "evidencia_demandada_ibfk_1")
+
+  @@index([codMarcoRecomendado], map: "codMarcoRecomendado")
+}
+
+model execucao_marco {
+  codExecucaoMarco      Int                                  @id @default(autoincrement())
+  dataConclusao         DateTime                             @db.DateTime(0)
+  descricao             String                               @db.VarChar(255)
+  descrDetAjustes       String?                              @db.VarChar(255)
+  bc_statusValidacaoCBH execucao_marco_bc_statusValidacaoCBH
+  codAvaliador          Int
+  codMarcoRecomendado   Int
+  codProjeto            Int
+  evidencia_apresentada evidencia_apresentada[]
+  avaliador_cbh         avaliador_cbh                        @relation(fields: [codAvaliador], references: [codAvaliador], map: "execucao_marco_ibfk_1")
+  marco_recomendado     marco_recomendado                    @relation(fields: [codMarcoRecomendado], references: [codMarcoRecomendado], map: "execucao_marco_ibfk_2")
+  projeto               projeto                              @relation(fields: [codProjeto], references: [codProjeto], map: "execucao_marco_ibfk_3")
+  pagto_marco_concluido pagto_marco_concluido[]
+
+  @@index([codAvaliador], map: "codAvaliador")
+  @@index([codMarcoRecomendado], map: "codMarcoRecomendado")
+  @@index([codProjeto], map: "codProjeto")
+}
+
+model investidor_esg {
+  codInvestidor    Int                @id @default(autoincrement())
+  razaoSocial      String             @db.VarChar(255)
+  cnpj             Int
+  contato          Int
+  aporte           aporte[]
+  comite_investido comite_investido[]
+}
+
+model marco_recomendado {
+  codMarcoRecomendado Int                   @id @default(autoincrement())
+  descricao           String                @db.VarChar(255)
+  valorEstimado       Int
+  codTipoProjeto      Int
+  evidencia_demandada evidencia_demandada[]
+  execucao_marco      execucao_marco[]
+  tipo_projeto        tipo_projeto          @relation(fields: [codTipoProjeto], references: [codTipoProjeto], map: "marco_recomendado_ibfk_1")
+
+  @@index([codTipoProjeto], map: "codTipoProjeto")
+}
+
+model microbacia {
+  CodMicroBacia Int           @id @default(autoincrement())
+  Nome          String        @db.VarChar(200)
+  CodCBH        Int
+  cbh           cbh           @relation(fields: [CodCBH], references: [codCBH], map: "microbacia_ibfk_1")
+  projeto       projeto[]
+  propriedade   propriedade[]
+
+  @@index([CodCBH], map: "CodCBH")
+}
+
+model pagto_marco_concluido {
+  codPagtoMarco     Int                @id @default(autoincrement())
+  bc_data           DateTime           @db.DateTime(0)
+  bc_valor          Int
+  codExecucaoMarco  Int
+  codProdutor       Int?
+  CodEntExec        Int?
+  execucao_marco    execucao_marco     @relation(fields: [codExecucaoMarco], references: [codExecucaoMarco], map: "pagto_marco_concluido_ibfk_2")
+  produtor_rural    produtor_rural?    @relation(fields: [codProdutor], references: [codProdutor], onDelete: Restrict, map: "pagto_marco_concluido_ibfk_3")
+  entidadeexecutora entidadeexecutora? @relation(fields: [CodEntExec], references: [codEntExec], onDelete: Restrict, map: "pagto_marco_concluido_ibfk_4")
+
+  @@index([CodEntExec], map: "CodEntExec")
+  @@index([codExecucaoMarco], map: "codExecucaoMarco")
+  @@index([codProdutor], map: "codProdutor")
+}
+
+model produtor_rural {
+  codProdutor           Int                     @id @default(autoincrement())
+  nome                  String                  @db.VarChar(255)
+  cpf                   Int
+  contato               Int
+  codCBH                Int
+  pagto_marco_concluido pagto_marco_concluido[]
+  cbh                   cbh                     @relation(fields: [codCBH], references: [codCBH], map: "produtor_rural_ibfk_1")
+  propriedade           propriedade[]
+
+  @@index([codCBH], map: "codCBH")
+}
+
+model projeto {
+  codProjeto        Int               @id @default(autoincrement())
+  titulo            String            @db.VarChar(255)
+  objetivo          String            @db.VarChar(255)
+  acoes             String            @db.VarChar(255)
+  cronograma        String            @db.VarChar(255)
+  orcamento         Int
+  codPropriedade    Int?
+  codTipoProjeto    Int
+  CodEntExec        Int
+  CodMicroBacia     Int
+  avaliacao         avaliacao[]
+  execucao_marco    execucao_marco[]
+  tipo_projeto      tipo_projeto      @relation(fields: [codTipoProjeto], references: [codTipoProjeto], map: "projeto_ibfk_1")
+  propriedade       propriedade?      @relation(fields: [codPropriedade], references: [codPropriedade], onDelete: Restrict, map: "projeto_ibfk_2")
+  entidadeexecutora entidadeexecutora @relation(fields: [codProjeto], references: [codEntExec], map: "projeto_ibfk_3")
+  microbacia        microbacia        @relation(fields: [CodMicroBacia], references: [CodMicroBacia], map: "projeto_ibfk_4")
+
+  @@index([CodEntExec], map: "CodEntExecutora")
+  @@index([CodMicroBacia], map: "CodMicroBacia")
+  @@index([codPropriedade], map: "codPropriedade")
+  @@index([codTipoProjeto], map: "codTipoProjeto")
+}
+
+model propriedade {
+  codPropriedade Int            @id @default(autoincrement())
+  logradouro     String         @db.VarChar(255)
+  numero         Int
+  complemento    String         @db.VarChar(255)
+  cep            Int
+  bairro         String         @db.VarChar(255)
+  cidade         String         @db.VarChar(255)
+  uf             String         @db.VarChar(255)
+  codProdutor    Int
+  CodMicroBacia  Int
+  projeto        projeto[]
+  produtor_rural produtor_rural @relation(fields: [codProdutor], references: [codProdutor], map: "propriedade_ibfk_1")
+  microbacia     microbacia     @relation(fields: [CodMicroBacia], references: [CodMicroBacia], map: "propriedade_ibfk_2")
+
+  @@index([CodMicroBacia], map: "CodMicroBacia")
+  @@index([codProdutor], map: "codProdutor")
+}
+
+model tipo_projeto {
+  codTipoProjeto    Int                 @id @default(autoincrement())
+  nome              String              @db.VarChar(255)
+  descricao         String              @db.VarChar(255)
+  marco_recomendado marco_recomendado[]
+  projeto           projeto[]
+}
+
+model usuario {
+  codUsuario Int    @id @default(autoincrement())
+  nome       String @db.VarChar(200)
+  email      String @unique @db.VarChar(200)
+  senha      String @db.VarChar(200)
+  codCBH     Int
+  Perfil     String @db.VarChar(100)
+  cbh        cbh    @relation(fields: [codCBH], references: [codCBH], map: "usuario_ibfk_1")
+
+  @@index([codCBH], map: "codCBH")
+}
+
+enum execucao_marco_bc_statusValidacaoCBH {
+  PENDENTE
+  APROVADO
+  REPROVADO
+  EMPTY_ENUM_VALUE @map("")
+}
