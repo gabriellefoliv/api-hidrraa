@@ -1,7 +1,7 @@
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import z from 'zod'
-import { listarTiposProjeto } from '../../functions/entidade-executora/listar-tipos-projeto'
-import { Perfil, verificarPermissao } from '../../middlewares/auth'
+import { listarTiposProjeto } from '../../../functions/entidade-executora/projeto/listar-tipos-projeto'
+import { Perfil, verificarPermissao } from '../../../middlewares/auth'
 
 export const listarTiposProjetoRoute: FastifyPluginAsyncZod = async app => {
   app.get(

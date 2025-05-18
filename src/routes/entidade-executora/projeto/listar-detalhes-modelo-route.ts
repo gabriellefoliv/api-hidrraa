@@ -1,7 +1,7 @@
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import z from 'zod'
-import { listarDetalhesModelo } from '../../functions/entidade-executora/listar-detalhes-modelo'
-import { Perfil, verificarPermissao } from '../../middlewares/auth'
+import { listarDetalhesModelo } from '../../../functions/entidade-executora/projeto/listar-detalhes-modelo'
+import { Perfil, verificarPermissao } from '../../../middlewares/auth'
 
 export const listarDetalhesModeloRoute: FastifyPluginAsyncZod = async app => {
   app.get(

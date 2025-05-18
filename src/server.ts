@@ -14,8 +14,20 @@ import { cadastrarEntidadeExecutoraRoute } from './routes/auth/cadastrar-entidad
 import { cadastrarInvestidorRoute } from './routes/auth/cadastrar-investidor-route'
 import { cadastrarMembroComiteRoute } from './routes/auth/cadastrar-membro-comite'
 import { loginRoute } from './routes/auth/login-route'
-import { listarDetalhesModeloRoute } from './routes/entidade-executora/listar-detalhes-modelo-route'
-import { listarTiposProjetoRoute } from './routes/entidade-executora/listar-tipo-projetos-route'
+import { listarDetalhesModeloRoute } from './routes/entidade-executora/projeto/listar-detalhes-modelo-route'
+import { listarTiposProjetoRoute } from './routes/entidade-executora/projeto/listar-tipo-projetos-route'
+import { atualizarMicrobaciaRoute } from './routes/membro-comite/microbacia/atualizar-microbacia-route'
+import { criarMicrobaciaRoute } from './routes/membro-comite/microbacia/criar-microbacia-route'
+import { deletarMicrobaciaRoute } from './routes/membro-comite/microbacia/deletar-microbacia-route'
+import { listarMicrobaciasRoute } from './routes/membro-comite/microbacia/listar-microbacias-route'
+import { atualizarProdutorRuralRoute } from './routes/membro-comite/produtor-rural/atualizar-produtor-rural-route'
+import { criarProdutorRuralRoute } from './routes/membro-comite/produtor-rural/criar-produtor-rural-route'
+import { deletarProdutorRuralRoute } from './routes/membro-comite/produtor-rural/deletar-produtor-rural-route'
+import { listarProdutoresRuraisRoute } from './routes/membro-comite/produtor-rural/listar-produtores-rurais-route'
+import { atualizarPropriedadeRoute } from './routes/membro-comite/propriedade/atualizar-propriedade-route'
+import { criarPropriedadeRoute } from './routes/membro-comite/propriedade/criar-propriedade-route'
+import { deletarPropriedadeRoute } from './routes/membro-comite/propriedade/deletar-propriedade-route'
+import { listarPropriedadesRoute } from './routes/membro-comite/propriedade/listar-propriedades-route'
 
 export interface JwtPayload {
   codUsuario: number
@@ -55,12 +67,29 @@ app.register(fastifySwaggerUi, {
   routePrefix: '/docs',
 })
 
+// Auth
 app.register(cadastrarEntidadeExecutoraRoute)
 app.register(cadastrarInvestidorRoute)
 app.register(cadastrarMembroComiteRoute)
 app.register(loginRoute)
+// Projetos
 app.register(listarTiposProjetoRoute)
 app.register(listarDetalhesModeloRoute)
+// Microbacia
+app.register(criarMicrobaciaRoute)
+app.register(listarMicrobaciasRoute)
+app.register(atualizarMicrobaciaRoute)
+app.register(deletarMicrobaciaRoute)
+// Propriedade
+app.register(criarPropriedadeRoute)
+app.register(listarPropriedadesRoute)
+app.register(atualizarPropriedadeRoute)
+app.register(deletarPropriedadeRoute)
+// Produtor Rural
+app.register(criarProdutorRuralRoute)
+app.register(listarProdutoresRuraisRoute)
+app.register(atualizarProdutorRuralRoute)
+app.register(deletarProdutorRuralRoute)
 
 app.listen({ port: 3000 }).then(() => {
   console.log('HTTP Server Running!')
