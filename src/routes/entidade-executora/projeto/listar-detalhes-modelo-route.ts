@@ -5,7 +5,7 @@ import { Perfil, verificarPermissao } from '../../../middlewares/auth'
 
 export const listarDetalhesModeloRoute: FastifyPluginAsyncZod = async app => {
   app.get(
-    '/api/modelos/:codTipoProjeto',
+    '/api/tipos-projeto/:codTipoProjeto',
     {
       preHandler: verificarPermissao(Perfil.ENTIDADE_EXECUTORA),
       schema: {

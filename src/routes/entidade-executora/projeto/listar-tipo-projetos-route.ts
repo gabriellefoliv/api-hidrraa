@@ -10,13 +10,27 @@ export const listarTiposProjetoRoute: FastifyPluginAsyncZod = async app => {
       preHandler: verificarPermissao(Perfil.ENTIDADE_EXECUTORA),
       schema: {
         summary: 'Listar tipos de projeto',
-        tags: ['Tipos de Projeto'],
+        tags: ['Projeto'],
         response: {
           200: z.array(
             z.object({
               id: z.number(),
               nome: z.string(),
               descricao: z.string(),
+              marcosRecomendados: z.array(
+                z.object({
+                  codMarcoRecomendado: z.number(),
+                  descricao: z.string(),
+                  valorEstimado: z.number(),
+                  evidenciasDemandadas: z.array(
+                    z.object({
+                      codEvidenciaDemandada: z.number(),
+                      descricao: z.string(),
+                      tipoArquivo: z.string(),
+                    })
+                  ),
+                })
+              ),
             })
           ),
           500: z.object({
@@ -27,13 +41,29 @@ export const listarTiposProjetoRoute: FastifyPluginAsyncZod = async app => {
     },
     async (request, reply) => {
       try {
-        const { tiposProjeto } = await listarTiposProjeto()
-        const formattedTiposProjeto = tiposProjeto.map(tp => ({
-          id: tp.codTipoProjeto,
-          nome: tp.nome,
-          descricao: tp.descricao,
+        const tp = await listarTiposProjeto()
+
+        if (!tp) {
+          return reply.status(404).send({ error: 'Modelo não encontrado.' })
+        }
+
+        const formattedTp = tp.map(tipoProjeto => ({
+          id: tipoProjeto.codTipoProjeto,
+          nome: tipoProjeto.nome,
+          descricao: tipoProjeto.descricao,
+          marcosRecomendados: tipoProjeto.marco_recomendado.map(marco => ({
+            codMarcoRecomendado: marco.codMarcoRecomendado,
+            descricao: marco.descricao,
+            valorEstimado: marco.valorEstimado,
+            evidenciasDemandadas: marco.evidencia_demandada.map(evidencia => ({
+              codEvidenciaDemandada: evidencia.codEvidenciaDemandada,
+              descricao: evidencia.descricao,
+              tipoArquivo: evidencia.tipoArquivo,
+            })),
+          })),
         }))
-        return reply.status(200).send(formattedTiposProjeto)
+
+        return reply.status(200).send(formattedTp)
       } catch (error) {
         if (error instanceof Error) {
           return reply.status(500).send({ error: error.message })

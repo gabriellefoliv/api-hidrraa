@@ -14,6 +14,7 @@ import { cadastrarEntidadeExecutoraRoute } from './routes/auth/cadastrar-entidad
 import { cadastrarInvestidorRoute } from './routes/auth/cadastrar-investidor-route'
 import { cadastrarMembroComiteRoute } from './routes/auth/cadastrar-membro-comite'
 import { loginRoute } from './routes/auth/login-route'
+import { criarProjetoRoute } from './routes/entidade-executora/projeto/criar-projeto-route'
 import { listarDetalhesModeloRoute } from './routes/entidade-executora/projeto/listar-detalhes-modelo-route'
 import { listarTiposProjetoRoute } from './routes/entidade-executora/projeto/listar-tipo-projetos-route'
 import { atualizarMicrobaciaRoute } from './routes/membro-comite/microbacia/atualizar-microbacia-route'
@@ -75,6 +76,7 @@ app.register(loginRoute)
 // Projetos
 app.register(listarTiposProjetoRoute)
 app.register(listarDetalhesModeloRoute)
+app.register(criarProjetoRoute)
 // Microbacia
 app.register(criarMicrobaciaRoute)
 app.register(listarMicrobaciasRoute)
@@ -92,5 +94,5 @@ app.register(atualizarProdutorRuralRoute)
 app.register(deletarProdutorRuralRoute)
 
 app.listen({ port: 3000 }).then(() => {
-  console.log('HTTP Server Running!')
+  console.log('💦 HTTP Server Running!')
 })

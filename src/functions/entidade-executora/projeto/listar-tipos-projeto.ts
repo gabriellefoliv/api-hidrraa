@@ -1,7 +1,13 @@
 import prisma from '../../../lib/prisma'
 
 export async function listarTiposProjeto() {
-  const tiposProjeto = await prisma.tipo_projeto.findMany()
-
-  return { tiposProjeto }
+  return await prisma.tipo_projeto.findMany({
+    include: {
+      marco_recomendado: {
+        include: {
+          evidencia_demandada: true,
+        },
+      },
+    },
+  })
 }
