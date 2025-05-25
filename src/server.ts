@@ -18,6 +18,10 @@ import { loginRoute } from './routes/auth/login-route'
 import { criarProjetoRoute } from './routes/entidade-executora/projeto/criar-projeto-route'
 import { listarDetalhesModeloRoute } from './routes/entidade-executora/projeto/listar-detalhes-modelo-route'
 import { listarTiposProjetoRoute } from './routes/entidade-executora/projeto/listar-tipo-projetos-route'
+import { avaliarProjetoRoute } from './routes/membro-comite/avaliacao/avaliar-projeto-route'
+import { criarCriterioRoute } from './routes/membro-comite/avaliacao/criar-criterio-route'
+import { listarCriteriosRoute } from './routes/membro-comite/avaliacao/listar-criterios-route'
+import { listarProjetosNaoAvaliadosRoute } from './routes/membro-comite/avaliacao/listar-projetos-nao-avaliados-route'
 import { atualizarMicrobaciaRoute } from './routes/membro-comite/microbacia/atualizar-microbacia-route'
 import { criarMicrobaciaRoute } from './routes/membro-comite/microbacia/criar-microbacia-route'
 import { deletarMicrobaciaRoute } from './routes/membro-comite/microbacia/deletar-microbacia-route'
@@ -95,6 +99,12 @@ app.register(atualizarProdutorRuralRoute)
 app.register(deletarProdutorRuralRoute)
 
 app.register(buscarEntExecPorCodUsuarioRoute)
+
+//Avaliação
+app.register(avaliarProjetoRoute)
+app.register(criarCriterioRoute)
+app.register(listarCriteriosRoute)
+app.register(listarProjetosNaoAvaliadosRoute)
 
 app.listen({ port: 3000 }).then(() => {
   console.log('💦 HTTP Server Running!')
