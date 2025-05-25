@@ -8,8 +8,9 @@ interface CriarProjetoParams {
   orcamento: number
   codPropriedade: number
   codTipoProjeto: number
-  CodEntExec: number
   CodMicroBacia: number
+  codUsuario: number
+  CodEntExec: number
 }
 
 export async function criarProjeto({
@@ -20,9 +21,21 @@ export async function criarProjeto({
   orcamento,
   codPropriedade,
   codTipoProjeto,
-  CodEntExec,
   CodMicroBacia,
+  codUsuario,
 }: CriarProjetoParams) {
+  const entExec = await prisma.entidadeexecutora.findFirst({
+    where: {
+      codUsuario,
+    },
+  })
+
+  if (!entExec) {
+    throw new Error(
+      'Entidade executora não encontrada para o usuário informado.'
+    )
+  }
+
   const projeto = await prisma.projeto.create({
     data: {
       titulo,
@@ -32,7 +45,7 @@ export async function criarProjeto({
       orcamento,
       codPropriedade,
       codTipoProjeto,
-      CodEntExec,
+      CodEntExec: entExec.codEntExec,
       CodMicroBacia,
     },
   })

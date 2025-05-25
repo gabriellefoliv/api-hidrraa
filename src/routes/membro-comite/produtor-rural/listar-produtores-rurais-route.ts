@@ -7,7 +7,10 @@ export const listarProdutoresRuraisRoute: FastifyPluginAsyncZod = async app => {
   app.get(
     '/api/produtores',
     {
-      preHandler: verificarPermissao(Perfil.MEMBRO_COMITE),
+      preHandler: verificarPermissao([
+        Perfil.MEMBRO_COMITE,
+        Perfil.ENTIDADE_EXECUTORA,
+      ]),
       schema: {
         summary: 'Listar Produtores Rurais',
         tags: ['Produtor Rural'],

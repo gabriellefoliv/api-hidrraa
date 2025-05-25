@@ -45,6 +45,10 @@ export const criarProjetoRoute: FastifyPluginAsyncZod = async app => {
         CodMicroBacia,
       } = request.body
 
+      const { codUsuario } = request.user as { codUsuario: number }
+      if (!codUsuario) {
+        return reply.status(401).send({ error: 'Usuário não autenticado' })
+      }
       const { projetoId } = await criarProjeto({
         titulo,
         objetivo,
@@ -55,6 +59,7 @@ export const criarProjetoRoute: FastifyPluginAsyncZod = async app => {
         codTipoProjeto,
         CodEntExec,
         CodMicroBacia,
+        codUsuario,
       })
       return reply.status(201).send({ projetoId })
     }

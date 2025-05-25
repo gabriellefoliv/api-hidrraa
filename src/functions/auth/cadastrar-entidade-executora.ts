@@ -46,6 +46,7 @@ export async function cadastrarEntidadeExecutora({
       cnpjcpf,
       especialidade,
       contato,
+      codUsuario: usuario.codUsuario,
     },
   })
 

@@ -7,7 +7,10 @@ export const listarPropriedadesRoute: FastifyPluginAsyncZod = async app => {
   app.get(
     '/api/propriedades',
     {
-      preHandler: verificarPermissao(Perfil.MEMBRO_COMITE),
+      preHandler: verificarPermissao([
+        Perfil.MEMBRO_COMITE,
+        Perfil.ENTIDADE_EXECUTORA,
+      ]),
       schema: {
         summary: 'Listar propriedades',
         tags: ['Propriedade'],

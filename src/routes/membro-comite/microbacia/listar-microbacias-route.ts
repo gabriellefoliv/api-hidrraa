@@ -7,7 +7,10 @@ export const listarMicrobaciasRoute: FastifyPluginAsyncZod = async app => {
   app.get(
     '/api/microbacias',
     {
-      preHandler: verificarPermissao(Perfil.MEMBRO_COMITE),
+      preHandler: verificarPermissao([
+        Perfil.MEMBRO_COMITE,
+        Perfil.ENTIDADE_EXECUTORA,
+      ]),
       schema: {
         summary: 'Listar microbacias',
         tags: ['Microbacia'],

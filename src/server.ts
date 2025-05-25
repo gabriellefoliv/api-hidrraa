@@ -10,6 +10,7 @@ import {
   validatorCompiler,
 } from 'fastify-type-provider-zod'
 
+import { buscarEntExecPorCodUsuarioRoute } from './routes/auth/buscar-entExec-por-codUsuario-route'
 import { cadastrarEntidadeExecutoraRoute } from './routes/auth/cadastrar-entidade-executora-route'
 import { cadastrarInvestidorRoute } from './routes/auth/cadastrar-investidor-route'
 import { cadastrarMembroComiteRoute } from './routes/auth/cadastrar-membro-comite'
@@ -92,6 +93,8 @@ app.register(criarProdutorRuralRoute)
 app.register(listarProdutoresRuraisRoute)
 app.register(atualizarProdutorRuralRoute)
 app.register(deletarProdutorRuralRoute)
+
+app.register(buscarEntExecPorCodUsuarioRoute)
 
 app.listen({ port: 3000 }).then(() => {
   console.log('💦 HTTP Server Running!')
