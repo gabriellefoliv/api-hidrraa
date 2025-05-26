@@ -3,7 +3,7 @@ import z from 'zod'
 import { realizarAporte } from '../../functions/investidor/realizar-aporte'
 import { Perfil, verificarPermissao } from '../../middlewares/auth'
 
-export const criarProdutorRuralRoute: FastifyPluginAsyncZod = async app => {
+export const realizarAporteRoute: FastifyPluginAsyncZod = async app => {
   app.post(
     '/api/aportes',
     {

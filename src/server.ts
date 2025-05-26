@@ -18,6 +18,9 @@ import { loginRoute } from './routes/auth/login-route'
 import { criarProjetoRoute } from './routes/entidade-executora/projeto/criar-projeto-route'
 import { listarDetalhesModeloRoute } from './routes/entidade-executora/projeto/listar-detalhes-modelo-route'
 import { listarTiposProjetoRoute } from './routes/entidade-executora/projeto/listar-tipo-projetos-route'
+import { listarAportesRealizadosRoute } from './routes/investidor/listar-aportes-realizados-route'
+import { realizarAporteRoute } from './routes/investidor/realizar-aporte-route'
+import { validarAporteRoute } from './routes/membro-comite/aporte/validar-aporte-route'
 import { avaliarProjetoRoute } from './routes/membro-comite/avaliacao/avaliar-projeto-route'
 import { criarCriterioRoute } from './routes/membro-comite/avaliacao/criar-criterio-route'
 import { listarCriteriosRoute } from './routes/membro-comite/avaliacao/listar-criterios-route'
@@ -105,6 +108,11 @@ app.register(avaliarProjetoRoute)
 app.register(criarCriterioRoute)
 app.register(listarCriteriosRoute)
 app.register(listarProjetosNaoAvaliadosRoute)
+
+//Aportes
+app.register(realizarAporteRoute)
+app.register(listarAportesRealizadosRoute)
+app.register(validarAporteRoute)
 
 app.listen({ port: 3000 }).then(() => {
   console.log('💦 HTTP Server Running!')
