@@ -1,11 +1,13 @@
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import z from 'zod'
 import { avaliarProjeto } from '../../../functions/membro-comite/avaliacao/avaliar-projeto'
+import { Perfil, verificarPermissao } from '../../../middlewares/auth'
 
 export const avaliarProjetoRoute: FastifyPluginAsyncZod = async app => {
   app.post(
-    '/api/avaliacao',
+    '/api/avaliacoes',
     {
+      preHandler: verificarPermissao(Perfil.MEMBRO_COMITE),
       schema: {
         summary: 'Avaliação de projeto',
         tags: ['Avaliação'],

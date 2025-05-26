@@ -1,11 +1,14 @@
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import z from 'zod'
 import { criarCriterio } from '../../../functions/membro-comite/avaliacao/criar-criterio'
+import { Perfil, verificarPermissao } from '../../../middlewares/auth'
 
 export const criarCriterioRoute: FastifyPluginAsyncZod = async app => {
   app.post(
-    '/api/avaliacao/criterio',
+    '/api/avaliacoes/criterios',
     {
+      preHandler: verificarPermissao(Perfil.MEMBRO_COMITE),
+
       schema: {
         summary: 'Criar Critério de Avaliação',
         tags: ['Avaliação'],

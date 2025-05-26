@@ -1,11 +1,14 @@
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import z from 'zod'
 import { listarCriterios } from '../../../functions/membro-comite/avaliacao/listar-criterios'
+import { Perfil, verificarPermissao } from '../../../middlewares/auth'
 
 export const listarCriteriosRoute: FastifyPluginAsyncZod = async app => {
   app.get(
-    '/api/avaliacao/criterios',
+    '/api/avaliacoes/criterios',
     {
+      preHandler: verificarPermissao(Perfil.MEMBRO_COMITE),
+
       schema: {
         summary: 'Listar Critérios de Avaliação',
         tags: ['Avaliação'],

@@ -1,12 +1,14 @@
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import z from 'zod'
 import { listarProjetosNaoAvaliados } from '../../../functions/membro-comite/avaliacao/listar-projetos-nao-avaliados'
+import { Perfil, verificarPermissao } from '../../../middlewares/auth'
 
 export const listarProjetosNaoAvaliadosRoute: FastifyPluginAsyncZod =
   async app => {
     app.get(
-      '/api/avaliacao/projetos',
+      '/api/avaliacoes',
       {
+        preHandler: verificarPermissao(Perfil.MEMBRO_COMITE),
         schema: {
           summary: 'Listar projetos com informações completas para avaliação',
           tags: ['Avaliação'],
