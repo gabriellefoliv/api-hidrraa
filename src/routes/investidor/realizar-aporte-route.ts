@@ -12,8 +12,6 @@ export const realizarAporteRoute: FastifyPluginAsyncZod = async app => {
         summary: 'Realizar Aporte',
         tags: ['Aporte'],
         body: z.object({
-          codInvestidor: z.number(),
-          codCBH: z.number(),
           bc_valor: z.number(),
         }),
         response: {
@@ -27,14 +25,23 @@ export const realizarAporteRoute: FastifyPluginAsyncZod = async app => {
       },
     },
     async (request, reply) => {
-      const { codInvestidor, codCBH, bc_valor } = request.body
+      const { bc_valor } = request.body
 
-      const { aporteId } = await realizarAporte({
-        codInvestidor,
-        codCBH,
-        bc_valor,
-      })
-      return reply.status(201).send({ aporteId })
+      const { codUsuario } = request.user as { codUsuario: number }
+      if (!codUsuario) {
+        return reply.status(401).send({ error: 'Usuário não autenticado' })
+      }
+
+      try {
+        const { aporteId } = await realizarAporte({
+          codUsuario,
+          bc_valor,
+        })
+
+        return reply.status(201).send({ aporteId })
+      } catch (error) {
+        return reply.status(409).send({ error: (error as Error).message })
+      }
     }
   )
 }

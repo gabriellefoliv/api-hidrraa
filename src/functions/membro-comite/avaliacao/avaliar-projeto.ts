@@ -11,7 +11,6 @@ interface AvaliacaoInput {
   codAvaliador: number
   dataIni: Date
   dataFim: Date
-  bc_aprovado: boolean
   bc_valorPagto: number
   itens: AvaliacaoItemInput[]
 }
@@ -21,7 +20,6 @@ export async function avaliarProjeto({
   codAvaliador,
   dataIni,
   dataFim,
-  bc_aprovado,
   bc_valorPagto,
   itens,
 }: AvaliacaoInput) {
@@ -31,7 +29,7 @@ export async function avaliarProjeto({
       dataFim: new Date(dataFim),
       codProjeto,
       codAvaliador,
-      bc_aprovado,
+      bc_aprovado: true,
       bc_valorPagto,
     },
   })

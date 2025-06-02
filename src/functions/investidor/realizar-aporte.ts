@@ -1,20 +1,37 @@
 import prisma from '../../lib/prisma'
 
 interface RealizarAporteParams {
-  codInvestidor: number
-  codCBH: number
+  codUsuario: number
   bc_valor: number
 }
 
 export async function realizarAporte({
-  codInvestidor,
-  codCBH,
+  codUsuario,
   bc_valor,
 }: RealizarAporteParams) {
+  const investidor = await prisma.investidor_esg.findFirst({
+    where: {
+      codUsuario,
+    },
+  })
+
+  if (!investidor) {
+    throw new Error('Investidor não encontrado.')
+  }
+  const usuario = await prisma.usuario.findUnique({
+    where: {
+      codUsuario,
+    },
+  })
+
+  if (!usuario) {
+    throw new Error('Usuário não encontrado.')
+  }
+
   const novoAporte = await prisma.aporte.create({
     data: {
-      codInvestidor,
-      codCBH,
+      codInvestidor: investidor.codInvestidor,
+      codCBH: usuario.codCBH,
       bc_valor,
       dataInvestimento: new Date(),
       validadoAGEVAP: false,

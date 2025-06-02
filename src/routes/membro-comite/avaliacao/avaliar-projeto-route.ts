@@ -14,9 +14,15 @@ export const avaliarProjetoRoute: FastifyPluginAsyncZod = async app => {
         body: z.object({
           codProjeto: z.number(),
           codAvaliador: z.number(),
-          dataIni: z.date(),
-          dataFim: z.date(),
-          bc_aprovado: z.boolean(),
+          dataIni: z
+            .string()
+            .refine(str => !Number.isNaN(Date.parse(str)), 'Data inválida')
+            .transform(str => new Date(str)),
+          dataFim: z
+            .string()
+            .refine(str => !Number.isNaN(Date.parse(str)), 'Data inválida')
+            .transform(str => new Date(str)),
+
           bc_valorPagto: z.number(),
           itens: z
             .array(
@@ -46,7 +52,6 @@ export const avaliarProjetoRoute: FastifyPluginAsyncZod = async app => {
           codAvaliador,
           dataIni,
           dataFim,
-          bc_aprovado,
           bc_valorPagto,
           itens,
         } = request.body
@@ -56,7 +61,6 @@ export const avaliarProjetoRoute: FastifyPluginAsyncZod = async app => {
           codAvaliador,
           dataIni,
           dataFim,
-          bc_aprovado,
           bc_valorPagto,
           itens,
         })

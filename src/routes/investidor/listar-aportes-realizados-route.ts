@@ -13,7 +13,7 @@ export const listarAportesRealizadosRoute: FastifyPluginAsyncZod =
           summary: 'Listar aportes realizados por Investidor',
           tags: ['Aporte'],
           params: z.object({
-            codInvestidor: z.number(),
+            codInvestidor: z.coerce.number(),
           }),
           response: {
             200: z.array(

@@ -22,15 +22,16 @@ model aporte {
 }
 
 model avaliacao {
-  codAvaliacao  Int           @id @default(autoincrement())
-  dataIni       DateTime      @db.DateTime(0)
-  dataFim       DateTime      @db.DateTime(0)
-  bc_aprovado   Boolean
-  bc_valorPagto Float         @db.Float
-  codProjeto    Int
-  codAvaliador  Int
-  projeto       projeto       @relation(fields: [codProjeto], references: [codProjeto], map: "avaliacao_ibfk_1")
-  avaliador_cbh avaliador_cbh @relation(fields: [codAvaliador], references: [codAvaliador], map: "avaliacao_ibfk_2")
+  codAvaliacao   Int              @id @default(autoincrement())
+  dataIni        DateTime         @db.DateTime(0)
+  dataFim        DateTime         @db.DateTime(0)
+  bc_aprovado    Boolean
+  bc_valorPagto  Float            @db.Float
+  codProjeto     Int
+  codAvaliador   Int
+  projeto        projeto          @relation(fields: [codProjeto], references: [codProjeto], map: "avaliacao_ibfk_1")
+  avaliador_cbh  avaliador_cbh    @relation(fields: [codAvaliador], references: [codAvaliador], map: "avaliacao_ibfk_2")
+  avaliacao_item avaliacao_item[]
 
   @@index([codAvaliador], map: "codAvaliador")
   @@index([codProjeto], map: "codProjeto")
@@ -41,9 +42,12 @@ model avaliacao_item {
   nota            Float         @db.Float
   parecer         String        @db.VarChar(255)
   codCriterioAval Int
+  codAvaliacao    Int
   criterio_aval   criterio_aval @relation(fields: [codCriterioAval], references: [codCriterioAval], map: "avaliacao_item_ibfk_1")
+  avaliacao       avaliacao     @relation(fields: [codAvaliacao], references: [codAvaliacao], map: "avaliacao_item_ibfk_2")
 
   @@index([codCriterioAval], map: "codCriterioAval")
+  @@index([codAvaliacao], map: "codAvaliacao")
 }
 
 model avaliador_cbh {
@@ -150,8 +154,12 @@ model investidor_esg {
   razaoSocial      String             @db.VarChar(255)
   cnpj             Int
   contato          Int
+  codUsuario       Int
   aporte           aporte[]
   comite_investido comite_investido[]
+  usuario          usuario            @relation(fields: [codUsuario], references: [codUsuario], map: "investidor_esg_ibfk_1")
+
+  @@index([codUsuario], map: "codUsuario")
 }
 
 model marco_recomendado {
@@ -265,6 +273,7 @@ model usuario {
   codCBH            Int
   Perfil            String              @db.VarChar(100)
   entidadeexecutora entidadeexecutora[]
+  investidor_esg    investidor_esg[]
   cbh               cbh                 @relation(fields: [codCBH], references: [codCBH], map: "usuario_ibfk_1")
 
   @@index([codCBH], map: "codCBH")

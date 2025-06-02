@@ -11,6 +11,7 @@ import {
 } from 'fastify-type-provider-zod'
 
 import { buscarEntExecPorCodUsuarioRoute } from './routes/auth/buscar-entExec-por-codUsuario-route'
+import { buscarInvestidorPorCodUsuarioRoute } from './routes/auth/buscar-investidor-por-codUsuario-route'
 import { cadastrarEntidadeExecutoraRoute } from './routes/auth/cadastrar-entidade-executora-route'
 import { cadastrarInvestidorRoute } from './routes/auth/cadastrar-investidor-route'
 import { cadastrarMembroComiteRoute } from './routes/auth/cadastrar-membro-comite'
@@ -20,10 +21,12 @@ import { listarDetalhesModeloRoute } from './routes/entidade-executora/projeto/l
 import { listarTiposProjetoRoute } from './routes/entidade-executora/projeto/listar-tipo-projetos-route'
 import { listarAportesRealizadosRoute } from './routes/investidor/listar-aportes-realizados-route'
 import { realizarAporteRoute } from './routes/investidor/realizar-aporte-route'
+import { listarAportesRoute } from './routes/membro-comite/aporte/listar-aportes-route'
 import { validarAporteRoute } from './routes/membro-comite/aporte/validar-aporte-route'
 import { avaliarProjetoRoute } from './routes/membro-comite/avaliacao/avaliar-projeto-route'
 import { criarCriterioRoute } from './routes/membro-comite/avaliacao/criar-criterio-route'
 import { listarCriteriosRoute } from './routes/membro-comite/avaliacao/listar-criterios-route'
+import { listarProjetosAvaliadosRoute } from './routes/membro-comite/avaliacao/listar-projetos-avaliados'
 import { listarProjetosNaoAvaliadosRoute } from './routes/membro-comite/avaliacao/listar-projetos-nao-avaliados-route'
 import { atualizarMicrobaciaRoute } from './routes/membro-comite/microbacia/atualizar-microbacia-route'
 import { criarMicrobaciaRoute } from './routes/membro-comite/microbacia/criar-microbacia-route'
@@ -53,6 +56,7 @@ app.register(fastifyCors, {
   origin: 'http://localhost:5173',
   credentials: true,
   allowedHeaders: ['Authorization', 'Content-Type'],
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
 })
 
 app.register(fastifyJwt, {
@@ -102,17 +106,20 @@ app.register(atualizarProdutorRuralRoute)
 app.register(deletarProdutorRuralRoute)
 
 app.register(buscarEntExecPorCodUsuarioRoute)
+app.register(buscarInvestidorPorCodUsuarioRoute)
 
 //Avaliação
 app.register(avaliarProjetoRoute)
 app.register(criarCriterioRoute)
 app.register(listarCriteriosRoute)
 app.register(listarProjetosNaoAvaliadosRoute)
+app.register(listarProjetosAvaliadosRoute)
 
 //Aportes
 app.register(realizarAporteRoute)
 app.register(listarAportesRealizadosRoute)
 app.register(validarAporteRoute)
+app.register(listarAportesRoute)
 
 app.listen({ port: 3000 }).then(() => {
   console.log('💦 HTTP Server Running!')

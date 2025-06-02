@@ -40,11 +40,19 @@ export async function cadastrarInvestidor({
     },
   })
 
-  await prisma.investidor_esg.create({
+  const investidor = await prisma.investidor_esg.create({
     data: {
       razaoSocial,
       cnpj,
       contato,
+      codUsuario: usuario.codUsuario,
+    },
+  })
+
+  await prisma.comite_investido.create({
+    data: {
+      codInvestidor: investidor.codInvestidor,
+      codCBH,
     },
   })
 
