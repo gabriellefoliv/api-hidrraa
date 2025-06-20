@@ -19,8 +19,15 @@ export const criarProjetoRoute: FastifyPluginAsyncZod = async app => {
           orcamento: z.number(),
           codPropriedade: z.number(),
           codTipoProjeto: z.number(),
-          CodEntExec: z.number(),
           CodMicroBacia: z.number(),
+          marcos: z.array(
+            z.object({
+              codMarcoRecomendado: z.number(),
+              descricao: z.string(),
+              valorEstimado: z.number(),
+              dataConclusao: z.coerce.date(), // Data de conclusão é opcional
+            })
+          ),
         }),
         response: {
           201: z.object({
@@ -41,8 +48,8 @@ export const criarProjetoRoute: FastifyPluginAsyncZod = async app => {
         orcamento,
         codPropriedade,
         codTipoProjeto,
-        CodEntExec,
         CodMicroBacia,
+        marcos,
       } = request.body
 
       const { codUsuario } = request.user as { codUsuario: number }
@@ -57,9 +64,9 @@ export const criarProjetoRoute: FastifyPluginAsyncZod = async app => {
         orcamento,
         codPropriedade,
         codTipoProjeto,
-        CodEntExec,
         CodMicroBacia,
         codUsuario,
+        marcos,
       })
       return reply.status(201).send({ projetoId })
     }

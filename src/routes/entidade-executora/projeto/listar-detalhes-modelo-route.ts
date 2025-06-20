@@ -12,7 +12,7 @@ export const listarDetalhesModeloRoute: FastifyPluginAsyncZod = async app => {
         summary: 'Listar detalhes de um tipo de projeto',
         tags: ['Tipos de Projeto'],
         params: z.object({
-          codTipoProjeto: z.number(),
+          codTipoProjeto: z.coerce.number(),
         }),
         response: {
           200: z.object({
@@ -23,7 +23,6 @@ export const listarDetalhesModeloRoute: FastifyPluginAsyncZod = async app => {
               z.object({
                 codMarcoRecomendado: z.number(),
                 descricao: z.string(),
-                valorEstimado: z.number(),
                 evidenciasDemandadas: z.array(
                   z.object({
                     codEvidenciaDemandada: z.number(),
@@ -59,7 +58,6 @@ export const listarDetalhesModeloRoute: FastifyPluginAsyncZod = async app => {
           marcosRecomendados: modelo.marco_recomendado.map(marco => ({
             codMarcoRecomendado: marco.codMarcoRecomendado,
             descricao: marco.descricao,
-            valorEstimado: marco.valorEstimado,
             evidenciasDemandadas: marco.evidencia_demandada.map(evidencia => ({
               codEvidenciaDemandada: evidencia.codEvidenciaDemandada,
               descricao: evidencia.descricao,

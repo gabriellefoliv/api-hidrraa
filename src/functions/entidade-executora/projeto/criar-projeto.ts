@@ -1,5 +1,12 @@
 import prisma from '../../../lib/prisma'
 
+interface ExecucaoMarcoInput {
+  codMarcoRecomendado: number
+  descricao: string
+  valorEstimado: number
+  dataConclusao: Date
+}
+
 interface CriarProjetoParams {
   titulo: string
   objetivo: string
@@ -10,7 +17,7 @@ interface CriarProjetoParams {
   codTipoProjeto: number
   CodMicroBacia: number
   codUsuario: number
-  CodEntExec: number
+  marcos: ExecucaoMarcoInput[]
 }
 
 export async function criarProjeto({
@@ -23,6 +30,7 @@ export async function criarProjeto({
   codTipoProjeto,
   CodMicroBacia,
   codUsuario,
+  marcos,
 }: CriarProjetoParams) {
   const entExec = await prisma.entidadeexecutora.findFirst({
     where: {
@@ -48,6 +56,16 @@ export async function criarProjeto({
       CodEntExec: entExec.codEntExec,
       CodMicroBacia,
     },
+  })
+
+  await prisma.execucao_marco.createMany({
+    data: marcos.map(marco => ({
+      dataConclusao: marco.dataConclusao,
+      descricao: marco.descricao,
+      valorEstimado: marco.valorEstimado,
+      codProjeto: projeto.codProjeto,
+      codMarcoRecomendado: marco.codMarcoRecomendado,
+    })),
   })
 
   return { projetoId: projeto.codProjeto }

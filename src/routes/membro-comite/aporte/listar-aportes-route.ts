@@ -22,6 +22,9 @@ export const listarAportesRoute: FastifyPluginAsyncZod = async app => {
               validadoAGEVAP: z.boolean(),
               codInvestidor: z.number(),
               codCBH: z.number(),
+              investidor_esg: z.object({
+                razaoSocial: z.string(),
+              }),
             })
           ),
           404: z.object({

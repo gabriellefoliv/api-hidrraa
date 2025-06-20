@@ -21,7 +21,6 @@ export const listarTiposProjetoRoute: FastifyPluginAsyncZod = async app => {
                 z.object({
                   codMarcoRecomendado: z.number(),
                   descricao: z.string(),
-                  valorEstimado: z.number(),
                   evidenciasDemandadas: z.array(
                     z.object({
                       codEvidenciaDemandada: z.number(),
@@ -54,7 +53,6 @@ export const listarTiposProjetoRoute: FastifyPluginAsyncZod = async app => {
           marcosRecomendados: tipoProjeto.marco_recomendado.map(marco => ({
             codMarcoRecomendado: marco.codMarcoRecomendado,
             descricao: marco.descricao,
-            valorEstimado: marco.valorEstimado,
             evidenciasDemandadas: marco.evidencia_demandada.map(evidencia => ({
               codEvidenciaDemandada: evidencia.codEvidenciaDemandada,
               descricao: evidencia.descricao,

@@ -16,9 +16,14 @@ import { cadastrarEntidadeExecutoraRoute } from './routes/auth/cadastrar-entidad
 import { cadastrarInvestidorRoute } from './routes/auth/cadastrar-investidor-route'
 import { cadastrarMembroComiteRoute } from './routes/auth/cadastrar-membro-comite'
 import { loginRoute } from './routes/auth/login-route'
+import { atualizarProjetoRoute } from './routes/entidade-executora/projeto/atualizar-projeto-route'
+import { buscarProjetoRoute } from './routes/entidade-executora/projeto/buscar-projeto-route'
 import { criarProjetoRoute } from './routes/entidade-executora/projeto/criar-projeto-route'
 import { listarDetalhesModeloRoute } from './routes/entidade-executora/projeto/listar-detalhes-modelo-route'
+import { listarProjetosSalvosPorEntExecRoute } from './routes/entidade-executora/projeto/listar-projetos-salvos-por-ent-exec-route'
+import { listarProjetosSubmetidosPorEntExecRoute } from './routes/entidade-executora/projeto/listar-projetos-submetidos-por-ent-exec'
 import { listarTiposProjetoRoute } from './routes/entidade-executora/projeto/listar-tipo-projetos-route'
+import { submeterProjetoRoute } from './routes/entidade-executora/projeto/submeter-projeto-route'
 import { listarAportesRealizadosRoute } from './routes/investidor/listar-aportes-realizados-route'
 import { realizarAporteRoute } from './routes/investidor/realizar-aporte-route'
 import { listarAportesRoute } from './routes/membro-comite/aporte/listar-aportes-route'
@@ -89,6 +94,11 @@ app.register(loginRoute)
 app.register(listarTiposProjetoRoute)
 app.register(listarDetalhesModeloRoute)
 app.register(criarProjetoRoute)
+app.register(submeterProjetoRoute)
+app.register(atualizarProjetoRoute)
+app.register(listarProjetosSubmetidosPorEntExecRoute)
+app.register(listarProjetosSalvosPorEntExecRoute)
+app.register(buscarProjetoRoute)
 // Microbacia
 app.register(criarMicrobaciaRoute)
 app.register(listarMicrobaciasRoute)

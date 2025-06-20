@@ -18,6 +18,18 @@ export const listarProjetosAvaliadosRoute: FastifyPluginAsyncZod =
                 codProjeto: z.number(),
                 titulo: z.string(),
                 mediaPonderada: z.number().nullable(),
+                descricao: z.string(),
+                marco_recomendado: z.array(
+                  z.object({
+                    execucao_marco: z.array(
+                      z.object({
+                        descricao: z.string(),
+                        valorEstimado: z.number(),
+                        dataConclusao: z.date(),
+                      })
+                    ),
+                  })
+                ),
               })
             ),
             500: z.object({
@@ -29,7 +41,23 @@ export const listarProjetosAvaliadosRoute: FastifyPluginAsyncZod =
       async (request, reply) => {
         try {
           const avaliados = await listarProjetosAvaliados()
-          return reply.status(200).send(avaliados)
+
+          // Map camelCase to snake_case for API response
+          const formatted = avaliados.map(projeto => ({
+            codProjeto: projeto.codProjeto,
+            titulo: projeto.titulo,
+            mediaPonderada: projeto.mediaPonderada,
+            descricao: projeto.descricao,
+            marco_recomendado: (projeto.marcoRecomendado || []).map(marco => ({
+              execucao_marco: (marco.execucaoMarco || []).map(execucao => ({
+                descricao: execucao.descricao,
+                valorEstimado: execucao.valorEstimado,
+                dataConclusao: execucao.dataConclusao,
+              })),
+            })),
+          }))
+
+          return reply.status(200).send(formatted)
         } catch (error) {
           return reply
             .status(500)

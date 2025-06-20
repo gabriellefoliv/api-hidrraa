@@ -26,8 +26,13 @@ export const listarProjetosNaoAvaliadosRoute: FastifyPluginAsyncZod =
                   descricao: z.string(),
                   marco_recomendado: z.array(
                     z.object({
-                      descricao: z.string(),
-                      valorEstimado: z.number(),
+                      execucao_marco: z.array(
+                        z.object({
+                          descricao: z.string(),
+                          valorEstimado: z.number(),
+                          dataConclusao: z.coerce.date(),
+                        })
+                      ),
                     })
                   ),
                 }),

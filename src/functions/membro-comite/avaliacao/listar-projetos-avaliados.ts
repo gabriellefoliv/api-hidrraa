@@ -28,6 +28,23 @@ export async function listarProjetosAvaliados() {
           },
         },
       },
+      tipo_projeto: {
+        select: {
+          descricao: true,
+          marco_recomendado: {
+            select: {
+              execucao_marco: {
+                select: {
+                  descricao: true,
+                  valorEstimado: true,
+                  dataConclusao: true,
+                  codProjeto: true,
+                },
+              },
+            },
+          },
+        },
+      },
     },
     orderBy: {
       titulo: 'asc',
@@ -53,10 +70,24 @@ export async function listarProjetosAvaliados() {
 
     const mediaPonderada = totalPeso > 0 ? somaPonderada / totalPeso : null
 
+    const marcoRecomendado = projeto.tipo_projeto.marco_recomendado.map(
+      marco => ({
+        execucaoMarco: marco.execucao_marco
+          .filter(execucao => execucao.codProjeto === projeto.codProjeto)
+          .map(execucao => ({
+            descricao: execucao.descricao,
+            valorEstimado: execucao.valorEstimado,
+            dataConclusao: execucao.dataConclusao,
+          })),
+      })
+    )
+
     return {
       codProjeto: projeto.codProjeto,
       titulo: projeto.titulo,
       mediaPonderada,
+      descricao: projeto.tipo_projeto.descricao,
+      marcoRecomendado,
     }
   })
 
