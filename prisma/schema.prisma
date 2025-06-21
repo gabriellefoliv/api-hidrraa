@@ -131,10 +131,10 @@ model evidencia_demandada {
 
 model execucao_marco {
   codExecucaoMarco      Int                                   @id @default(autoincrement())
-  dataConclusao         DateTime                              @db.Date
-  descricao             String                                @db.VarChar(255)
+  dataConclusao         DateTime?                             @db.Date
+  descricao             String?                               @db.VarChar(255)
   descrDetAjustes       String?                               @db.VarChar(255)
-  valorEstimado         Float                                 @db.Float
+  valorEstimado         Float?                                @db.Float
   bc_statusValidacaoCBH execucao_marco_bc_statusValidacaoCBH?
   codAvaliador          Int?
   codMarcoRecomendado   Int
@@ -216,21 +216,21 @@ model produtor_rural {
 
 model projeto {
   codProjeto        Int               @id @default(autoincrement())
-  titulo            String            @db.VarChar(255)
-  objetivo          String            @db.VarChar(255)
-  acoes             String            @db.VarChar(255)
-  cronograma        String            @db.VarChar(255)
-  orcamento         Int
+  titulo            String?           @db.VarChar(255)
+  objetivo          String?           @db.VarChar(255)
+  acoes             String?           @db.VarChar(255)
+  cronograma        String?           @db.VarChar(255)
+  orcamento         Int?
   dataSubmissao     DateTime?         @db.Date
   codPropriedade    Int?
   codTipoProjeto    Int
   CodEntExec        Int
-  CodMicroBacia     Int
+  CodMicroBacia     Int?
   avaliacao         avaliacao[]
   execucao_marco    execucao_marco[]
   tipo_projeto      tipo_projeto      @relation(fields: [codTipoProjeto], references: [codTipoProjeto], map: "projeto_ibfk_1")
   propriedade       propriedade?      @relation(fields: [codPropriedade], references: [codPropriedade], onDelete: Restrict, map: "projeto_ibfk_2")
-  microbacia        microbacia        @relation(fields: [CodMicroBacia], references: [CodMicroBacia], map: "projeto_ibfk_4")
+  microbacia        microbacia?       @relation(fields: [CodMicroBacia], references: [CodMicroBacia], onDelete: Restrict, map: "projeto_ibfk_4")
   entidadeexecutora entidadeexecutora @relation(fields: [CodEntExec], references: [codEntExec], map: "projeto_ibfk_5")
 
   @@index([CodEntExec], map: "CodEntExecutora")

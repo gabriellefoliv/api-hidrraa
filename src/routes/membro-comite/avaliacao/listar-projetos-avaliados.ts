@@ -10,26 +10,32 @@ export const listarProjetosAvaliadosRoute: FastifyPluginAsyncZod =
       {
         preHandler: verificarPermissao(Perfil.MEMBRO_COMITE),
         schema: {
-          summary: 'Listar projetos já avaliados com média final',
+          summary: 'Listar projetos avaliados com detalhes',
           tags: ['Avaliação'],
           response: {
             200: z.array(
               z.object({
                 codProjeto: z.number(),
                 titulo: z.string(),
+                objetivo: z.string(),
+                acoes: z.string(),
+                cronograma: z.string(),
+                orcamento: z.number(),
+                codPropriedade: z.number(),
+                CodMicroBacia: z.number(),
                 mediaPonderada: z.number().nullable(),
-                descricao: z.string(),
-                marco_recomendado: z.array(
-                  z.object({
-                    execucao_marco: z.array(
-                      z.object({
-                        descricao: z.string(),
-                        valorEstimado: z.number(),
-                        dataConclusao: z.date(),
-                      })
-                    ),
-                  })
-                ),
+                tipo_projeto: z.object({
+                  codTipoProjeto: z.number(),
+                  nome: z.string(),
+                  descricao: z.string(),
+                  execucao_marcos: z.array(
+                    z.object({
+                      descricao: z.string(),
+                      valorEstimado: z.number(),
+                      dataConclusao: z.date(),
+                    })
+                  ),
+                }),
               })
             ),
             500: z.object({
@@ -40,25 +46,36 @@ export const listarProjetosAvaliadosRoute: FastifyPluginAsyncZod =
       },
       async (request, reply) => {
         try {
-          const avaliados = await listarProjetosAvaliados()
+          const projetos = await listarProjetosAvaliados()
 
-          // Map camelCase to snake_case for API response
-          const formatted = avaliados.map(projeto => ({
-            codProjeto: projeto.codProjeto,
-            titulo: projeto.titulo,
-            mediaPonderada: projeto.mediaPonderada,
-            descricao: projeto.descricao,
-            marco_recomendado: (projeto.marcoRecomendado || []).map(marco => ({
-              execucao_marco: (marco.execucaoMarco || []).map(execucao => ({
-                descricao: execucao.descricao,
-                valorEstimado: execucao.valorEstimado,
-                dataConclusao: execucao.dataConclusao,
-              })),
-            })),
+          const formatted = projetos.map(proj => ({
+            codProjeto: proj.codProjeto,
+            titulo: proj.titulo ?? '',
+            objetivo: proj.objetivo ?? '',
+            acoes: proj.acoes ?? '',
+            cronograma: proj.cronograma ?? '',
+            orcamento: proj.orcamento ?? 0,
+            codPropriedade: proj.codPropriedade ?? 0,
+            CodMicroBacia: proj.CodMicroBacia ?? 0,
+            mediaPonderada: proj.mediaPonderada,
+            tipo_projeto: {
+              ...proj.tipo_projeto,
+              execucao_marcos: Array.isArray(proj.tipo_projeto?.execucao_marcos)
+                ? // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+                  proj.tipo_projeto.execucao_marcos.map((marco: any) => ({
+                    descricao: marco.descricao ?? '',
+                    valorEstimado: marco.valorEstimado ?? 0,
+                    dataConclusao: marco.dataConclusao
+                      ? new Date(marco.dataConclusao)
+                      : new Date(0),
+                  }))
+                : [],
+            },
           }))
 
           return reply.status(200).send(formatted)
         } catch (error) {
+          console.error(error)
           return reply
             .status(500)
             .send({ error: 'Erro ao listar projetos avaliados' })

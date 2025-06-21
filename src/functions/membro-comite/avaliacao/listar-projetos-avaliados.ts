@@ -6,41 +6,26 @@ export async function listarProjetosAvaliados() {
       avaliacao: {
         some: {}, // Pelo menos uma avaliação
       },
+      titulo: { not: null },
+      objetivo: { not: null },
+      acoes: { not: null },
+      cronograma: { not: null },
     },
-    select: {
-      codProjeto: true,
-      titulo: true,
-      avaliacao: {
-        select: {
-          dataIni: true,
-          dataFim: true,
-          codAvaliador: true,
-          bc_valorPagto: true,
-          avaliacao_item: {
-            select: {
-              nota: true,
-              criterio_aval: {
-                select: {
-                  peso: true,
-                },
-              },
+    include: {
+      tipo_projeto: {
+        include: {
+          marco_recomendado: {
+            include: {
+              execucao_marco: true,
             },
           },
         },
       },
-      tipo_projeto: {
-        select: {
-          descricao: true,
-          marco_recomendado: {
-            select: {
-              execucao_marco: {
-                select: {
-                  descricao: true,
-                  valorEstimado: true,
-                  dataConclusao: true,
-                  codProjeto: true,
-                },
-              },
+      avaliacao: {
+        include: {
+          avaliacao_item: {
+            include: {
+              criterio_aval: true,
             },
           },
         },
@@ -51,10 +36,10 @@ export async function listarProjetosAvaliados() {
     },
   })
 
-  // Calcular média ponderada de cada projeto
   const projetosComMedia = projetos.map(projeto => {
     const avaliacoes = projeto.avaliacao
 
+    // Calcular média ponderada
     const todasNotasEPesos = avaliacoes.flatMap(avaliacao =>
       avaliacao.avaliacao_item.map(item => ({
         nota: item.nota,
@@ -70,24 +55,34 @@ export async function listarProjetosAvaliados() {
 
     const mediaPonderada = totalPeso > 0 ? somaPonderada / totalPeso : null
 
-    const marcoRecomendado = projeto.tipo_projeto.marco_recomendado.map(
-      marco => ({
-        execucaoMarco: marco.execucao_marco
-          .filter(execucao => execucao.codProjeto === projeto.codProjeto)
-          .map(execucao => ({
-            descricao: execucao.descricao,
-            valorEstimado: execucao.valorEstimado,
-            dataConclusao: execucao.dataConclusao,
-          })),
-      })
+    // Mapear marcos de execução desse projeto
+    const execucaoMarcos = projeto.tipo_projeto.marco_recomendado.flatMap(
+      marco =>
+        marco.execucao_marco.filter(
+          execucao => execucao.codProjeto === projeto.codProjeto
+        )
     )
 
     return {
       codProjeto: projeto.codProjeto,
       titulo: projeto.titulo,
+      objetivo: projeto.objetivo,
+      acoes: projeto.acoes,
+      cronograma: projeto.cronograma,
+      orcamento: projeto.orcamento,
+      codPropriedade: projeto.codPropriedade,
+      CodMicroBacia: projeto.CodMicroBacia,
       mediaPonderada,
-      descricao: projeto.tipo_projeto.descricao,
-      marcoRecomendado,
+      tipo_projeto: {
+        codTipoProjeto: projeto.tipo_projeto.codTipoProjeto,
+        nome: projeto.tipo_projeto.nome,
+        descricao: projeto.tipo_projeto.descricao,
+        execucao_marcos: execucaoMarcos.map(exec => ({
+          descricao: exec.descricao,
+          valorEstimado: exec.valorEstimado,
+          dataConclusao: exec.dataConclusao,
+        })),
+      },
     }
   })
 

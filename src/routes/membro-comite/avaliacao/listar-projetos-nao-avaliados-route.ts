@@ -21,26 +21,20 @@ export const listarProjetosNaoAvaliadosRoute: FastifyPluginAsyncZod =
                 acoes: z.string(),
                 cronograma: z.string(),
                 orcamento: z.number(),
+                codPropriedade: z.number(),
+                CodMicroBacia: z.number(),
+                dataSubmissao: z.date(),
                 tipo_projeto: z.object({
+                  codTipoProjeto: z.number(),
                   nome: z.string(),
                   descricao: z.string(),
-                  marco_recomendado: z.array(
+                  execucao_marcos: z.array(
                     z.object({
-                      execucao_marco: z.array(
-                        z.object({
-                          descricao: z.string(),
-                          valorEstimado: z.number(),
-                          dataConclusao: z.coerce.date(),
-                        })
-                      ),
+                      descricao: z.string(),
+                      valorEstimado: z.number(),
+                      dataConclusao: z.date(),
                     })
                   ),
-                }),
-                entidadeexecutora: z.object({
-                  nome: z.string(),
-                }),
-                microbacia: z.object({
-                  Nome: z.string(),
                 }),
               })
             ),
@@ -53,7 +47,41 @@ export const listarProjetosNaoAvaliadosRoute: FastifyPluginAsyncZod =
       async (request, reply) => {
         try {
           const projetos = await listarProjetosNaoAvaliados()
-          return reply.status(200).send(projetos)
+          // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+          const formatted = projetos.map((proj: any) => ({
+            codProjeto: proj.codProjeto,
+            titulo: proj.titulo ?? '',
+            objetivo: proj.objetivo ?? '',
+            acoes: proj.acoes ?? '',
+            cronograma: proj.cronograma ?? '',
+            orcamento: proj.orcamento ?? 0,
+            codPropriedade: proj.codPropriedade ?? 0,
+            CodMicroBacia: proj.CodMicroBacia ?? 0,
+            dataSubmissao: proj.dataSubmissao ?? new Date(0),
+            tipo_projeto: {
+              codTipoProjeto: proj.tipo_projeto?.codTipoProjeto ?? 0,
+              nome: proj.tipo_projeto?.nome ?? '',
+              descricao: proj.tipo_projeto?.descricao ?? '',
+              execucao_marcos: Array.isArray(
+                proj.tipo_projeto?.marco_recomendado
+              )
+                ? // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+                  proj.tipo_projeto.marco_recomendado.flatMap((marco: any) =>
+                    Array.isArray(marco.execucao_marco)
+                      ? // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+                        marco.execucao_marco.map((em: any) => ({
+                          descricao: em.descricao ?? '',
+                          valorEstimado: em.valorEstimado ?? 0,
+                          dataConclusao: em.dataConclusao
+                            ? new Date(em.dataConclusao)
+                            : new Date(0),
+                        }))
+                      : []
+                  )
+                : [],
+            },
+          }))
+          return reply.status(200).send(formatted)
         } catch (error) {
           return reply.status(500).send({ error: 'Erro ao listar projetos' })
         }

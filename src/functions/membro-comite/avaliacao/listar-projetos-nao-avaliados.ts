@@ -9,40 +9,19 @@ export async function listarProjetosNaoAvaliados() {
       avaliacao: {
         none: {},
       },
+      titulo: { not: null },
+      objetivo: { not: null },
+      acoes: { not: null },
+      cronograma: { not: null },
     },
-    select: {
-      codProjeto: true,
-      titulo: true,
-      objetivo: true,
-      acoes: true,
-      cronograma: true,
-      orcamento: true,
+    include: {
       tipo_projeto: {
-        select: {
-          nome: true,
-          descricao: true,
+        include: {
           marco_recomendado: {
             include: {
-              execucao_marco: {
-                select: {
-                  descricao: true,
-                  valorEstimado: true,
-                  dataConclusao: true,
-                  codProjeto: true,
-                },
-              },
+              execucao_marco: true,
             },
           },
-        },
-      },
-      entidadeexecutora: {
-        select: {
-          nome: true,
-        },
-      },
-      microbacia: {
-        select: {
-          Nome: true,
         },
       },
     },
