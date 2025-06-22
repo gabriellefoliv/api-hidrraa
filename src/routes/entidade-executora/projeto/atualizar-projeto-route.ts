@@ -1,18 +1,22 @@
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import z from 'zod'
 import { atualizarProjeto } from '../../../functions/entidade-executora/projeto/atualizar-projeto'
+import { Perfil, verificarPermissao } from '../../../middlewares/auth'
 
 const marcoSchema = z.object({
-  codExecucaoMarco: z.number(),
+  codExecucaoMarco: z.number().optional(),
+  codMarcoRecomendado: z.number(),
   descricao: z.string().optional(),
   descrDetAjustes: z.string().optional(),
   valorEstimado: z.number().optional(),
+  dataConclusao: z.string().datetime().optional(),
 })
 
 export const atualizarProjetoRoute: FastifyPluginAsyncZod = async app => {
   app.put(
     '/api/projetos/:codProjeto',
     {
+      preHandler: verificarPermissao(Perfil.ENTIDADE_EXECUTORA),
       schema: {
         summary: 'Atualizar projeto parcialmente',
         tags: ['Projeto'],
@@ -45,19 +49,8 @@ export const atualizarProjetoRoute: FastifyPluginAsyncZod = async app => {
     },
     async (request, reply) => {
       const { codProjeto } = request.params
-      const {
-        titulo,
-        objetivo,
-        acoes,
-        cronograma,
-        orcamento,
-        codPropriedade,
-        codTipoProjeto,
-        CodMicroBacia,
-        marcos,
-      } = request.body
-
       const { codUsuario } = (request.user as { codUsuario?: number }) || {}
+
       if (!codUsuario) {
         return reply.status(401).send({ error: 'Usuário não autenticado' })
       }
@@ -65,15 +58,13 @@ export const atualizarProjetoRoute: FastifyPluginAsyncZod = async app => {
       try {
         const resultado = await atualizarProjeto({
           codProjeto,
-          titulo,
-          objetivo,
-          acoes,
-          cronograma,
-          orcamento,
-          codPropriedade,
-          codTipoProjeto,
-          CodMicroBacia,
-          marcos,
+          ...request.body,
+          marcos: request.body.marcos?.map(marco => ({
+            ...marco,
+            dataConclusao: marco.dataConclusao
+              ? new Date(marco.dataConclusao)
+              : undefined,
+          })),
         })
 
         return reply.status(200).send(resultado)

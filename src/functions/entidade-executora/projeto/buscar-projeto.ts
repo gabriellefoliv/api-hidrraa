@@ -16,6 +16,7 @@ export async function buscarProjeto({ codProjeto }: BuscarProjetoParams) {
             include: {
               execucao_marco: {
                 select: {
+                  codMarcoRecomendado: true,
                   descricao: true,
                   valorEstimado: true,
                   dataConclusao: true,
@@ -33,7 +34,14 @@ export async function buscarProjeto({ codProjeto }: BuscarProjetoParams) {
     throw new Error('Projeto não encontrado.')
   }
   const execucaoMarcos = projeto.tipo_projeto.marco_recomendado.flatMap(marco =>
-    marco.execucao_marco.filter(exec => exec.codProjeto === projeto.codProjeto)
+    marco.execucao_marco
+      .filter(exec => exec.codProjeto === projeto.codProjeto)
+      .map(exec => ({
+        codMarcoRecomendado: marco.codMarcoRecomendado,
+        descricao: exec.descricao,
+        valorEstimado: exec.valorEstimado,
+        dataConclusao: exec.dataConclusao,
+      }))
   )
 
   const projetoFormatado = {

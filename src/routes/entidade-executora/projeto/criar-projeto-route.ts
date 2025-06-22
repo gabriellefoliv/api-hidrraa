@@ -3,13 +3,21 @@ import z from 'zod'
 import { criarProjeto } from '../../../functions/entidade-executora/projeto/criar-projeto'
 import { Perfil, verificarPermissao } from '../../../middlewares/auth'
 
+const marcoSchema = z.object({
+  codMarcoRecomendado: z.number(),
+  descricao: z.string(),
+  descrDetAjustes: z.string().optional(),
+  valorEstimado: z.number(),
+  dataConclusao: z.coerce.date(),
+})
+
 export const criarProjetoRoute: FastifyPluginAsyncZod = async app => {
   app.post(
     '/api/projetos',
     {
-      preHandler: verificarPermissao(Perfil.ENTIDADE_EXECUTORA),
+      preHandler: verificarPermissao([Perfil.ENTIDADE_EXECUTORA]),
       schema: {
-        summary: 'Criar Projeto',
+        summary: 'Criar novo projeto',
         tags: ['Projeto'],
         body: z.object({
           titulo: z.string(),
@@ -20,55 +28,23 @@ export const criarProjetoRoute: FastifyPluginAsyncZod = async app => {
           codPropriedade: z.number(),
           codTipoProjeto: z.number(),
           CodMicroBacia: z.number(),
-          marcos: z.array(
-            z.object({
-              codMarcoRecomendado: z.number(),
-              descricao: z.string(),
-              valorEstimado: z.number(),
-              dataConclusao: z.coerce.date(), // Data de conclusão é opcional
-            })
-          ),
+          CodEntExec: z.number(),
+          marcos: z.array(marcoSchema),
         }),
         response: {
           201: z.object({
+            mensagem: z.string(),
             projetoId: z.number(),
-          }),
-          409: z.object({
-            error: z.string(),
           }),
         },
       },
     },
     async (request, reply) => {
-      const {
-        titulo,
-        objetivo,
-        acoes,
-        cronograma,
-        orcamento,
-        codPropriedade,
-        codTipoProjeto,
-        CodMicroBacia,
-        marcos,
-      } = request.body
+      const data = request.body
 
-      const { codUsuario } = request.user as { codUsuario: number }
-      if (!codUsuario) {
-        return reply.status(401).send({ error: 'Usuário não autenticado' })
-      }
-      const { projetoId } = await criarProjeto({
-        titulo,
-        objetivo,
-        acoes,
-        cronograma,
-        orcamento,
-        codPropriedade,
-        codTipoProjeto,
-        CodMicroBacia,
-        codUsuario,
-        marcos,
-      })
-      return reply.status(201).send({ projetoId })
+      const resultado = await criarProjeto(data)
+
+      return reply.status(201).send(resultado)
     }
   )
 }

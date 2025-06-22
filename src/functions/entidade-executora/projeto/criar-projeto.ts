@@ -1,12 +1,5 @@
 import prisma from '../../../lib/prisma'
 
-interface ExecucaoMarcoInput {
-  codMarcoRecomendado: number
-  descricao: string
-  valorEstimado: number
-  dataConclusao: Date
-}
-
 interface CriarProjetoParams {
   titulo: string
   objetivo: string
@@ -16,33 +9,29 @@ interface CriarProjetoParams {
   codPropriedade: number
   codTipoProjeto: number
   CodMicroBacia: number
-  codUsuario: number
-  marcos: ExecucaoMarcoInput[]
+  CodEntExec: number
+  marcos: {
+    codMarcoRecomendado: number
+    descricao: string
+    descrDetAjustes?: string
+    valorEstimado: number
+    dataConclusao: Date
+  }[]
 }
 
-export async function criarProjeto({
-  titulo,
-  objetivo,
-  acoes,
-  cronograma,
-  orcamento,
-  codPropriedade,
-  codTipoProjeto,
-  CodMicroBacia,
-  codUsuario,
-  marcos,
-}: CriarProjetoParams) {
-  const entExec = await prisma.entidadeexecutora.findFirst({
-    where: {
-      codUsuario,
-    },
-  })
-
-  if (!entExec) {
-    throw new Error(
-      'Entidade executora não encontrada para o usuário informado.'
-    )
-  }
+export async function criarProjeto(params: CriarProjetoParams) {
+  const {
+    titulo,
+    objetivo,
+    acoes,
+    cronograma,
+    orcamento,
+    codPropriedade,
+    codTipoProjeto,
+    CodMicroBacia,
+    CodEntExec,
+    marcos,
+  } = params
 
   const projeto = await prisma.projeto.create({
     data: {
@@ -53,20 +42,24 @@ export async function criarProjeto({
       orcamento,
       codPropriedade,
       codTipoProjeto,
-      CodEntExec: entExec.codEntExec,
       CodMicroBacia,
+      CodEntExec,
     },
   })
 
   await prisma.execucao_marco.createMany({
-    data: marcos.map(marco => ({
-      dataConclusao: marco.dataConclusao,
-      descricao: marco.descricao,
-      valorEstimado: marco.valorEstimado,
+    data: marcos.map(m => ({
       codProjeto: projeto.codProjeto,
-      codMarcoRecomendado: marco.codMarcoRecomendado,
+      codMarcoRecomendado: m.codMarcoRecomendado,
+      descricao: m.descricao || null,
+      descrDetAjustes: m.descrDetAjustes ?? '',
+      valorEstimado: m.valorEstimado || null,
+      dataConclusao: m.dataConclusao || null,
     })),
   })
 
-  return { projetoId: projeto.codProjeto }
+  return {
+    mensagem: 'Projeto criado com sucesso!',
+    projetoId: projeto.codProjeto,
+  }
 }

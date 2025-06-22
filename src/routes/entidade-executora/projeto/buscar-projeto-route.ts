@@ -18,24 +18,25 @@ export const buscarProjetoRoute: FastifyPluginAsyncZod = async app => {
         response: {
           200: z.object({
             codProjeto: z.number(),
-            titulo: z.string(),
-            objetivo: z.string(),
-            acoes: z.string(),
-            cronograma: z.string(),
-            orcamento: z.number(),
+            titulo: z.string().optional(),
+            objetivo: z.string().optional(),
+            acoes: z.string().optional(),
+            cronograma: z.string().optional(),
+            orcamento: z.number().optional(),
             codPropriedade: z.number().nullable(),
-            dataSubmissao: z.date().nullable(),
+            dataSubmissao: z.date().nullable().optional(),
             CodMicroBacia: z.number(),
             CodEntExec: z.number(),
             tipo_projeto: z.object({
               codTipoProjeto: z.number(),
-              nome: z.string(),
-              descricao: z.string(),
+              nome: z.string().optional(),
+              descricao: z.string().optional(),
               execucao_marcos: z.array(
                 z.object({
-                  descricao: z.string(),
-                  valorEstimado: z.number(),
-                  dataConclusao: z.coerce.date(),
+                  codMarcoRecomendado: z.number(),
+                  descricao: z.string().optional(),
+                  valorEstimado: z.number().optional(),
+                  dataConclusao: z.coerce.date().optional(),
                 })
               ),
             }),
@@ -51,8 +52,41 @@ export const buscarProjetoRoute: FastifyPluginAsyncZod = async app => {
       const { codProjeto } = request.params
 
       try {
-        const projetos = await buscarProjeto({ codProjeto })
-        return reply.status(200).send(projetos)
+        const projeto = await buscarProjeto({ codProjeto })
+        if (!projeto) {
+          return reply.status(404).send({ error: 'Projeto não encontrado.' })
+        }
+        const formattedProjeto = {
+          codProjeto: projeto.codProjeto,
+          titulo: projeto.titulo ?? '',
+          objetivo: projeto.objetivo ?? '',
+          acoes: projeto.acoes ?? '',
+          cronograma: projeto.cronograma ?? '',
+          orcamento: projeto.orcamento ?? 0,
+          codPropriedade: projeto.codPropriedade ?? null,
+          dataSubmissao: projeto.dataSubmissao ?? null,
+          CodMicroBacia: projeto.CodMicroBacia ?? 0,
+          CodEntExec: projeto.CodEntExec ?? 0,
+          tipo_projeto: {
+            codTipoProjeto: projeto.tipo_projeto?.codTipoProjeto ?? 0,
+            nome: projeto.tipo_projeto?.nome ?? '',
+            descricao: projeto.tipo_projeto?.descricao ?? '',
+            execucao_marcos: Array.isArray(
+              projeto.tipo_projeto?.execucao_marcos
+            )
+              ? // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+                projeto.tipo_projeto.execucao_marcos.map((marco: any) => ({
+                  codMarcoRecomendado: marco.codMarcoRecomendado ?? 0,
+                  descricao: marco.descricao ?? '',
+                  valorEstimado: marco.valorEstimado ?? 0,
+                  dataConclusao: marco.dataConclusao
+                    ? new Date(marco.dataConclusao)
+                    : new Date(0),
+                }))
+              : [],
+          },
+        }
+        return reply.status(200).send(formattedProjeto)
         // biome-ignore lint/suspicious/noExplicitAny: <explanation>
       } catch (error: any) {
         return reply

@@ -145,6 +145,7 @@ model execucao_marco {
   projeto               projeto                               @relation(fields: [codProjeto], references: [codProjeto], map: "execucao_marco_ibfk_3")
   pagto_marco_concluido pagto_marco_concluido[]
 
+  @@unique([codProjeto, codMarcoRecomendado], name: "codProjeto_codMarcoRecomendado")
   @@index([codAvaliador], map: "codAvaliador")
   @@index([codMarcoRecomendado], map: "codMarcoRecomendado")
   @@index([codProjeto], map: "codProjeto")
