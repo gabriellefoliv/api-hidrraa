@@ -29,6 +29,7 @@ export async function listarProjetosSubmetidosPorEntExec({
     include: {
       entidadeexecutora: true,
       tipo_projeto: true,
+      microbacia: true,
     },
   })
 
@@ -61,6 +62,10 @@ export async function listarProjetosSubmetidosPorEntExec({
           nome: projeto.tipo_projeto.nome,
           descricao: projeto.tipo_projeto.descricao,
           execucao_marcos: execucaoMarcos, // só os do projeto atual
+        },
+        microbacia: {
+          codMicroBacia: projeto.microbacia?.CodMicroBacia,
+          nome: projeto.microbacia?.Nome,
         },
       }
     })

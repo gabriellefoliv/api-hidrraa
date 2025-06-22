@@ -10,7 +10,7 @@ datasource db {
 model aporte {
   codAporte        Int            @id @default(autoincrement())
   dataInvestimento DateTime       @db.DateTime(0)
-  bc_valor         Int
+  bc_valor         Float          @db.Float
   validadoAGEVAP   Boolean        @default(false)
   codInvestidor    Int
   codCBH           Int

@@ -27,6 +27,7 @@ export async function listarProjetosSalvosPorEntExec({
     include: {
       entidadeexecutora: true,
       tipo_projeto: true,
+      microbacia: true,
     },
   })
 
@@ -58,6 +59,10 @@ export async function listarProjetosSalvosPorEntExec({
           nome: projeto.tipo_projeto.nome,
           descricao: projeto.tipo_projeto.descricao,
           execucao_marcos: execucaoMarcos,
+        },
+        microbacia: {
+          codMicroBacia: projeto.microbacia?.CodMicroBacia,
+          nome: projeto.microbacia?.Nome,
         },
       }
     })

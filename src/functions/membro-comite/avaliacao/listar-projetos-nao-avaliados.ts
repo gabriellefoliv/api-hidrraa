@@ -24,9 +24,11 @@ export async function listarProjetosNaoAvaliados() {
           },
         },
       },
+      microbacia: true,
+      entidadeexecutora: true,
     },
     orderBy: {
-      titulo: 'asc',
+      dataSubmissao: 'desc',
     },
   })
 
@@ -42,6 +44,8 @@ export async function listarProjetosNaoAvaliados() {
         ),
       })),
     },
+    microbacia: projeto.microbacia,
+    entidadeexecutora: projeto.entidadeexecutora,
   }))
 
   return projetosFiltrados

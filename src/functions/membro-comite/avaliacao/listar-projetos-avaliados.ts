@@ -30,9 +30,11 @@ export async function listarProjetosAvaliados() {
           },
         },
       },
+      microbacia: true,
+      entidadeexecutora: true,
     },
     orderBy: {
-      titulo: 'asc',
+      dataSubmissao: 'desc',
     },
   })
 
@@ -82,6 +84,14 @@ export async function listarProjetosAvaliados() {
           valorEstimado: exec.valorEstimado,
           dataConclusao: exec.dataConclusao,
         })),
+      },
+      microbacia: {
+        codMicroBacia: projeto.microbacia?.CodMicroBacia,
+        nome: projeto.microbacia?.Nome,
+      },
+      entidadeexecutora: {
+        codEntExec: projeto.entidadeexecutora?.codEntExec,
+        nome: projeto.entidadeexecutora?.nome,
       },
     }
   })

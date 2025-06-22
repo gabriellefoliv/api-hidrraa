@@ -36,6 +36,14 @@ export const listarProjetosNaoAvaliadosRoute: FastifyPluginAsyncZod =
                     })
                   ),
                 }),
+                microbacia: z.object({
+                  codMicroBacia: z.number(),
+                  nome: z.string(),
+                }),
+                entidadeexecutora: z.object({
+                  codEntidadeExecutora: z.number(),
+                  nome: z.string(),
+                }),
               })
             ),
             500: z.object({
@@ -79,6 +87,14 @@ export const listarProjetosNaoAvaliadosRoute: FastifyPluginAsyncZod =
                       : []
                   )
                 : [],
+            },
+            microbacia: {
+              codMicroBacia: proj.microbacia?.CodMicroBacia ?? null,
+              nome: proj.microbacia?.Nome ?? null,
+            },
+            entidadeexecutora: {
+              codEntidadeExecutora: proj.entidadeexecutora?.codEntExec ?? null,
+              nome: proj.entidadeexecutora?.nome ?? null,
             },
           }))
           return reply.status(200).send(formatted)

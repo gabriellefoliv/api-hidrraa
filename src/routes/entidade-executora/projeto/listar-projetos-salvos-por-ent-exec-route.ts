@@ -36,6 +36,10 @@ export const listarProjetosSalvosPorEntExecRoute: FastifyPluginAsyncZod =
                     })
                   ),
                 }),
+                microbacia: z.object({
+                  codMicroBacia: z.number(),
+                  nome: z.string(),
+                }),
               })
             ),
             404: z.object({
@@ -52,7 +56,37 @@ export const listarProjetosSalvosPorEntExecRoute: FastifyPluginAsyncZod =
 
         try {
           const projetos = await listarProjetosSalvosPorEntExec({ codUsuario })
-          return reply.status(200).send(projetos)
+          const formattedProjetos = projetos.map(proj => ({
+            codProjeto: proj.codProjeto,
+            titulo: proj.titulo ?? '',
+            objetivo: proj.objetivo ?? '',
+            acoes: proj.acoes ?? '',
+            cronograma: proj.cronograma ?? '',
+            orcamento: proj.orcamento ?? 0,
+            codPropriedade: proj.codPropriedade ?? null,
+            CodMicroBacia: proj.CodMicroBacia ?? 0,
+            CodEntExec: proj.CodEntExec,
+            tipo_projeto: {
+              codTipoProjeto: proj.tipo_projeto?.codTipoProjeto ?? 0,
+              nome: proj.tipo_projeto?.nome ?? '',
+              descricao: proj.tipo_projeto?.descricao ?? '',
+              execucao_marcos: Array.isArray(proj.tipo_projeto?.execucao_marcos)
+                ? // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+                  proj.tipo_projeto.execucao_marcos.map((marco: any) => ({
+                    descricao: marco.descricao ?? '',
+                    valorEstimado: marco.valorEstimado ?? 0,
+                    dataConclusao: marco.dataConclusao
+                      ? new Date(marco.dataConclusao)
+                      : new Date(0),
+                  }))
+                : [],
+            },
+            microbacia: {
+              codMicroBacia: proj.microbacia?.codMicroBacia ?? 0,
+              nome: proj.microbacia?.nome ?? '',
+            },
+          }))
+          return reply.status(200).send(formattedProjetos)
           // biome-ignore lint/suspicious/noExplicitAny: <explanation>
         } catch (error: any) {
           return reply
