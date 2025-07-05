@@ -5,10 +5,13 @@ import { Perfil, verificarPermissao } from '../../../middlewares/auth'
 
 const marcoSchema = z.object({
   codMarcoRecomendado: z.number(),
-  descricao: z.string(),
-  descrDetAjustes: z.string().optional(),
-  valorEstimado: z.number(),
-  dataConclusao: z.coerce.date(),
+  descricao: z.string().optional().nullable(),
+  descrDetAjustes: z.string().optional().nullable(),
+  valorEstimado: z.number().optional().nullable(),
+  dataConclusao: z
+    .union([z.coerce.date(), z.literal('').transform(() => null)])
+    .optional()
+    .nullable(),
 })
 
 export const criarProjetoRoute: FastifyPluginAsyncZod = async app => {
@@ -20,14 +23,14 @@ export const criarProjetoRoute: FastifyPluginAsyncZod = async app => {
         summary: 'Criar novo projeto',
         tags: ['Projeto'],
         body: z.object({
-          titulo: z.string(),
-          objetivo: z.string(),
-          acoes: z.string(),
-          cronograma: z.string(),
-          orcamento: z.number(),
+          titulo: z.string().optional().nullable(),
+          objetivo: z.string().optional().nullable(),
+          acoes: z.string().optional().nullable(),
+          cronograma: z.string().optional().nullable(),
+          orcamento: z.number().optional().nullable(),
           codPropriedade: z.number(),
-          codTipoProjeto: z.number(),
           CodMicroBacia: z.number(),
+          codTipoProjeto: z.number(),
           CodEntExec: z.number(),
           marcos: z.array(marcoSchema),
         }),
@@ -40,9 +43,37 @@ export const criarProjetoRoute: FastifyPluginAsyncZod = async app => {
       },
     },
     async (request, reply) => {
-      const data = request.body
+      const {
+        titulo,
+        objetivo,
+        acoes,
+        cronograma,
+        orcamento,
+        codPropriedade,
+        codTipoProjeto,
+        CodMicroBacia,
+        CodEntExec,
+        marcos,
+      } = request.body
 
-      const resultado = await criarProjeto(data)
+      const resultado = await criarProjeto({
+        titulo: titulo ?? '',
+        objetivo: objetivo ?? '',
+        acoes: acoes ?? '',
+        cronograma: cronograma ?? '',
+        orcamento: orcamento ?? 0,
+        codPropriedade,
+        codTipoProjeto,
+        CodMicroBacia,
+        CodEntExec,
+        marcos: marcos.map(marco => ({
+          codMarcoRecomendado: marco.codMarcoRecomendado,
+          descricao: marco.descricao ?? '',
+          descrDetAjustes: marco.descrDetAjustes ?? '',
+          valorEstimado: marco.valorEstimado ?? 0,
+          dataConclusao: marco.dataConclusao ?? new Date(),
+        })),
+      })
 
       return reply.status(201).send(resultado)
     }

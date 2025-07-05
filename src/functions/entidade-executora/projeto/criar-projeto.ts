@@ -35,11 +35,11 @@ export async function criarProjeto(params: CriarProjetoParams) {
 
   const projeto = await prisma.projeto.create({
     data: {
-      titulo,
-      objetivo,
-      acoes,
-      cronograma,
-      orcamento,
+      titulo: titulo ?? '',
+      objetivo: objetivo ?? '',
+      acoes: acoes ?? '',
+      cronograma: cronograma ?? '',
+      orcamento: orcamento ?? 0,
       codPropriedade,
       codTipoProjeto,
       CodMicroBacia,
@@ -51,10 +51,10 @@ export async function criarProjeto(params: CriarProjetoParams) {
     data: marcos.map(m => ({
       codProjeto: projeto.codProjeto,
       codMarcoRecomendado: m.codMarcoRecomendado,
-      descricao: m.descricao || null,
+      descricao: m.descricao ?? '',
       descrDetAjustes: m.descrDetAjustes ?? '',
-      valorEstimado: m.valorEstimado || null,
-      dataConclusao: m.dataConclusao || null,
+      valorEstimado: m.valorEstimado ?? 0,
+      dataConclusao: m.dataConclusao ?? null,
     })),
   })
 
