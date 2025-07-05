@@ -135,7 +135,7 @@ model execucao_marco {
   descricao             String?                               @db.VarChar(255)
   descrDetAjustes       String?                               @db.VarChar(255)
   valorEstimado         Float?                                @db.Float
-  bc_statusValidacaoCBH execucao_marco_bc_statusValidacaoCBH?
+  bc_statusValidacaoCBH execucao_marco_bc_statusValidacaoCBH? @default(PENDENTE)
   codAvaliador          Int?
   codMarcoRecomendado   Int
   codProjeto            Int

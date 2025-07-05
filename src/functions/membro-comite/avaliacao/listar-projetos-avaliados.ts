@@ -38,6 +38,26 @@ export async function listarProjetosAvaliados() {
     },
   })
 
+  const codAvaliadoresUnicos = [
+    ...new Set(projetos.flatMap(p => p.avaliacao.map(a => a.codAvaliador))),
+  ]
+
+  const usuarios = await prisma.usuario.findMany({
+    where: {
+      codUsuario: { in: codAvaliadoresUnicos },
+    },
+    select: {
+      codUsuario: true,
+      nome: true,
+    },
+  })
+
+  const nomesPorAvaliador = new Map<number, string>()
+  // biome-ignore lint/complexity/noForEach: <explanation>
+  usuarios.forEach(user => {
+    nomesPorAvaliador.set(user.codUsuario, user.nome)
+  })
+
   const projetosComMedia = projetos.map(projeto => {
     const avaliacoes = projeto.avaliacao
 
@@ -65,6 +85,10 @@ export async function listarProjetosAvaliados() {
         )
     )
 
+    const nomesAvaliadores = avaliacoes.map(
+      a => nomesPorAvaliador.get(a.codAvaliador) ?? 'Desconhecido'
+    )
+
     return {
       codProjeto: projeto.codProjeto,
       titulo: projeto.titulo,
@@ -75,6 +99,7 @@ export async function listarProjetosAvaliados() {
       codPropriedade: projeto.codPropriedade,
       CodMicroBacia: projeto.CodMicroBacia,
       mediaPonderada,
+      nomesAvaliadores,
       tipo_projeto: {
         codTipoProjeto: projeto.tipo_projeto.codTipoProjeto,
         nome: projeto.tipo_projeto.nome,

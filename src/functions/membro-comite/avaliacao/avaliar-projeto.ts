@@ -23,17 +23,7 @@ export async function avaliarProjeto({
   bc_valorPagto,
   itens,
 }: AvaliacaoInput) {
-  const avaliacao = await prisma.avaliacao.create({
-    data: {
-      dataIni: new Date(dataIni),
-      dataFim: new Date(dataFim),
-      codProjeto,
-      codAvaliador,
-      bc_aprovado: true,
-      bc_valorPagto,
-    },
-  })
-
+  // Calcular média ponderada antes de salvar
   const avalItens = await Promise.all(
     itens.map(async item => {
       const criterio = await prisma.criterio_aval.findUnique({
@@ -44,7 +34,6 @@ export async function avaliarProjeto({
         throw new Error(`Critério ${item.codCriterioAval} não encontrado.`)
 
       return {
-        codAvaliacao: avaliacao.codAvaliacao,
         codCriterioAval: item.codCriterioAval,
         nota: item.nota,
         parecer: item.parecer,
@@ -54,12 +43,6 @@ export async function avaliarProjeto({
     })
   )
 
-  // Insere os itens no banco
-  await prisma.avaliacao_item.createMany({
-    data: avalItens.map(({ peso, notaPonderada, ...data }) => data), // peso e notaPonderada não estão na tabela, removemos
-  })
-
-  // Cálculo da média ponderada
   const totalPeso = avalItens.reduce((acc, item) => acc + item.peso, 0)
   const somaNotasPonderadas = avalItens.reduce(
     (acc, item) => acc + item.notaPonderada,
@@ -67,8 +50,31 @@ export async function avaliarProjeto({
   )
   const mediaPonderada = totalPeso > 0 ? somaNotasPonderadas / totalPeso : 0
 
+  const aprovado = mediaPonderada >= 7
+
+  const avaliacao = await prisma.avaliacao.create({
+    data: {
+      codProjeto,
+      codAvaliador,
+      dataIni,
+      dataFim,
+      bc_valorPagto,
+      bc_aprovado: aprovado,
+    },
+  })
+
+  await prisma.avaliacao_item.createMany({
+    data: avalItens.map(item => ({
+      codAvaliacao: avaliacao.codAvaliacao,
+      codCriterioAval: item.codCriterioAval,
+      nota: item.nota,
+      parecer: item.parecer,
+    })),
+  })
+
   return {
     codAvaliacao: avaliacao.codAvaliacao,
     mediaPonderada: Number(mediaPonderada.toFixed(2)),
+    aprovado,
   }
 }

@@ -14,15 +14,8 @@ export const avaliarProjetoRoute: FastifyPluginAsyncZod = async app => {
         body: z.object({
           codProjeto: z.number(),
           codAvaliador: z.number(),
-          dataIni: z
-            .string()
-            .refine(str => !Number.isNaN(Date.parse(str)), 'Data inválida')
-            .transform(str => new Date(str)),
-          dataFim: z
-            .string()
-            .refine(str => !Number.isNaN(Date.parse(str)), 'Data inválida')
-            .transform(str => new Date(str)),
-
+          dataIni: z.string().transform(str => new Date(str)),
+          dataFim: z.string().transform(str => new Date(str)),
           bc_valorPagto: z.number(),
           itens: z
             .array(
@@ -38,10 +31,9 @@ export const avaliarProjetoRoute: FastifyPluginAsyncZod = async app => {
           201: z.object({
             codAvaliacao: z.number(),
             mediaPonderada: z.number(),
+            aprovado: z.boolean(),
           }),
-          500: z.object({
-            error: z.string(),
-          }),
+          500: z.object({ error: z.string() }),
         },
       },
     },
@@ -56,18 +48,26 @@ export const avaliarProjetoRoute: FastifyPluginAsyncZod = async app => {
           itens,
         } = request.body
 
-        const { codAvaliacao, mediaPonderada } = await avaliarProjeto({
-          codProjeto,
-          codAvaliador,
-          dataIni,
-          dataFim,
-          bc_valorPagto,
-          itens,
-        })
+        const { codAvaliacao, mediaPonderada, aprovado } = await avaliarProjeto(
+          {
+            codProjeto,
+            codAvaliador,
+            dataIni,
+            dataFim,
+            bc_valorPagto,
+            itens,
+          }
+        )
 
-        return reply.status(201).send({ codAvaliacao, mediaPonderada })
+        return reply.status(201).send({
+          codAvaliacao,
+          mediaPonderada,
+          aprovado,
+        })
       } catch (error) {
-        return reply.status(500).send({ error: 'Erro ao avaliar projeto.' })
+        return reply.status(500).send({
+          error: 'Erro ao avaliar projeto.',
+        })
       }
     }
   )

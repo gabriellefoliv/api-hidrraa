@@ -24,6 +24,7 @@ export const listarProjetosAvaliadosRoute: FastifyPluginAsyncZod =
                 codPropriedade: z.number(),
                 CodMicroBacia: z.number(),
                 mediaPonderada: z.number().nullable(),
+                nomesAvaliadores: z.array(z.string()),
                 tipo_projeto: z.object({
                   codTipoProjeto: z.number(),
                   nome: z.string(),
@@ -66,6 +67,7 @@ export const listarProjetosAvaliadosRoute: FastifyPluginAsyncZod =
             codPropriedade: proj.codPropriedade ?? 0,
             CodMicroBacia: proj.CodMicroBacia ?? 0,
             mediaPonderada: proj.mediaPonderada,
+            nomesAvaliadores: proj.nomesAvaliadores ?? [],
             tipo_projeto: {
               ...proj.tipo_projeto,
               execucao_marcos: Array.isArray(proj.tipo_projeto?.execucao_marcos)
