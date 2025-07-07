@@ -46,6 +46,10 @@ import { atualizarPropriedadeRoute } from './routes/membro-comite/propriedade/at
 import { criarPropriedadeRoute } from './routes/membro-comite/propriedade/criar-propriedade-route'
 import { deletarPropriedadeRoute } from './routes/membro-comite/propriedade/deletar-propriedade-route'
 import { listarPropriedadesRoute } from './routes/membro-comite/propriedade/listar-propriedades-route'
+import fastifyMultipart from '@fastify/multipart'
+import { uploadEvidenciaRoute } from './routes/entidade-executora/projeto/upload-evidencia-route'
+import { listarProjetosAprovadosRoute } from './routes/entidade-executora/projeto/listar-projetos-aprovados-route'
+import { buscarProjetoExecutavelRoute } from './routes/entidade-executora/projeto/buscar-projeto-executavel-route'
 
 export interface JwtPayload {
   codUsuario: number
@@ -86,6 +90,12 @@ app.register(fastifySwaggerUi, {
   routePrefix: '/docs',
 })
 
+app.register(fastifyMultipart, {
+  limits: {
+    fileSize: 10 * 1024 * 1024, // Limite de 10MB por arquivo
+  }
+})
+
 // Auth
 app.register(cadastrarEntidadeExecutoraRoute)
 app.register(cadastrarInvestidorRoute)
@@ -101,6 +111,12 @@ app.register(listarProjetosSubmetidosPorEntExecRoute)
 app.register(listarProjetosSalvosPorEntExecRoute)
 app.register(buscarProjetoRoute)
 app.register(excluirProjetoRoute)
+// Evidências
+app.register(listarProjetosAprovadosRoute)
+app.register(uploadEvidenciaRoute)
+// TODO : Usar rota de buscarProjeto no futuro, ao invés disso
+app.register(buscarProjetoExecutavelRoute)
+
 // Microbacia
 app.register(criarMicrobaciaRoute)
 app.register(listarMicrobaciasRoute)
