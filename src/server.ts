@@ -10,6 +10,9 @@ import {
   validatorCompiler,
 } from 'fastify-type-provider-zod'
 
+import path from 'node:path'
+import fastifyMultipart from '@fastify/multipart'
+import fastifyStatic from '@fastify/static'
 import { buscarEntExecPorCodUsuarioRoute } from './routes/auth/buscar-entExec-por-codUsuario-route'
 import { buscarInvestidorPorCodUsuarioRoute } from './routes/auth/buscar-investidor-por-codUsuario-route'
 import { cadastrarEntidadeExecutoraRoute } from './routes/auth/cadastrar-entidade-executora-route'
@@ -17,14 +20,18 @@ import { cadastrarInvestidorRoute } from './routes/auth/cadastrar-investidor-rou
 import { cadastrarMembroComiteRoute } from './routes/auth/cadastrar-membro-comite'
 import { loginRoute } from './routes/auth/login-route'
 import { atualizarProjetoRoute } from './routes/entidade-executora/projeto/atualizar-projeto-route'
+import { buscarProjetoExecutavelRoute } from './routes/entidade-executora/projeto/buscar-projeto-executavel-route'
 import { buscarProjetoRoute } from './routes/entidade-executora/projeto/buscar-projeto-route'
 import { criarProjetoRoute } from './routes/entidade-executora/projeto/criar-projeto-route'
 import { excluirProjetoRoute } from './routes/entidade-executora/projeto/excluir-projeto-route'
 import { listarDetalhesModeloRoute } from './routes/entidade-executora/projeto/listar-detalhes-modelo-route'
+import { listarEvidenciasRoute } from './routes/entidade-executora/projeto/listar-evidencias-por-marco-route'
+import { listarProjetosAprovadosRoute } from './routes/entidade-executora/projeto/listar-projetos-aprovados-route'
 import { listarProjetosSalvosPorEntExecRoute } from './routes/entidade-executora/projeto/listar-projetos-salvos-por-ent-exec-route'
 import { listarProjetosSubmetidosPorEntExecRoute } from './routes/entidade-executora/projeto/listar-projetos-submetidos-por-ent-exec'
 import { listarTiposProjetoRoute } from './routes/entidade-executora/projeto/listar-tipo-projetos-route'
 import { submeterProjetoRoute } from './routes/entidade-executora/projeto/submeter-projeto-route'
+import { uploadEvidenciaRoute } from './routes/entidade-executora/projeto/upload-evidencia-route'
 import { listarAportesRealizadosRoute } from './routes/investidor/listar-aportes-realizados-route'
 import { realizarAporteRoute } from './routes/investidor/realizar-aporte-route'
 import { listarAportesRoute } from './routes/membro-comite/aporte/listar-aportes-route'
@@ -46,10 +53,6 @@ import { atualizarPropriedadeRoute } from './routes/membro-comite/propriedade/at
 import { criarPropriedadeRoute } from './routes/membro-comite/propriedade/criar-propriedade-route'
 import { deletarPropriedadeRoute } from './routes/membro-comite/propriedade/deletar-propriedade-route'
 import { listarPropriedadesRoute } from './routes/membro-comite/propriedade/listar-propriedades-route'
-import fastifyMultipart from '@fastify/multipart'
-import { uploadEvidenciaRoute } from './routes/entidade-executora/projeto/upload-evidencia-route'
-import { listarProjetosAprovadosRoute } from './routes/entidade-executora/projeto/listar-projetos-aprovados-route'
-import { buscarProjetoExecutavelRoute } from './routes/entidade-executora/projeto/buscar-projeto-executavel-route'
 
 export interface JwtPayload {
   codUsuario: number
@@ -93,7 +96,12 @@ app.register(fastifySwaggerUi, {
 app.register(fastifyMultipart, {
   limits: {
     fileSize: 10 * 1024 * 1024, // Limite de 10MB por arquivo
-  }
+  },
+})
+
+app.register(fastifyStatic, {
+  root: path.join(__dirname, '..', 'uploads'),
+  prefix: '/uploads/',
 })
 
 // Auth
@@ -114,6 +122,7 @@ app.register(excluirProjetoRoute)
 // Evidências
 app.register(listarProjetosAprovadosRoute)
 app.register(uploadEvidenciaRoute)
+app.register(listarEvidenciasRoute)
 // TODO : Usar rota de buscarProjeto no futuro, ao invés disso
 app.register(buscarProjetoExecutavelRoute)
 

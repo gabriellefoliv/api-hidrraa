@@ -7,6 +7,9 @@ export function listarProjetosAprovados() {
         some: {
           bc_aprovado: true,
         },
+        none: {
+          bc_aprovado: false,
+        },
       },
       dataSubmissao: {
         not: null,
