@@ -1,9 +1,9 @@
-import type { FastifyPluginAsync } from 'fastify'
+import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import z from 'zod'
-import { verificarPermissao, Perfil } from '../../../middlewares/auth'
-import { listarEvidenciasPorMarco } from '../../../functions/entidade-executora/projeto/listar-evidencias-por-marco'
+import { listarEvidenciasPorMarco } from '../../../functions/entidade-executora/execucao-marco/listar-evidencias-por-marco'
+import { Perfil, verificarPermissao } from '../../../middlewares/auth'
 
-export const listarEvidenciasRoute: FastifyPluginAsync = async app => {
+export const listarEvidenciasRoute: FastifyPluginAsyncZod = async app => {
   app.get(
     '/api/evidencias/:codProjeto/:codExecucaoMarco',
     {
@@ -22,14 +22,21 @@ export const listarEvidenciasRoute: FastifyPluginAsync = async app => {
               caminhoArquivo: z.string(),
               dataUpload: z.coerce.date(),
               codEvidenciaDemandada: z.number(),
+              execucao_marco: z.object({
+                dataConclusaoEfetiva: z.coerce.date().nullable(),
+              }),
             })
           ),
         },
       },
     },
     async (request, reply) => {
-      const { codProjeto, codExecucaoMarco } = request.params as { codProjeto: number; codExecucaoMarco: number }
-      const evidencias = await listarEvidenciasPorMarco({ codProjeto, codExecucaoMarco })
+      const { codProjeto, codExecucaoMarco } = request.params
+
+      const evidencias = await listarEvidenciasPorMarco({
+        codProjeto,
+        codExecucaoMarco,
+      })
       return reply.send(evidencias)
     }
   )

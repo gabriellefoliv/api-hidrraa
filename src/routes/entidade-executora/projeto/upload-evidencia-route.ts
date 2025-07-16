@@ -3,7 +3,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { pipeline } from 'node:stream/promises'
 import type { FastifyPluginAsync } from 'fastify'
-import { apresentarEvidencia } from '../../../functions/entidade-executora/projeto/apresentar-evidencia'
+import { apresentarEvidencia } from '../../../functions/entidade-executora/execucao-marco/apresentar-evidencia'
 import { Perfil, verificarPermissao } from '../../../middlewares/auth'
 
 export const uploadEvidenciaRoute: FastifyPluginAsync = async app => {

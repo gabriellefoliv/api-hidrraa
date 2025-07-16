@@ -26,6 +26,21 @@ export async function apresentarEvidencia({
     throw new Error('Projeto não aprovado ou inexistente')
   }
 
+  const execucaoMarco = await prisma.execucao_marco.findUnique({
+    where: { codExecucaoMarco },
+    select: { dataConclusaoEfetiva: true },
+  })
+
+  if (!execucaoMarco) {
+    throw new Error('Execução de marco não encontrada')
+  }
+
+  if (execucaoMarco.dataConclusaoEfetiva !== null) {
+    throw new Error(
+      'Não é possível enviar evidências após a conclusão do marco.'
+    )
+  }
+
   const evidencia = await prisma.evidencia_apresentada.create({
     data: {
       caminhoArquivo: filePath,

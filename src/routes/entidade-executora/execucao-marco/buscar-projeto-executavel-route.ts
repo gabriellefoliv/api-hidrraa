@@ -1,7 +1,7 @@
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import z from 'zod'
+import { buscarProjetoExecutavel } from '../../../functions/entidade-executora/execucao-marco/buscar-projeto-executavel'
 import { buscarProjeto } from '../../../functions/entidade-executora/projeto/buscar-projeto'
-import { buscarProjetoExecutavel } from '../../../functions/entidade-executora/projeto/buscar-projeto-executavel'
 import { listarProjetosSalvosPorEntExec } from '../../../functions/entidade-executora/projeto/listar-projetos-salvos-por-ent-exec'
 import { Perfil, verificarPermissao } from '../../../middlewares/auth'
 
@@ -40,6 +40,7 @@ export const buscarProjetoExecutavelRoute: FastifyPluginAsyncZod =
                     descricao: z.string().optional(),
                     valorEstimado: z.number().optional(),
                     dataConclusaoPrevista: z.coerce.date().optional(),
+                    dataConclusaoEfetiva: z.coerce.date().nullable().optional(),
                   })
                 ),
               }),
@@ -83,6 +84,9 @@ export const buscarProjetoExecutavelRoute: FastifyPluginAsyncZod =
                     codMarcoRecomendado: marco.codMarcoRecomendado ?? 0,
                     descricao: marco.descricao ?? '',
                     valorEstimado: marco.valorEstimado ?? 0,
+                    dataConclusaoEfetiva: marco.dataConclusaoEfetiva
+                      ? new Date(marco.dataConclusaoEfetiva)
+                      : null,
                     dataConclusaoPrevista: marco.dataConclusaoPrevista
                       ? new Date(marco.dataConclusaoPrevista)
                       : new Date(0),

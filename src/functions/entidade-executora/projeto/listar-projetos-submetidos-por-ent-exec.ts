@@ -36,6 +36,9 @@ export async function listarProjetosSubmetidosPorEntExec({
         },
       },
     },
+    orderBy: {
+      dataSubmissao: 'desc',
+    },
   })
 
   const projetosFormatados = await Promise.all(

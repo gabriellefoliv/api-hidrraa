@@ -21,6 +21,11 @@ export async function listarEvidenciasPorMarco({
       caminhoArquivo: true,
       dataUpload: true,
       codEvidenciaDemandada: true,
+      execucao_marco: {
+        select: {
+          dataConclusaoEfetiva: true,
+        },
+      },
     },
     orderBy: {
       dataUpload: 'desc',

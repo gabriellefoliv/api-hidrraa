@@ -19,13 +19,15 @@ import { cadastrarEntidadeExecutoraRoute } from './routes/auth/cadastrar-entidad
 import { cadastrarInvestidorRoute } from './routes/auth/cadastrar-investidor-route'
 import { cadastrarMembroComiteRoute } from './routes/auth/cadastrar-membro-comite'
 import { loginRoute } from './routes/auth/login-route'
+import { buscarProjetoExecutavelRoute } from './routes/entidade-executora/execucao-marco/buscar-projeto-executavel-route'
+import { excluirEvidenciaRoute } from './routes/entidade-executora/execucao-marco/excluir-evidencia-route'
+import { listarEvidenciasRoute } from './routes/entidade-executora/execucao-marco/listar-evidencias-por-marco-route'
+import { submeterEvidenciasRoute } from './routes/entidade-executora/execucao-marco/submeter-evidencias'
 import { atualizarProjetoRoute } from './routes/entidade-executora/projeto/atualizar-projeto-route'
-import { buscarProjetoExecutavelRoute } from './routes/entidade-executora/projeto/buscar-projeto-executavel-route'
 import { buscarProjetoRoute } from './routes/entidade-executora/projeto/buscar-projeto-route'
 import { criarProjetoRoute } from './routes/entidade-executora/projeto/criar-projeto-route'
 import { excluirProjetoRoute } from './routes/entidade-executora/projeto/excluir-projeto-route'
 import { listarDetalhesModeloRoute } from './routes/entidade-executora/projeto/listar-detalhes-modelo-route'
-import { listarEvidenciasRoute } from './routes/entidade-executora/projeto/listar-evidencias-por-marco-route'
 import { listarProjetosAprovadosRoute } from './routes/entidade-executora/projeto/listar-projetos-aprovados-route'
 import { listarProjetosSalvosPorEntExecRoute } from './routes/entidade-executora/projeto/listar-projetos-salvos-por-ent-exec-route'
 import { listarProjetosSubmetidosPorEntExecRoute } from './routes/entidade-executora/projeto/listar-projetos-submetidos-por-ent-exec'
@@ -125,6 +127,8 @@ app.register(uploadEvidenciaRoute)
 app.register(listarEvidenciasRoute)
 // TODO : Usar rota de buscarProjeto no futuro, ao invés disso
 app.register(buscarProjetoExecutavelRoute)
+app.register(submeterEvidenciasRoute)
+app.register(excluirEvidenciaRoute)
 
 // Microbacia
 app.register(criarMicrobaciaRoute)

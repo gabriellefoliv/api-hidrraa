@@ -23,6 +23,7 @@ export async function buscarProjetoExecutavel({
                   descricao: true,
                   valorEstimado: true,
                   dataConclusaoPrevista: true,
+                  dataConclusaoEfetiva: true,
                   codProjeto: true,
                 },
               },
@@ -45,6 +46,7 @@ export async function buscarProjetoExecutavel({
         descricao: exec.descricao,
         valorEstimado: exec.valorEstimado,
         dataConclusaoPrevista: exec.dataConclusaoPrevista,
+        dataConclusaoEfetiva: exec.dataConclusaoEfetiva,
       }))
   )
 
