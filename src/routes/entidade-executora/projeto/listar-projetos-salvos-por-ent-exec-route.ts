@@ -32,7 +32,7 @@ export const listarProjetosSalvosPorEntExecRoute: FastifyPluginAsyncZod =
                     z.object({
                       descricao: z.string(),
                       valorEstimado: z.number(),
-                      dataConclusao: z.coerce.date(),
+                      dataConclusaoPrevista: z.coerce.date(),
                     })
                   ),
                 }),
@@ -75,8 +75,8 @@ export const listarProjetosSalvosPorEntExecRoute: FastifyPluginAsyncZod =
                   proj.tipo_projeto.execucao_marcos.map((marco: any) => ({
                     descricao: marco.descricao ?? '',
                     valorEstimado: marco.valorEstimado ?? 0,
-                    dataConclusao: marco.dataConclusao
-                      ? new Date(marco.dataConclusao)
+                    dataConclusaoPrevista: marco.dataConclusaoPrevista
+                      ? new Date(marco.dataConclusaoPrevista)
                       : new Date(0),
                   }))
                 : [],

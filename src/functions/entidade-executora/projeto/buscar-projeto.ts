@@ -19,7 +19,7 @@ export async function buscarProjeto({ codProjeto }: BuscarProjetoParams) {
                   codMarcoRecomendado: true,
                   descricao: true,
                   valorEstimado: true,
-                  dataConclusao: true,
+                  dataConclusaoPrevista: true,
                   codProjeto: true,
                 },
               },
@@ -40,7 +40,7 @@ export async function buscarProjeto({ codProjeto }: BuscarProjetoParams) {
         codMarcoRecomendado: marco.codMarcoRecomendado,
         descricao: exec.descricao,
         valorEstimado: exec.valorEstimado,
-        dataConclusao: exec.dataConclusao,
+        dataConclusaoPrevista: exec.dataConclusaoPrevista,
       }))
   )
 

@@ -16,7 +16,7 @@ interface AtualizarProjetoParams {
     descricao?: string
     descrDetAjustes?: string
     valorEstimado?: number
-    dataConclusao?: Date
+    dataConclusaoPrevista?: Date
   }[]
 }
 
@@ -56,7 +56,7 @@ export async function atualizarProjeto(params: AtualizarProjetoParams) {
         descricao,
         descrDetAjustes,
         valorEstimado,
-        dataConclusao,
+        dataConclusaoPrevista,
       } = marco
 
       await prisma.execucao_marco.upsert({
@@ -70,7 +70,7 @@ export async function atualizarProjeto(params: AtualizarProjetoParams) {
           ...(descricao !== undefined && { descricao }),
           ...(descrDetAjustes !== undefined && { descrDetAjustes }),
           ...(valorEstimado !== undefined && { valorEstimado }),
-          ...(dataConclusao !== undefined && { dataConclusao }),
+          ...(dataConclusaoPrevista !== undefined && { dataConclusaoPrevista }),
         },
         create: {
           codProjeto,
@@ -78,7 +78,7 @@ export async function atualizarProjeto(params: AtualizarProjetoParams) {
           descricao: descricao ?? '',
           descrDetAjustes: descrDetAjustes ?? '',
           valorEstimado: valorEstimado ?? 0,
-          dataConclusao: dataConclusao ?? undefined,
+          dataConclusaoPrevista: dataConclusaoPrevista ?? undefined,
         },
       })
     }

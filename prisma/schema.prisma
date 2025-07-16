@@ -131,7 +131,8 @@ model evidencia_demandada {
 
 model execucao_marco {
   codExecucaoMarco      Int                                   @id @default(autoincrement())
-  dataConclusao         DateTime?                             @db.Date
+  dataConclusaoPrevista DateTime?                             @db.Date
+  dataConclusaoEfetiva  DateTime?                             @db.Date
   descricao             String?                               @db.VarChar(255)
   descrDetAjustes       String?                               @db.VarChar(255)
   valorEstimado         Float?                                @db.Float

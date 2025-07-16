@@ -20,6 +20,7 @@ export function listarProjetosAprovados() {
       cronograma: { not: null },
     },
     include: {
+      avaliacao: true,
       tipo_projeto: {
         include: {
           marco_recomendado: {

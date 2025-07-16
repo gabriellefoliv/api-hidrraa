@@ -1,6 +1,6 @@
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import z from 'zod'
-import { listarProjetosSubmetidosPorEntExec } from '../../../functions/entidade-executora/projeto/listar-projetos-submetidos-por-ent-exec'
+import { listarProjetosAprovados } from '../../../functions/entidade-executora/projeto/listar-projetos-aprovados'
 import { Perfil, verificarPermissao } from '../../../middlewares/auth'
 
 export const listarProjetosAprovadosRoute: FastifyPluginAsyncZod =
@@ -33,12 +33,12 @@ export const listarProjetosAprovadosRoute: FastifyPluginAsyncZod =
                     z.object({
                       descricao: z.string(),
                       valorEstimado: z.number(),
-                      dataConclusao: z.coerce.date(),
+                      dataConclusaoPrevista: z.coerce.date(),
                     })
                   ),
                 }),
                 avaliacao: z.object({
-                  bc_aprovado: z.boolean().nullable(),
+                  bc_aprovado: z.boolean(),
                 }),
                 microbacia: z.object({
                   codMicroBacia: z.number(),
@@ -59,9 +59,8 @@ export const listarProjetosAprovadosRoute: FastifyPluginAsyncZod =
         }
 
         try {
-          const projetos = await listarProjetosSubmetidosPorEntExec({
-            codUsuario,
-          })
+          const projetos = await listarProjetosAprovados()
+
           const formattedProjetos = projetos.map(proj => ({
             codProjeto: proj.codProjeto,
             titulo: proj.titulo ?? '',
@@ -77,31 +76,31 @@ export const listarProjetosAprovadosRoute: FastifyPluginAsyncZod =
               codTipoProjeto: proj.tipo_projeto?.codTipoProjeto ?? 0,
               nome: proj.tipo_projeto?.nome ?? '',
               descricao: proj.tipo_projeto?.descricao ?? '',
-              execucao_marcos: Array.isArray(proj.tipo_projeto?.execucao_marcos)
-                ? // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-                  proj.tipo_projeto.execucao_marcos.map((marco: any) => ({
-                    descricao: marco.descricao ?? '',
-                    valorEstimado: marco.valorEstimado ?? 0,
-                    dataConclusao: marco.dataConclusao
-                      ? new Date(marco.dataConclusao)
-                      : new Date(0),
+              execucao_marcos:
+                proj.tipo_projeto?.marco_recomendado?.flatMap(marco =>
+                  marco.execucao_marco.map(m => ({
+                    descricao: m.descricao ?? '',
+                    valorEstimado: m.valorEstimado ?? 0,
+                    dataConclusaoPrevista:
+                      m.dataConclusaoPrevista ?? new Date(0),
                   }))
-                : [],
+                ) ?? [],
             },
             avaliacao: {
-              bc_aprovado: proj.avaliacao?.bc_aprovado ?? null,
+              bc_aprovado: proj.avaliacao?.[0]?.bc_aprovado ?? null,
             },
             microbacia: {
-              codMicroBacia: proj.microbacia?.codMicroBacia ?? 0,
-              nome: proj.microbacia?.nome ?? '',
+              codMicroBacia: proj.microbacia?.CodMicroBacia ?? 0,
+              nome: proj.microbacia?.Nome ?? '',
             },
           }))
+
           return reply.status(200).send(formattedProjetos)
           // biome-ignore lint/suspicious/noExplicitAny: <explanation>
         } catch (error: any) {
           return reply
             .status(404)
-            .send({ error: error.message || 'Projeto não encontrado.' })
+            .send({ error: error.message || 'Erro ao buscar projetos.' })
         }
       }
     )

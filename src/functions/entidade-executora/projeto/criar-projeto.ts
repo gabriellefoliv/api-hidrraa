@@ -15,7 +15,7 @@ interface CriarProjetoParams {
     descricao: string
     descrDetAjustes?: string
     valorEstimado: number
-    dataConclusao: Date
+    dataConclusaoPrevista: Date
   }[]
 }
 
@@ -54,7 +54,7 @@ export async function criarProjeto(params: CriarProjetoParams) {
       descricao: m.descricao ?? '',
       descrDetAjustes: m.descrDetAjustes ?? '',
       valorEstimado: m.valorEstimado ?? 0,
-      dataConclusao: m.dataConclusao ?? null,
+      dataConclusaoPrevista: m.dataConclusaoPrevista ?? null,
     })),
   })
 

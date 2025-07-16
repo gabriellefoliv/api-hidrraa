@@ -47,7 +47,7 @@ export async function listarProjetosSubmetidosPorEntExec({
         select: {
           descricao: true,
           valorEstimado: true,
-          dataConclusao: true,
+          dataConclusaoPrevista: true,
         },
       })
 

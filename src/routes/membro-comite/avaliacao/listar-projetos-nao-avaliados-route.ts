@@ -32,7 +32,7 @@ export const listarProjetosNaoAvaliadosRoute: FastifyPluginAsyncZod =
                     z.object({
                       descricao: z.string(),
                       valorEstimado: z.number(),
-                      dataConclusao: z.date(),
+                      dataConclusaoPrevista: z.date(),
                     })
                   ),
                 }),
@@ -80,8 +80,8 @@ export const listarProjetosNaoAvaliadosRoute: FastifyPluginAsyncZod =
                         marco.execucao_marco.map((em: any) => ({
                           descricao: em.descricao ?? '',
                           valorEstimado: em.valorEstimado ?? 0,
-                          dataConclusao: em.dataConclusao
-                            ? new Date(em.dataConclusao)
+                          dataConclusaoPrevista: em.dataConclusaoPrevista
+                            ? new Date(em.dataConclusaoPrevista)
                             : new Date(0),
                         }))
                       : []

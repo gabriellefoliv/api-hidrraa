@@ -4,7 +4,9 @@ interface BuscarProjetoParams {
   codProjeto: number
 }
 
-export async function buscarProjetoExecutavel({ codProjeto }: BuscarProjetoParams) {
+export async function buscarProjetoExecutavel({
+  codProjeto,
+}: BuscarProjetoParams) {
   const projeto = await prisma.projeto.findUnique({
     where: {
       codProjeto,
@@ -20,7 +22,7 @@ export async function buscarProjetoExecutavel({ codProjeto }: BuscarProjetoParam
                   codMarcoRecomendado: true,
                   descricao: true,
                   valorEstimado: true,
-                  dataConclusao: true,
+                  dataConclusaoPrevista: true,
                   codProjeto: true,
                 },
               },
@@ -42,7 +44,7 @@ export async function buscarProjetoExecutavel({ codProjeto }: BuscarProjetoParam
         codMarcoRecomendado: marco.codMarcoRecomendado,
         descricao: exec.descricao,
         valorEstimado: exec.valorEstimado,
-        dataConclusao: exec.dataConclusao,
+        dataConclusaoPrevista: exec.dataConclusaoPrevista,
       }))
   )
 

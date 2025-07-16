@@ -9,7 +9,7 @@ const marcoSchema = z.object({
   descricao: z.string().optional(),
   descrDetAjustes: z.string().optional(),
   valorEstimado: z.number().optional(),
-  dataConclusao: z.string().datetime().optional(),
+  dataConclusaoPrevista: z.string().datetime().optional(),
 })
 
 export const atualizarProjetoRoute: FastifyPluginAsyncZod = async app => {
@@ -61,8 +61,8 @@ export const atualizarProjetoRoute: FastifyPluginAsyncZod = async app => {
           ...request.body,
           marcos: request.body.marcos?.map(marco => ({
             ...marco,
-            dataConclusao: marco.dataConclusao
-              ? new Date(marco.dataConclusao)
+            dataConclusaoPrevista: marco.dataConclusaoPrevista
+              ? new Date(marco.dataConclusaoPrevista)
               : undefined,
           })),
         })

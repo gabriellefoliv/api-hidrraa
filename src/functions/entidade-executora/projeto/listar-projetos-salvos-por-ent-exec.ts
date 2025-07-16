@@ -40,7 +40,7 @@ export async function listarProjetosSalvosPorEntExec({
         select: {
           descricao: true,
           valorEstimado: true,
-          dataConclusao: true,
+          dataConclusaoPrevista: true,
         },
       })
 

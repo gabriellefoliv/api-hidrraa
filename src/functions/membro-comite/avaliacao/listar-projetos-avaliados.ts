@@ -107,7 +107,7 @@ export async function listarProjetosAvaliados() {
         execucao_marcos: execucaoMarcos.map(exec => ({
           descricao: exec.descricao,
           valorEstimado: exec.valorEstimado,
-          dataConclusao: exec.dataConclusao,
+          dataConclusaoPrevista: exec.dataConclusaoPrevista,
         })),
       },
       microbacia: {

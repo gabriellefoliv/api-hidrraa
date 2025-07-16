@@ -8,7 +8,7 @@ const marcoSchema = z.object({
   descricao: z.string().optional().nullable(),
   descrDetAjustes: z.string().optional().nullable(),
   valorEstimado: z.number().optional().nullable(),
-  dataConclusao: z
+  dataConclusaoPrevista: z
     .union([z.coerce.date(), z.literal('').transform(() => null)])
     .optional()
     .nullable(),
@@ -71,7 +71,7 @@ export const criarProjetoRoute: FastifyPluginAsyncZod = async app => {
           descricao: marco.descricao ?? '',
           descrDetAjustes: marco.descrDetAjustes ?? '',
           valorEstimado: marco.valorEstimado ?? 0,
-          dataConclusao: marco.dataConclusao ?? new Date(),
+          dataConclusaoPrevista: marco.dataConclusaoPrevista ?? new Date(),
         })),
       })
 

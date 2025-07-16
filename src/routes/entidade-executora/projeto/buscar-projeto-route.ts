@@ -36,7 +36,7 @@ export const buscarProjetoRoute: FastifyPluginAsyncZod = async app => {
                   codMarcoRecomendado: z.number(),
                   descricao: z.string().optional(),
                   valorEstimado: z.number().optional(),
-                  dataConclusao: z.coerce.date().optional(),
+                  dataConclusaoPrevista: z.coerce.date().optional(),
                 })
               ),
             }),
@@ -79,8 +79,8 @@ export const buscarProjetoRoute: FastifyPluginAsyncZod = async app => {
                   codMarcoRecomendado: marco.codMarcoRecomendado ?? 0,
                   descricao: marco.descricao ?? '',
                   valorEstimado: marco.valorEstimado ?? 0,
-                  dataConclusao: marco.dataConclusao
-                    ? new Date(marco.dataConclusao)
+                  dataConclusaoPrevista: marco.dataConclusaoPrevista
+                    ? new Date(marco.dataConclusaoPrevista)
                     : new Date(0),
                 }))
               : [],

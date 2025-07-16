@@ -24,7 +24,7 @@ ALTER TABLE `entidadeexecutora` ADD COLUMN `codUsuario` INTEGER NOT NULL;
 
 -- AlterTable
 ALTER TABLE `execucao_marco` ADD COLUMN `valorEstimado` FLOAT NULL,
-    MODIFY `dataConclusao` DATE NULL,
+    MODIFY `dataConclusaoPrevista` DATE NULL,
     MODIFY `descricao` VARCHAR(255) NULL,
     MODIFY `bc_statusValidacaoCBH` ENUM('PENDENTE', 'APROVADO', 'REPROVADO') NULL DEFAULT 'PENDENTE',
     MODIFY `codAvaliador` INTEGER NULL;

@@ -114,7 +114,7 @@ CREATE TABLE `evidencia_demandada` (
 -- CreateTable
 CREATE TABLE `execucao_marco` (
     `codExecucaoMarco` INTEGER NOT NULL AUTO_INCREMENT,
-    `dataConclusao` DATETIME(0) NOT NULL,
+    `dataConclusaoPrevista` DATETIME(0) NOT NULL,
     `descricao` VARCHAR(255) NOT NULL,
     `descrDetAjustes` VARCHAR(255) NULL,
     `bc_statusValidacaoCBH` ENUM('PENDENTE', 'APROVADO', 'REPROVADO', '') NOT NULL,
