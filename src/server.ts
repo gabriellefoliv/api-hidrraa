@@ -36,6 +36,9 @@ import { submeterProjetoRoute } from './routes/entidade-executora/projeto/submet
 import { uploadEvidenciaRoute } from './routes/entidade-executora/projeto/upload-evidencia-route'
 import { listarAportesRealizadosRoute } from './routes/investidor/listar-aportes-realizados-route'
 import { realizarAporteRoute } from './routes/investidor/realizar-aporte-route'
+import { listarEvidenciasSubmetidasRoute } from './routes/membro-comite/analise-evidencia/listar-evidencias-submetidas-route'
+import { listarProjetosComEvidenciasRoute } from './routes/membro-comite/analise-evidencia/listar-projetos-com-evidencias-route'
+import { validarEvidenciasRoute } from './routes/membro-comite/analise-evidencia/validar-evidencias-route'
 import { listarAportesRoute } from './routes/membro-comite/aporte/listar-aportes-route'
 import { validarAporteRoute } from './routes/membro-comite/aporte/validar-aporte-route'
 import { avaliarProjetoRoute } from './routes/membro-comite/avaliacao/avaliar-projeto-route'
@@ -129,6 +132,9 @@ app.register(listarEvidenciasRoute)
 app.register(buscarProjetoExecutavelRoute)
 app.register(submeterEvidenciasRoute)
 app.register(excluirEvidenciaRoute)
+app.register(validarEvidenciasRoute)
+app.register(listarEvidenciasSubmetidasRoute)
+app.register(listarProjetosComEvidenciasRoute)
 
 // Microbacia
 app.register(criarMicrobaciaRoute)
