@@ -21,6 +21,7 @@ import { cadastrarMembroComiteRoute } from './routes/auth/cadastrar-membro-comit
 import { loginRoute } from './routes/auth/login-route'
 import { buscarProjetoExecutavelRoute } from './routes/entidade-executora/execucao-marco/buscar-projeto-executavel-route'
 import { excluirEvidenciaRoute } from './routes/entidade-executora/execucao-marco/excluir-evidencia-route'
+import { listarEvidenciasAvaliadasRoute } from './routes/entidade-executora/execucao-marco/listar-evidencias-avaliadas-route'
 import { listarEvidenciasRoute } from './routes/entidade-executora/execucao-marco/listar-evidencias-por-marco-route'
 import { submeterEvidenciasRoute } from './routes/entidade-executora/execucao-marco/submeter-evidencias'
 import { atualizarProjetoRoute } from './routes/entidade-executora/projeto/atualizar-projeto-route'
@@ -94,8 +95,11 @@ app.register(fastifySwagger, {
   transform: jsonSchemaTransform,
 })
 
-app.register(fastifySwaggerUi, {
+app.register(import('@scalar/fastify-api-reference'), {
   routePrefix: '/docs',
+  configuration: {
+    theme: 'kepler',
+  }
 })
 
 app.register(fastifyMultipart, {
@@ -135,6 +139,7 @@ app.register(excluirEvidenciaRoute)
 app.register(validarEvidenciasRoute)
 app.register(listarEvidenciasSubmetidasRoute)
 app.register(listarProjetosComEvidenciasRoute)
+app.register(listarEvidenciasAvaliadasRoute)
 
 // Microbacia
 app.register(criarMicrobaciaRoute)

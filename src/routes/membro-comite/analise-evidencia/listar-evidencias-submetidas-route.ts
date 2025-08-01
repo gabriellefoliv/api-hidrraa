@@ -8,7 +8,10 @@ export const listarEvidenciasSubmetidasRoute: FastifyPluginAsyncZod =
     app.get(
       '/api/evidencias/:codProjeto/submetidas',
       {
-        preHandler: verificarPermissao([Perfil.MEMBRO_COMITE]),
+        preHandler: verificarPermissao([
+          Perfil.MEMBRO_COMITE,
+          Perfil.ENTIDADE_EXECUTORA,
+        ]),
         schema: {
           summary:
             'Listar execuções de marco com evidências submetidas por projeto',
