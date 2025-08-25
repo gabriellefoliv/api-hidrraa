@@ -20,9 +20,6 @@ export function listarEvidenciasAvaliadas({
       dataSubmissao: true,
       execucao_marco: {
         where: {
-          dataConclusaoEfetiva: {
-            not: null,
-          },
           evidencia_apresentada: {
             some: {},
           },

@@ -19,6 +19,7 @@ export async function submeterEvidencias({
     where: { codExecucaoMarco },
     data: {
       dataConclusaoEfetiva: new Date(),
+      bc_statusValidacaoCBH: null,
     },
   })
 

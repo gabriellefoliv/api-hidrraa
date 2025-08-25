@@ -99,12 +99,12 @@ app.register(import('@scalar/fastify-api-reference'), {
   routePrefix: '/docs',
   configuration: {
     theme: 'kepler',
-  }
+  },
 })
 
 app.register(fastifyMultipart, {
   limits: {
-    fileSize: 10 * 1024 * 1024, // Limite de 10MB por arquivo
+    fileSize: 40 * 1024 * 1024, // Limite de 40MB por arquivo
   },
 })
 
