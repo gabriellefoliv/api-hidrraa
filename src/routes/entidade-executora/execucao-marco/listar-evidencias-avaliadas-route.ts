@@ -24,7 +24,6 @@ export const listarEvidenciasAvaliadasRoute: FastifyPluginAsyncZod =
               acoes: z.string().nullable(),
               orcamento: z.string().nullable(),
               dataSubmissao: z.coerce.date().nullable(),
-              bc_valorPagto: z.number().nullable(),
               execucao_marco: z.array(
                 z.object({
                   codExecucaoMarco: z.number(),
@@ -70,7 +69,6 @@ export const listarEvidenciasAvaliadasRoute: FastifyPluginAsyncZod =
               ? String(projeto.orcamento)
               : null,
           dataSubmissao: projeto.dataSubmissao ?? null,
-          bc_valorPagto: projeto.avaliacao?.[0]?.bc_valorPagto ?? null,
           execucao_marco: Array.isArray(projeto.execucao_marco)
             ? projeto.execucao_marco.map(marco => ({
                 codExecucaoMarco: marco.codExecucaoMarco ?? 0,

@@ -22,52 +22,10 @@ model aporte {
   @@index([codInvestidor], map: "codInvestidor")
 }
 
-model avaliacao {
-  codAvaliacao   Int              @id @default(autoincrement())
-  dataIni        DateTime         @db.DateTime(0)
-  dataFim        DateTime         @db.DateTime(0)
-  bc_aprovado    Boolean
-  bc_valorPagto  Float            @db.Float
-  codProjeto     Int
-  codAvaliador   Int
-  projeto        projeto          @relation(fields: [codProjeto], references: [codProjeto], map: "avaliacao_ibfk_1")
-  avaliador_cbh  avaliador_cbh    @relation(fields: [codAvaliador], references: [codAvaliador], map: "avaliacao_ibfk_2")
-  avaliacao_item avaliacao_item[]
-
-  @@index([codAvaliador], map: "codAvaliador")
-  @@index([codProjeto], map: "codProjeto")
-}
-
-model avaliacao_item {
-  codAvalItem     Int           @id @default(autoincrement())
-  nota            Float         @db.Float
-  parecer         String        @db.VarChar(255)
-  codCriterioAval Int
-  codAvaliacao    Int
-  criterio_aval   criterio_aval @relation(fields: [codCriterioAval], references: [codCriterioAval], map: "avaliacao_item_ibfk_1")
-  avaliacao       avaliacao     @relation(fields: [codAvaliacao], references: [codAvaliacao], map: "avaliacao_item_ibfk_2")
-
-  @@index([codCriterioAval], map: "codCriterioAval")
-  @@index([codAvaliacao], map: "codAvaliacao")
-}
-
-model avaliador_cbh {
-  codAvaliador   Int              @unique
-  codCBH         Int
-  avaliacao      avaliacao[]
-  cbh            cbh              @relation(fields: [codCBH], references: [codCBH], map: "avaliador_cbh_ibfk_1")
-  execucao_marco execucao_marco[]
-
-  @@id([codAvaliador, codCBH])
-  @@index([codAvaliador], map: "codAvaliador")
-  @@index([codCBH], map: "codCBH")
-}
-
 model cbh {
   codCBH           Int                @id @default(autoincrement())
   nome             String             @db.VarChar(255)
   aporte           aporte[]
-  avaliador_cbh    avaliador_cbh[]
   comite_investido comite_investido[]
   microbacia       microbacia[]
   produtor_rural   produtor_rural[]
@@ -83,13 +41,6 @@ model comite_investido {
   @@id([codCBH, codInvestidor])
   @@index([codCBH], map: "codCBH")
   @@index([codInvestidor], map: "codInvestidor")
-}
-
-model criterio_aval {
-  codCriterioAval Int              @id @default(autoincrement())
-  descricao       String           @db.VarChar(255)
-  peso            Float            @db.Float
-  avaliacao_item  avaliacao_item[]
 }
 
 model entidadeexecutora {
@@ -142,7 +93,6 @@ model execucao_marco {
   dataConclusaoEfetiva  DateTime?                             @db.Date
   dataConclusaoPrevista DateTime?                             @db.Date
   evidencia_apresentada evidencia_apresentada[]
-  avaliador_cbh         avaliador_cbh?                        @relation(fields: [codAvaliador], references: [codAvaliador], onDelete: Restrict, map: "execucao_marco_ibfk_1")
   marco_recomendado     marco_recomendado                     @relation(fields: [codMarcoRecomendado], references: [codMarcoRecomendado], map: "execucao_marco_ibfk_2")
   projeto               projeto                               @relation(fields: [codProjeto], references: [codProjeto], map: "execucao_marco_ibfk_3")
   pagto_marco_concluido pagto_marco_concluido[]
@@ -231,7 +181,6 @@ model projeto {
   CodEntExec        Int
   CodMicroBacia     Int?
   dataSubmissao     DateTime?         @db.Date
-  avaliacao         avaliacao[]
   execucao_marco    execucao_marco[]
   tipo_projeto      tipo_projeto      @relation(fields: [codTipoProjeto], references: [codTipoProjeto], map: "projeto_ibfk_1")
   propriedade       propriedade?      @relation(fields: [codPropriedade], references: [codPropriedade], onDelete: Restrict, map: "projeto_ibfk_2")

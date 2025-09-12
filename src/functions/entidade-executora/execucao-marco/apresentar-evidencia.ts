@@ -15,17 +15,6 @@ export async function apresentarEvidencia({
   tipo,
   filePath,
 }: EvidenciaPayload) {
-  const avaliacao = await prisma.avaliacao.findFirst({
-    where: {
-      codProjeto,
-      bc_aprovado: true,
-    },
-  })
-
-  if (!avaliacao) {
-    throw new Error('Projeto não aprovado ou inexistente')
-  }
-
   const execucaoMarco = await prisma.execucao_marco.findUnique({
     where: { codExecucaoMarco },
     select: { dataConclusaoEfetiva: true },

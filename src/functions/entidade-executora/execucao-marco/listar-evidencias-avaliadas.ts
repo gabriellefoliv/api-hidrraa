@@ -47,11 +47,6 @@ export function listarEvidenciasAvaliadas({
           dataConclusaoEfetiva: 'desc',
         },
       },
-      avaliacao: {
-        select: {
-          bc_valorPagto: true,
-        },
-      },
     },
   })
 }

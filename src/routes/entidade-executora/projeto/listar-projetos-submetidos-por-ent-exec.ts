@@ -37,9 +37,6 @@ export const listarProjetosSubmetidosPorEntExecRoute: FastifyPluginAsyncZod =
                     })
                   ),
                 }),
-                avaliacao: z.object({
-                  bc_aprovado: z.boolean().nullable(),
-                }),
                 microbacia: z.object({
                   codMicroBacia: z.number(),
                   nome: z.string(),
@@ -87,9 +84,6 @@ export const listarProjetosSubmetidosPorEntExecRoute: FastifyPluginAsyncZod =
                       : new Date(0),
                   }))
                 : [],
-            },
-            avaliacao: {
-              bc_aprovado: proj.avaliacao?.bc_aprovado ?? null,
             },
             microbacia: {
               codMicroBacia: proj.microbacia?.codMicroBacia ?? 0,

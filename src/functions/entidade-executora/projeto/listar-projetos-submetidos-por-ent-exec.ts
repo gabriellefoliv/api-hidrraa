@@ -30,11 +30,6 @@ export async function listarProjetosSubmetidosPorEntExec({
       entidadeexecutora: true,
       tipo_projeto: true,
       microbacia: true,
-      avaliacao: {
-        select: {
-          bc_aprovado: true,
-        },
-      },
     },
     orderBy: {
       dataSubmissao: 'desc',
@@ -70,9 +65,6 @@ export async function listarProjetosSubmetidosPorEntExec({
           nome: projeto.tipo_projeto.nome,
           descricao: projeto.tipo_projeto.descricao,
           execucao_marcos: execucaoMarcos, // só os do projeto atual
-        },
-        avaliacao: {
-          bc_aprovado: projeto.avaliacao?.[0]?.bc_aprovado ?? null,
         },
         microbacia: {
           codMicroBacia: projeto.microbacia?.CodMicroBacia,
