@@ -192,7 +192,7 @@ model microbacia {
 model pagto_marco_concluido {
   codPagtoMarco     Int                    @id @default(autoincrement())
   bc_data           DateTime               @db.DateTime(0)
-  bc_valor          Int
+  bc_valor          Float
   codExecucaoMarco  Int
   codProdutor       Int?
   CodEntExec        Int?

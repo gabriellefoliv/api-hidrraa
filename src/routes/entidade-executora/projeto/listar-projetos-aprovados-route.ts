@@ -31,6 +31,8 @@ export const listarProjetosAprovadosRoute: FastifyPluginAsyncZod =
                   descricao: z.string(),
                   execucao_marcos: z.array(
                     z.object({
+                      // CORREÇÃO: Adicionado o campo que faltava para o frontend
+                      codMarcoRecomendado: z.number(),
                       descricao: z.string(),
                       valorEstimado: z.number(),
                       dataConclusaoPrevista: z.coerce.date(),
@@ -38,7 +40,7 @@ export const listarProjetosAprovadosRoute: FastifyPluginAsyncZod =
                   ),
                 }),
                 avaliacao: z.object({
-                  bc_aprovado: z.boolean(),
+                  bc_aprovado: z.boolean().nullable(),
                 }),
                 microbacia: z.object({
                   codMicroBacia: z.number(),
@@ -59,6 +61,7 @@ export const listarProjetosAprovadosRoute: FastifyPluginAsyncZod =
         }
 
         try {
+          // Supondo que esta função retorne os dados com as aninhadas necessárias
           const projetos = await listarProjetosAprovados()
 
           const formattedProjetos = projetos.map(proj => ({
@@ -78,12 +81,19 @@ export const listarProjetosAprovadosRoute: FastifyPluginAsyncZod =
               descricao: proj.tipo_projeto?.descricao ?? '',
               execucao_marcos:
                 proj.tipo_projeto?.marco_recomendado?.flatMap(marco =>
-                  marco.execucao_marco.map(m => ({
-                    descricao: m.descricao ?? '',
-                    valorEstimado: m.valorEstimado ?? 0,
-                    dataConclusaoPrevista:
-                      m.dataConclusaoPrevista ?? new Date(0),
-                  }))
+                  marco.execucao_marco
+                    // --- CORREÇÃO PRINCIPAL: Adicionado filtro ---
+                    // Garante que apenas os marcos de execução deste projeto específico sejam incluídos.
+                    // (Supondo que `execucao` tenha a propriedade `codProjeto`)
+                    .filter(execucao => execucao.codProjeto === proj.codProjeto)
+                    .map(m => ({
+                      // CORREÇÃO: Adicionado o código do marco para o frontend
+                      codMarcoRecomendado: marco.codMarcoRecomendado,
+                      descricao: m.descricao ?? '',
+                      valorEstimado: m.valorEstimado ?? 0,
+                      dataConclusaoPrevista:
+                        m.dataConclusaoPrevista ?? new Date(0),
+                    }))
                 ) ?? [],
             },
             avaliacao: {

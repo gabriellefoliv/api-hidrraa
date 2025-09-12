@@ -20,9 +20,11 @@ import { cadastrarInvestidorRoute } from './routes/auth/cadastrar-investidor-rou
 import { cadastrarMembroComiteRoute } from './routes/auth/cadastrar-membro-comite'
 import { loginRoute } from './routes/auth/login-route'
 import { buscarProjetoExecutavelRoute } from './routes/entidade-executora/execucao-marco/buscar-projeto-executavel-route'
+import { buscarSaldoDisponivelRoute } from './routes/entidade-executora/execucao-marco/buscar-saldo-disponivel-route'
 import { excluirEvidenciaRoute } from './routes/entidade-executora/execucao-marco/excluir-evidencia-route'
 import { listarEvidenciasAvaliadasRoute } from './routes/entidade-executora/execucao-marco/listar-evidencias-avaliadas-route'
 import { listarEvidenciasRoute } from './routes/entidade-executora/execucao-marco/listar-evidencias-por-marco-route'
+import { solicitarFinanciamentoRoute } from './routes/entidade-executora/execucao-marco/solicitar-financiamento-route'
 import { submeterEvidenciasRoute } from './routes/entidade-executora/execucao-marco/submeter-evidencias'
 import { atualizarProjetoRoute } from './routes/entidade-executora/projeto/atualizar-projeto-route'
 import { buscarProjetoRoute } from './routes/entidade-executora/projeto/buscar-projeto-route'
@@ -36,7 +38,10 @@ import { listarTiposProjetoRoute } from './routes/entidade-executora/projeto/lis
 import { submeterProjetoRoute } from './routes/entidade-executora/projeto/submeter-projeto-route'
 import { uploadEvidenciaRoute } from './routes/entidade-executora/projeto/upload-evidencia-route'
 import { listarAportesRealizadosRoute } from './routes/investidor/listar-aportes-realizados-route'
-import { realizarAporteRoute } from './routes/investidor/realizar-aporte-route'
+import {
+  criarPaymentIntentRoute,
+  realizarAporteRoute,
+} from './routes/investidor/realizar-aporte-route'
 import { listarEvidenciasSubmetidasRoute } from './routes/membro-comite/analise-evidencia/listar-evidencias-submetidas-route'
 import { listarProjetosComEvidenciasRoute } from './routes/membro-comite/analise-evidencia/listar-projetos-com-evidencias-route'
 import { validarEvidenciasRoute } from './routes/membro-comite/analise-evidencia/validar-evidencias-route'
@@ -172,6 +177,11 @@ app.register(realizarAporteRoute)
 app.register(listarAportesRealizadosRoute)
 app.register(validarAporteRoute)
 app.register(listarAportesRoute)
+app.register(criarPaymentIntentRoute)
+
+//Financiamento
+app.register(solicitarFinanciamentoRoute)
+app.register(buscarSaldoDisponivelRoute)
 
 app.listen({ port: 3000 }).then(() => {
   console.log('💦 HTTP Server Running!')
