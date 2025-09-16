@@ -170,22 +170,22 @@ model produtor_rural {
 }
 
 model projeto {
-  codProjeto        Int               @id @default(autoincrement())
-  titulo            String?           @db.VarChar(255)
-  objetivo          String?           @db.VarChar(255)
-  acoes             String?           @db.VarChar(255)
-  cronograma        String?           @db.VarChar(255)
+  codProjeto        Int                @id @default(autoincrement())
+  titulo            String?            @db.VarChar(255)
+  objetivo          String?            @db.VarChar(255)
+  acoes             String?            @db.VarChar(255)
+  cronograma        String?            @db.VarChar(255)
   orcamento         Int?
   codPropriedade    Int?
   codTipoProjeto    Int
-  CodEntExec        Int
+  CodEntExec        Int?
   CodMicroBacia     Int?
-  dataSubmissao     DateTime?         @db.Date
+  dataSubmissao     DateTime?          @db.Date
   execucao_marco    execucao_marco[]
-  tipo_projeto      tipo_projeto      @relation(fields: [codTipoProjeto], references: [codTipoProjeto], map: "projeto_ibfk_1")
-  propriedade       propriedade?      @relation(fields: [codPropriedade], references: [codPropriedade], onDelete: Restrict, map: "projeto_ibfk_2")
-  microbacia        microbacia?       @relation(fields: [CodMicroBacia], references: [CodMicroBacia], onDelete: Restrict, map: "projeto_ibfk_4")
-  entidadeexecutora entidadeexecutora @relation(fields: [CodEntExec], references: [codEntExec], map: "projeto_ibfk_5")
+  tipo_projeto      tipo_projeto       @relation(fields: [codTipoProjeto], references: [codTipoProjeto], map: "projeto_ibfk_1")
+  propriedade       propriedade?       @relation(fields: [codPropriedade], references: [codPropriedade], onDelete: Restrict, map: "projeto_ibfk_2")
+  microbacia        microbacia?        @relation(fields: [CodMicroBacia], references: [CodMicroBacia], onDelete: Restrict, map: "projeto_ibfk_4")
+  entidadeexecutora entidadeexecutora? @relation(fields: [CodEntExec], references: [codEntExec], map: "projeto_ibfk_5")
 
   @@index([CodEntExec], map: "CodEntExecutora")
   @@index([CodMicroBacia], map: "CodMicroBacia")

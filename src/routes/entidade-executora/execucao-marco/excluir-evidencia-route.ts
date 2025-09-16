@@ -1,7 +1,7 @@
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import { z } from 'zod'
 import { excluirEvidencia } from '../../../functions/entidade-executora/execucao-marco/excluir-evidencia'
-import { excluirProjeto } from '../../../functions/entidade-executora/projeto/excluir-projeto'
+import { excluirProjeto } from '../../../functions/membro-comite/projeto/excluir-projeto'
 import { Perfil, verificarPermissao } from '../../../middlewares/auth'
 
 export const excluirEvidenciaRoute: FastifyPluginAsyncZod = async app => {

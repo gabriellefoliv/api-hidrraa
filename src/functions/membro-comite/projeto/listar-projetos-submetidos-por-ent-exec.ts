@@ -1,33 +1,19 @@
 import prisma from '../../../lib/prisma'
 
-interface ListarProjetosSalvosPorEntExecParams {
-  codUsuario: number
-}
-
-export async function listarProjetosSalvosPorEntExec({
-  codUsuario,
-}: ListarProjetosSalvosPorEntExecParams) {
-  const entExec = await prisma.entidadeexecutora.findFirst({
-    where: {
-      codUsuario,
-    },
-  })
-
-  if (!entExec) {
-    throw new Error(
-      'Entidade executora não encontrada para o usuário informado.'
-    )
-  }
-
+export async function listarProjetosSubmetidosPorEntExec() {
   const projetos = await prisma.projeto.findMany({
     where: {
-      CodEntExec: entExec.codEntExec,
-      dataSubmissao: null,
+      dataSubmissao: {
+        not: null,
+      },
     },
     include: {
       entidadeexecutora: true,
       tipo_projeto: true,
       microbacia: true,
+    },
+    orderBy: {
+      dataSubmissao: 'desc',
     },
   })
 
@@ -51,14 +37,14 @@ export async function listarProjetosSalvosPorEntExec({
         acoes: projeto.acoes,
         cronograma: projeto.cronograma,
         orcamento: projeto.orcamento,
+        dataSubmissao: projeto.dataSubmissao,
         codPropriedade: projeto.codPropriedade,
         CodMicroBacia: projeto.CodMicroBacia,
-        CodEntExec: projeto.CodEntExec,
         tipo_projeto: {
           codTipoProjeto: projeto.tipo_projeto.codTipoProjeto,
           nome: projeto.tipo_projeto.nome,
           descricao: projeto.tipo_projeto.descricao,
-          execucao_marcos: execucaoMarcos,
+          execucao_marcos: execucaoMarcos, // só os do projeto atual
         },
         microbacia: {
           codMicroBacia: projeto.microbacia?.CodMicroBacia,

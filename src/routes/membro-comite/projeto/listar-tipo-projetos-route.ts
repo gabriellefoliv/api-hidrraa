@@ -1,13 +1,13 @@
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import z from 'zod'
-import { listarTiposProjeto } from '../../../functions/entidade-executora/projeto/listar-tipos-projeto'
+import { listarTiposProjeto } from '../../../functions/membro-comite/projeto/listar-tipos-projeto'
 import { Perfil, verificarPermissao } from '../../../middlewares/auth'
 
 export const listarTiposProjetoRoute: FastifyPluginAsyncZod = async app => {
   app.get(
     '/api/tipos-projeto',
     {
-      preHandler: verificarPermissao(Perfil.ENTIDADE_EXECUTORA),
+      preHandler: verificarPermissao(Perfil.MEMBRO_COMITE),
       schema: {
         summary: 'Listar tipos de projeto',
         tags: ['Projeto'],

@@ -1,6 +1,6 @@
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import z from 'zod'
-import { atualizarProjeto } from '../../../functions/entidade-executora/projeto/atualizar-projeto'
+import { atualizarProjeto } from '../../../functions/membro-comite/projeto/atualizar-projeto'
 import { Perfil, verificarPermissao } from '../../../middlewares/auth'
 
 const marcoSchema = z.object({
@@ -16,7 +16,7 @@ export const atualizarProjetoRoute: FastifyPluginAsyncZod = async app => {
   app.put(
     '/api/projetos/:codProjeto',
     {
-      preHandler: verificarPermissao(Perfil.ENTIDADE_EXECUTORA),
+      preHandler: verificarPermissao(Perfil.MEMBRO_COMITE),
       schema: {
         summary: 'Atualizar projeto parcialmente',
         tags: ['Projeto'],
@@ -49,11 +49,6 @@ export const atualizarProjetoRoute: FastifyPluginAsyncZod = async app => {
     },
     async (request, reply) => {
       const { codProjeto } = request.params
-      const { codUsuario } = (request.user as { codUsuario?: number }) || {}
-
-      if (!codUsuario) {
-        return reply.status(401).send({ error: 'Usuário não autenticado' })
-      }
 
       try {
         const resultado = await atualizarProjeto({

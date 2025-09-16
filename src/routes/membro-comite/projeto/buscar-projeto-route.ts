@@ -1,14 +1,14 @@
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import z from 'zod'
-import { buscarProjeto } from '../../../functions/entidade-executora/projeto/buscar-projeto'
-import { listarProjetosSalvosPorEntExec } from '../../../functions/entidade-executora/projeto/listar-projetos-salvos-por-ent-exec'
+import { buscarProjeto } from '../../../functions/membro-comite/projeto/buscar-projeto'
+import { listarProjetosSalvosPorEntExec } from '../../../functions/membro-comite/projeto/listar-projetos-salvos-por-ent-exec'
 import { Perfil, verificarPermissao } from '../../../middlewares/auth'
 
 export const buscarProjetoRoute: FastifyPluginAsyncZod = async app => {
   app.get(
     '/api/projetos/:codProjeto',
     {
-      preHandler: verificarPermissao(Perfil.ENTIDADE_EXECUTORA),
+      preHandler: verificarPermissao(Perfil.MEMBRO_COMITE),
       schema: {
         summary: 'Buscar projeto por id',
         tags: ['Projeto'],

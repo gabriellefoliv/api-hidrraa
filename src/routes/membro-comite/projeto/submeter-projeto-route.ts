@@ -1,6 +1,6 @@
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import z from 'zod'
-import { submeterProjeto } from '../../../functions/entidade-executora/projeto/submeter-projeto'
+import { submeterProjeto } from '../../../functions/membro-comite/projeto/submeter-projeto'
 
 export const submeterProjetoRoute: FastifyPluginAsyncZod = async app => {
   app.put(

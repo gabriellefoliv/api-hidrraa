@@ -26,17 +26,7 @@ import { listarEvidenciasAvaliadasRoute } from './routes/entidade-executora/exec
 import { listarEvidenciasRoute } from './routes/entidade-executora/execucao-marco/listar-evidencias-por-marco-route'
 import { solicitarFinanciamentoRoute } from './routes/entidade-executora/execucao-marco/solicitar-financiamento-route'
 import { submeterEvidenciasRoute } from './routes/entidade-executora/execucao-marco/submeter-evidencias'
-import { atualizarProjetoRoute } from './routes/entidade-executora/projeto/atualizar-projeto-route'
-import { buscarProjetoRoute } from './routes/entidade-executora/projeto/buscar-projeto-route'
-import { criarProjetoRoute } from './routes/entidade-executora/projeto/criar-projeto-route'
-import { excluirProjetoRoute } from './routes/entidade-executora/projeto/excluir-projeto-route'
-import { listarDetalhesModeloRoute } from './routes/entidade-executora/projeto/listar-detalhes-modelo-route'
-import { listarProjetosAprovadosRoute } from './routes/entidade-executora/projeto/listar-projetos-aprovados-route'
-import { listarProjetosSalvosPorEntExecRoute } from './routes/entidade-executora/projeto/listar-projetos-salvos-por-ent-exec-route'
-import { listarProjetosSubmetidosPorEntExecRoute } from './routes/entidade-executora/projeto/listar-projetos-submetidos-por-ent-exec'
-import { listarTiposProjetoRoute } from './routes/entidade-executora/projeto/listar-tipo-projetos-route'
-import { submeterProjetoRoute } from './routes/entidade-executora/projeto/submeter-projeto-route'
-import { uploadEvidenciaRoute } from './routes/entidade-executora/projeto/upload-evidencia-route'
+import { uploadEvidenciaRoute } from './routes/entidade-executora/execucao-marco/upload-evidencia-route'
 import { listarAportesRealizadosRoute } from './routes/investidor/listar-aportes-realizados-route'
 import {
   criarPaymentIntentRoute,
@@ -55,6 +45,16 @@ import { atualizarProdutorRuralRoute } from './routes/membro-comite/produtor-rur
 import { criarProdutorRuralRoute } from './routes/membro-comite/produtor-rural/criar-produtor-rural-route'
 import { deletarProdutorRuralRoute } from './routes/membro-comite/produtor-rural/deletar-produtor-rural-route'
 import { listarProdutoresRuraisRoute } from './routes/membro-comite/produtor-rural/listar-produtores-rurais-route'
+import { atualizarProjetoRoute } from './routes/membro-comite/projeto/atualizar-projeto-route'
+import { buscarProjetoRoute } from './routes/membro-comite/projeto/buscar-projeto-route'
+import { criarProjetoRoute } from './routes/membro-comite/projeto/criar-projeto-route'
+import { excluirProjetoRoute } from './routes/membro-comite/projeto/excluir-projeto-route'
+import { listarDetalhesModeloRoute } from './routes/membro-comite/projeto/listar-detalhes-modelo-route'
+import { listarProjetosAprovadosRoute } from './routes/membro-comite/projeto/listar-projetos-aprovados-route'
+import { listarProjetosSalvosRoute } from './routes/membro-comite/projeto/listar-projetos-salvos-por-ent-exec-route'
+import { listarProjetosSubmetidosPorEntExecRoute } from './routes/membro-comite/projeto/listar-projetos-submetidos-por-ent-exec'
+import { listarTiposProjetoRoute } from './routes/membro-comite/projeto/listar-tipo-projetos-route'
+import { submeterProjetoRoute } from './routes/membro-comite/projeto/submeter-projeto-route'
 import { atualizarPropriedadeRoute } from './routes/membro-comite/propriedade/atualizar-propriedade-route'
 import { criarPropriedadeRoute } from './routes/membro-comite/propriedade/criar-propriedade-route'
 import { deletarPropriedadeRoute } from './routes/membro-comite/propriedade/deletar-propriedade-route'
@@ -125,7 +125,7 @@ app.register(criarProjetoRoute)
 app.register(submeterProjetoRoute)
 app.register(atualizarProjetoRoute)
 app.register(listarProjetosSubmetidosPorEntExecRoute)
-app.register(listarProjetosSalvosPorEntExecRoute)
+app.register(listarProjetosSalvosRoute)
 app.register(buscarProjetoRoute)
 app.register(excluirProjetoRoute)
 // Evidências

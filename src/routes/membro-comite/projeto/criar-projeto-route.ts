@@ -1,6 +1,6 @@
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import z from 'zod'
-import { criarProjeto } from '../../../functions/entidade-executora/projeto/criar-projeto'
+import { criarProjeto } from '../../../functions/membro-comite/projeto/criar-projeto'
 import { Perfil, verificarPermissao } from '../../../middlewares/auth'
 
 const marcoSchema = z.object({
@@ -18,7 +18,7 @@ export const criarProjetoRoute: FastifyPluginAsyncZod = async app => {
   app.post(
     '/api/projetos',
     {
-      preHandler: verificarPermissao([Perfil.ENTIDADE_EXECUTORA]),
+      preHandler: verificarPermissao([Perfil.MEMBRO_COMITE]),
       schema: {
         summary: 'Criar novo projeto',
         tags: ['Projeto'],
@@ -31,7 +31,6 @@ export const criarProjetoRoute: FastifyPluginAsyncZod = async app => {
           codPropriedade: z.number(),
           CodMicroBacia: z.number(),
           codTipoProjeto: z.number(),
-          CodEntExec: z.number(),
           marcos: z.array(marcoSchema),
         }),
         response: {
@@ -52,7 +51,6 @@ export const criarProjetoRoute: FastifyPluginAsyncZod = async app => {
         codPropriedade,
         codTipoProjeto,
         CodMicroBacia,
-        CodEntExec,
         marcos,
       } = request.body
 
@@ -65,7 +63,6 @@ export const criarProjetoRoute: FastifyPluginAsyncZod = async app => {
         codPropriedade,
         codTipoProjeto,
         CodMicroBacia,
-        CodEntExec,
         marcos: marcos.map(marco => ({
           codMarcoRecomendado: marco.codMarcoRecomendado,
           descricao: marco.descricao ?? '',

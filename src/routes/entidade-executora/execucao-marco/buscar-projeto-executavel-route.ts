@@ -1,8 +1,8 @@
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import z from 'zod'
 import { buscarProjetoExecutavel } from '../../../functions/entidade-executora/execucao-marco/buscar-projeto-executavel'
-import { buscarProjeto } from '../../../functions/entidade-executora/projeto/buscar-projeto'
-import { listarProjetosSalvosPorEntExec } from '../../../functions/entidade-executora/projeto/listar-projetos-salvos-por-ent-exec'
+import { buscarProjeto } from '../../../functions/membro-comite/projeto/buscar-projeto'
+import { listarProjetosSalvosPorEntExec } from '../../../functions/membro-comite/projeto/listar-projetos-salvos-por-ent-exec'
 import { Perfil, verificarPermissao } from '../../../middlewares/auth'
 
 export const buscarProjetoExecutavelRoute: FastifyPluginAsyncZod =
