@@ -1,25 +1,19 @@
 import bcrypt from 'bcrypt'
 import prisma from '../../lib/prisma'
 
-interface InvestidorSignUpParams {
+interface EntidadeDelegatariaTecnicaSignUpParams {
   nome: string
   email: string
   senha: string
-  razaoSocial: string
   codCBH: number
-  cnpj: string
-  contato: string
 }
 
-export async function cadastrarInvestidor({
+export async function cadastrarEntidadeDelegatariaTecnica({
   nome,
   email,
   senha,
   codCBH,
-  cnpj,
-  contato,
-  razaoSocial,
-}: InvestidorSignUpParams) {
+}: EntidadeDelegatariaTecnicaSignUpParams) {
   const existingUser = await prisma.usuario.findUnique({
     where: { email },
   })
@@ -36,23 +30,7 @@ export async function cadastrarInvestidor({
       email,
       senha: hashedPassword,
       codCBH,
-      Perfil: 'investidor',
-    },
-  })
-
-  const investidor = await prisma.investidor_esg.create({
-    data: {
-      razaoSocial,
-      cnpj,
-      contato,
-      codUsuario: usuario.codUsuario,
-    },
-  })
-
-  await prisma.comite_investido.create({
-    data: {
-      codInvestidor: investidor.codInvestidor,
-      codCBH,
+      Perfil: 'ent_del_tec',
     },
   })
 

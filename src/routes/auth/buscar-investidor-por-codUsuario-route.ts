@@ -20,8 +20,8 @@ export const buscarInvestidorPorCodUsuarioRoute: FastifyPluginAsyncZod =
             200: z.object({
               codInvestidor: z.number(),
               razaoSocial: z.string(),
-              cnpj: z.number(),
-              contato: z.number(),
+              cnpj: z.string(),
+              contato: z.string(),
               codUsuario: z.number(),
             }),
             404: z.object({

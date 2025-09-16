@@ -19,9 +19,9 @@ export const buscarEntExecPorCodUsuarioRoute: FastifyPluginAsyncZod =
             200: z.object({
               codEntExec: z.number(),
               nome: z.string(),
-              cnpjcpf: z.number(),
+              cnpjcpf: z.string(),
               especialidade: z.string(),
-              contato: z.number(),
+              contato: z.string(),
               codUsuario: z.number(),
             }),
             404: z.object({

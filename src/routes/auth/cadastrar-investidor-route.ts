@@ -14,9 +14,9 @@ export const cadastrarInvestidorRoute: FastifyPluginAsyncZod = async app => {
           email: z.string().email(),
           senha: z.string().min(6),
           codCBH: z.number(),
-          cnpj: z.number(),
+          cnpj: z.string(),
           razaoSocial: z.string(),
-          contato: z.number(),
+          contato: z.string(),
         }),
         response: {
           201: z.object({

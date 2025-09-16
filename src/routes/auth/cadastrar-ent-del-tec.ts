@@ -1,23 +1,20 @@
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import z from 'zod'
-import { cadastrarEntidadeExecutora } from '../../functions/auth/cadastrar-entidade-executora'
+import { cadastrarEntidadeDelegatariaTecnica } from '../../functions/auth/cadastrar-ent-del-tec'
 
-export const cadastrarEntidadeExecutoraRoute: FastifyPluginAsyncZod =
+export const cadastrarEntidadeDelegatariaTecnicaRoute: FastifyPluginAsyncZod =
   async app => {
     app.post(
-      '/api/entExec/cadastro',
+      '/api/entdeltec/cadastro',
       {
         schema: {
-          summary: 'Cadastro de Entidade Executora',
+          summary: 'Cadastro de Entidade Delegatária Técnica',
           tags: ['Autenticação'],
           body: z.object({
             nome: z.string(),
             email: z.string().email(),
             senha: z.string().min(6),
             codCBH: z.number(),
-            cnpjcpf: z.string(),
-            especialidade: z.string(),
-            contato: z.string(),
           }),
           response: {
             201: z.object({
@@ -31,24 +28,13 @@ export const cadastrarEntidadeExecutoraRoute: FastifyPluginAsyncZod =
       },
       async (request, reply) => {
         try {
-          const {
-            nome,
-            email,
-            senha,
-            codCBH,
-            cnpjcpf,
-            contato,
-            especialidade,
-          } = request.body
+          const { nome, email, senha, codCBH } = request.body
 
-          const { codUsuario } = await cadastrarEntidadeExecutora({
+          const { codUsuario } = await cadastrarEntidadeDelegatariaTecnica({
             nome,
             email,
             senha,
             codCBH,
-            cnpjcpf,
-            contato,
-            especialidade,
           })
           return reply.status(201).send({ codUsuario })
         } catch (error) {

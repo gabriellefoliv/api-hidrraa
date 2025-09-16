@@ -3,7 +3,7 @@ import type { FastifyReply, FastifyRequest } from 'fastify'
 // Tipos de perfis de usuário
 export enum Perfil {
   ENTIDADE_EXECUTORA = 'entidade_executora',
-  MEMBRO_COMITE = 'membro_comite',
+  ENT_DEL_TEC = 'ent_del_tec',
   INVESTIDOR = 'investidor',
 }
 

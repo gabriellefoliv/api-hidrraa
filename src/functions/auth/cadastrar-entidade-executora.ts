@@ -6,9 +6,9 @@ interface EntExecSignUpParams {
   email: string
   senha: string
   codCBH: number
-  cnpjcpf: number
+  cnpjcpf: string
   especialidade: string
-  contato: number
+  contato: string
 }
 
 export async function cadastrarEntidadeExecutora({

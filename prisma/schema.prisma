@@ -46,9 +46,9 @@ model comite_investido {
 model entidadeexecutora {
   codEntExec            Int                     @id @default(autoincrement())
   nome                  String                  @db.VarChar(255)
-  cnpjcpf               Int
+  cnpjcpf               String                  @db.VarChar(255)
   especialidade         String                  @db.VarChar(255)
-  contato               Int
+  contato               String                  @db.VarChar(255)
   codUsuario            Int
   usuario               usuario                 @relation(fields: [codUsuario], references: [codUsuario], map: "entidadeexecutora_ibfk_1")
   pagto_marco_concluido pagto_marco_concluido[]
@@ -107,8 +107,8 @@ model execucao_marco {
 model investidor_esg {
   codInvestidor    Int                @id @default(autoincrement())
   razaoSocial      String             @db.VarChar(255)
-  cnpj             Int
-  contato          Int
+  cnpj             String             @db.VarChar(255)
+  contato          String             @db.VarChar(255)
   codUsuario       Int
   aporte           aporte[]
   comite_investido comite_investido[]
@@ -159,8 +159,8 @@ model pagto_marco_concluido {
 model produtor_rural {
   codProdutor           Int                     @id @default(autoincrement())
   nome                  String                  @db.VarChar(255)
-  cpf                   Int
-  contato               Int
+  cpf                   String                  @db.VarChar(255)
+  contato               String                  @db.VarChar(255)
   codCBH                Int
   pagto_marco_concluido pagto_marco_concluido[]
   cbh                   cbh                     @relation(fields: [codCBH], references: [codCBH], map: "produtor_rural_ibfk_1")
@@ -175,7 +175,7 @@ model projeto {
   objetivo          String?            @db.VarChar(255)
   acoes             String?            @db.VarChar(255)
   cronograma        String?            @db.VarChar(255)
-  orcamento         Int?
+  orcamento         Float?
   codPropriedade    Int?
   codTipoProjeto    Int
   CodEntExec        Int?
@@ -198,7 +198,7 @@ model propriedade {
   logradouro     String         @db.VarChar(255)
   numero         Int
   complemento    String         @db.VarChar(255)
-  cep            Int
+  cep            String         @db.VarChar(255)
   bairro         String         @db.VarChar(255)
   cidade         String         @db.VarChar(255)
   uf             String         @db.VarChar(255)
@@ -237,8 +237,8 @@ model usuario {
 model fornecedor {
   codFornecedor Int             @id @default(autoincrement())
   nome          String          @db.VarChar(255)
-  cnpjcpf       Int
-  contato       Int
+  cnpjcpf       String          @db.VarChar(255)
+  contato       String          @db.VarChar(255)
   especialidade String          @db.VarChar(255)
   pagto_servico pagto_servico[]
 }
