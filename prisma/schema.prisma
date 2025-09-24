@@ -57,6 +57,18 @@ model entidadeexecutora {
   @@index([codUsuario], map: "codUsuario")
 }
 
+model entidade_gerenciadora {
+  codEntGer  Int       @id @default(autoincrement())
+  nome       String    @db.VarChar(255)
+  cnpjcpf    String    @db.VarChar(255)
+  contato    String    @db.VarChar(255)
+  codUsuario Int
+  usuario    usuario   @relation(fields: [codUsuario], references: [codUsuario], map: "entidadegerenciadora_ibfk_1")
+  projeto    projeto[]
+
+  @@index([codUsuario], map: "codUsuario")
+}
+
 model evidencia_apresentada {
   codEvidenciaApresentada Int                 @id @default(autoincrement())
   caminhoArquivo          String              @db.VarChar(255)
@@ -170,22 +182,24 @@ model produtor_rural {
 }
 
 model projeto {
-  codProjeto        Int                @id @default(autoincrement())
-  titulo            String?            @db.VarChar(255)
-  objetivo          String?            @db.VarChar(255)
-  acoes             String?            @db.VarChar(255)
-  cronograma        String?            @db.VarChar(255)
-  orcamento         Float?
-  codPropriedade    Int?
-  codTipoProjeto    Int
-  CodEntExec        Int?
-  CodMicroBacia     Int?
-  dataSubmissao     DateTime?          @db.Date
-  execucao_marco    execucao_marco[]
-  tipo_projeto      tipo_projeto       @relation(fields: [codTipoProjeto], references: [codTipoProjeto], map: "projeto_ibfk_1")
-  propriedade       propriedade?       @relation(fields: [codPropriedade], references: [codPropriedade], onDelete: Restrict, map: "projeto_ibfk_2")
-  microbacia        microbacia?        @relation(fields: [CodMicroBacia], references: [CodMicroBacia], onDelete: Restrict, map: "projeto_ibfk_4")
-  entidadeexecutora entidadeexecutora? @relation(fields: [CodEntExec], references: [codEntExec], map: "projeto_ibfk_5")
+  codProjeto            Int                    @id @default(autoincrement())
+  titulo                String?                @db.VarChar(255)
+  objetivo              String?                @db.VarChar(255)
+  acoes                 String?                @db.VarChar(255)
+  cronograma            String?                @db.VarChar(255)
+  orcamento             Float?
+  codPropriedade        Int?
+  codTipoProjeto        Int
+  CodEntExec            Int?
+  codEntGer             Int?
+  CodMicroBacia         Int?
+  dataSubmissao         DateTime?              @db.Date
+  execucao_marco        execucao_marco[]
+  tipo_projeto          tipo_projeto           @relation(fields: [codTipoProjeto], references: [codTipoProjeto], map: "projeto_ibfk_1")
+  propriedade           propriedade?           @relation(fields: [codPropriedade], references: [codPropriedade], onDelete: Restrict, map: "projeto_ibfk_2")
+  microbacia            microbacia?            @relation(fields: [CodMicroBacia], references: [CodMicroBacia], onDelete: Restrict, map: "projeto_ibfk_4")
+  entidadeexecutora     entidadeexecutora?     @relation(fields: [CodEntExec], references: [codEntExec], map: "projeto_ibfk_5")
+  entidade_gerenciadora entidade_gerenciadora? @relation(fields: [codEntGer], references: [codEntGer], map: "projeto_ibfk_6")
 
   @@index([CodEntExec], map: "CodEntExecutora")
   @@index([CodMicroBacia], map: "CodMicroBacia")
@@ -221,15 +235,16 @@ model tipo_projeto {
 }
 
 model usuario {
-  codUsuario        Int                 @id @default(autoincrement())
-  nome              String              @db.VarChar(200)
-  email             String              @unique @db.VarChar(200)
-  senha             String              @db.VarChar(200)
-  codCBH            Int
-  Perfil            String              @db.VarChar(100)
-  entidadeexecutora entidadeexecutora[]
-  investidor_esg    investidor_esg[]
-  cbh               cbh                 @relation(fields: [codCBH], references: [codCBH], map: "usuario_ibfk_1")
+  codUsuario            Int                     @id @default(autoincrement())
+  nome                  String                  @db.VarChar(200)
+  email                 String                  @unique @db.VarChar(200)
+  senha                 String                  @db.VarChar(200)
+  codCBH                Int
+  Perfil                String                  @db.VarChar(100)
+  entidadeexecutora     entidadeexecutora[]
+  investidor_esg        investidor_esg[]
+  cbh                   cbh                     @relation(fields: [codCBH], references: [codCBH], map: "usuario_ibfk_1")
+  entidade_gerenciadora entidade_gerenciadora[]
 
   @@index([codCBH], map: "codCBH")
 }

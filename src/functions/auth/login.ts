@@ -30,5 +30,6 @@ export async function loginUsuario({ email, senha }: LoginParams) {
     nome: usuario.nome,
     email: usuario.email,
     perfil: usuario.Perfil,
+    codCBH: usuario.codCBH,
   }
 }

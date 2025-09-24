@@ -17,6 +17,7 @@ import { buscarEntExecPorCodUsuarioRoute } from './routes/auth/buscar-entExec-po
 import { buscarInvestidorPorCodUsuarioRoute } from './routes/auth/buscar-investidor-por-codUsuario-route'
 import { cadastrarEntidadeDelegatariaTecnicaRoute } from './routes/auth/cadastrar-ent-del-tec'
 import { cadastrarEntidadeExecutoraRoute } from './routes/auth/cadastrar-entidade-executora-route'
+import { cadastrarEntidadeGerenciadoraRoute } from './routes/auth/cadastrar-entidade-gerenciadora-route'
 import { cadastrarInvestidorRoute } from './routes/auth/cadastrar-investidor-route'
 import { loginRoute } from './routes/auth/login-route'
 import { listarEvidenciasSubmetidasRoute } from './routes/ent-del-tec/analise-evidencia/listar-evidencias-submetidas-route'
@@ -117,6 +118,7 @@ app.register(fastifyStatic, {
 app.register(cadastrarEntidadeExecutoraRoute)
 app.register(cadastrarInvestidorRoute)
 app.register(cadastrarEntidadeDelegatariaTecnicaRoute)
+app.register(cadastrarEntidadeGerenciadoraRoute)
 app.register(loginRoute)
 // Projetos
 app.register(listarTiposProjetoRoute)

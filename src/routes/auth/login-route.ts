@@ -21,6 +21,7 @@ export const loginRoute: FastifyPluginAsyncZod = async app => {
               nome: z.string(),
               email: z.string().email(),
               perfil: z.string(),
+              codCBH: z.number(),
             }),
           }),
           401: z.object({
@@ -32,7 +33,7 @@ export const loginRoute: FastifyPluginAsyncZod = async app => {
     async (request, reply) => {
       try {
         const { email, senha } = request.body
-        const { codUsuario, nome, perfil } = await loginUsuario({
+        const { codUsuario, nome, perfil, codCBH } = await loginUsuario({
           email,
           senha,
         })
@@ -41,7 +42,7 @@ export const loginRoute: FastifyPluginAsyncZod = async app => {
 
         return reply.status(200).send({
           token,
-          usuario: { codUsuario, nome, email, perfil },
+          usuario: { codUsuario, nome, email, perfil, codCBH },
         })
       } catch (error) {
         return reply.status(401).send({
