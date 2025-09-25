@@ -9,6 +9,7 @@ export async function listarProjetosSubmetidosPorEntExec() {
     },
     include: {
       entidadeexecutora: true,
+      entidade_gerenciadora: true,
       tipo_projeto: true,
       microbacia: true,
     },
@@ -40,6 +41,18 @@ export async function listarProjetosSubmetidosPorEntExec() {
         dataSubmissao: projeto.dataSubmissao,
         codPropriedade: projeto.codPropriedade,
         CodMicroBacia: projeto.CodMicroBacia,
+        entidadeexecutora: projeto.entidadeexecutora
+          ? {
+              codEntExec: projeto.entidadeexecutora.codEntExec,
+              nome: projeto.entidadeexecutora.nome,
+            }
+          : null,
+        entidade_gerenciadora: projeto.entidade_gerenciadora
+          ? {
+              codEntGer: projeto.entidade_gerenciadora.codEntGer,
+              nome: projeto.entidade_gerenciadora.nome,
+            }
+          : null,
         tipo_projeto: {
           codTipoProjeto: projeto.tipo_projeto.codTipoProjeto,
           nome: projeto.tipo_projeto.nome,

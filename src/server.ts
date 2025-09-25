@@ -13,12 +13,13 @@ import {
 import path from 'node:path'
 import fastifyMultipart from '@fastify/multipart'
 import fastifyStatic from '@fastify/static'
-import { buscarEntExecPorCodUsuarioRoute } from './routes/auth/buscar-entExec-por-codUsuario-route'
 import { buscarInvestidorPorCodUsuarioRoute } from './routes/auth/buscar-investidor-por-codUsuario-route'
 import { cadastrarEntidadeDelegatariaTecnicaRoute } from './routes/auth/cadastrar-ent-del-tec'
 import { cadastrarEntidadeExecutoraRoute } from './routes/auth/cadastrar-entidade-executora-route'
 import { cadastrarEntidadeGerenciadoraRoute } from './routes/auth/cadastrar-entidade-gerenciadora-route'
 import { cadastrarInvestidorRoute } from './routes/auth/cadastrar-investidor-route'
+import { listarEntExecsRoute } from './routes/auth/listar-entExecs-route'
+import { listarEntGersRoute } from './routes/auth/listar-entGers-route'
 import { loginRoute } from './routes/auth/login-route'
 import { listarEvidenciasSubmetidasRoute } from './routes/ent-del-tec/analise-evidencia/listar-evidencias-submetidas-route'
 import { listarProjetosComEvidenciasRoute } from './routes/ent-del-tec/analise-evidencia/listar-projetos-com-evidencias-route'
@@ -36,6 +37,7 @@ import { listarProdutoresRuraisRoute } from './routes/ent-del-tec/produtor-rural
 import { atualizarProjetoRoute } from './routes/ent-del-tec/projeto/atualizar-projeto-route'
 import { buscarProjetoRoute } from './routes/ent-del-tec/projeto/buscar-projeto-route'
 import { criarProjetoRoute } from './routes/ent-del-tec/projeto/criar-projeto-route'
+import { delegarEntExecEntGerRoute } from './routes/ent-del-tec/projeto/delegar-entExec-entGer-route'
 import { excluirProjetoRoute } from './routes/ent-del-tec/projeto/excluir-projeto-route'
 import { listarDetalhesModeloRoute } from './routes/ent-del-tec/projeto/listar-detalhes-modelo-route'
 import { listarProjetosAprovadosRoute } from './routes/ent-del-tec/projeto/listar-projetos-aprovados-route'
@@ -130,6 +132,7 @@ app.register(listarProjetosSubmetidosPorEntExecRoute)
 app.register(listarProjetosSalvosRoute)
 app.register(buscarProjetoRoute)
 app.register(excluirProjetoRoute)
+app.register(delegarEntExecEntGerRoute)
 // Evidências
 app.register(listarProjetosAprovadosRoute)
 app.register(uploadEvidenciaRoute)
@@ -159,7 +162,8 @@ app.register(listarProdutoresRuraisRoute)
 app.register(atualizarProdutorRuralRoute)
 app.register(deletarProdutorRuralRoute)
 
-app.register(buscarEntExecPorCodUsuarioRoute)
+app.register(listarEntExecsRoute)
+app.register(listarEntGersRoute)
 app.register(buscarInvestidorPorCodUsuarioRoute)
 
 //Aportes

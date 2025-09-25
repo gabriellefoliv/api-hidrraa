@@ -1,6 +1,5 @@
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import z from 'zod'
-import { buscarEntExecPorCodUsuario } from '../../functions/auth/buscar-entExec-por-codUsuario'
 import { buscarInvestidorPorCodUsuario } from '../../functions/auth/buscar-investidor-por-codUsuario'
 import { Perfil, verificarPermissao } from '../../middlewares/auth'
 

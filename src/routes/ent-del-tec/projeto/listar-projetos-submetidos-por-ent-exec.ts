@@ -24,6 +24,18 @@ export const listarProjetosSubmetidosPorEntExecRoute: FastifyPluginAsyncZod =
                 dataSubmissao: z.coerce.date().nullable(),
                 codPropriedade: z.number().nullable(),
                 CodMicroBacia: z.number(),
+                entidadeexecutora: z
+                  .object({
+                    codEntExec: z.number(),
+                    nome: z.string(),
+                  })
+                  .nullable(),
+                entidade_gerenciadora: z
+                  .object({
+                    codEntGer: z.number(),
+                    nome: z.string(),
+                  })
+                  .nullable(),
                 tipo_projeto: z.object({
                   codTipoProjeto: z.number(),
                   nome: z.string(),
@@ -61,6 +73,18 @@ export const listarProjetosSubmetidosPorEntExecRoute: FastifyPluginAsyncZod =
             dataSubmissao: proj.dataSubmissao ?? null,
             codPropriedade: proj.codPropriedade ?? null,
             CodMicroBacia: proj.CodMicroBacia ?? 0,
+            entidadeexecutora: proj.entidadeexecutora
+              ? {
+                  codEntExec: proj.entidadeexecutora.codEntExec,
+                  nome: proj.entidadeexecutora.nome,
+                }
+              : null,
+            entidade_gerenciadora: proj.entidade_gerenciadora
+              ? {
+                  codEntGer: proj.entidade_gerenciadora.codEntGer,
+                  nome: proj.entidade_gerenciadora.nome,
+                }
+              : null,
             tipo_projeto: {
               codTipoProjeto: proj.tipo_projeto?.codTipoProjeto ?? 0,
               nome: proj.tipo_projeto?.nome ?? '',
