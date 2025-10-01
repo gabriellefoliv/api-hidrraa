@@ -8,7 +8,10 @@ export const listarEvidenciasAvaliadasRoute: FastifyPluginAsyncZod =
     app.get(
       '/api/evidencias/:codProjeto/avaliadas',
       {
-        preHandler: verificarPermissao([Perfil.ENTIDADE_EXECUTORA]),
+        preHandler: verificarPermissao([
+          Perfil.ENTIDADE_EXECUTORA,
+          Perfil.ENT_GER,
+        ]),
         schema: {
           summary:
             'Listar execuções de marco com evidências avaliadas por projeto',
@@ -40,6 +43,15 @@ export const listarEvidenciasAvaliadasRoute: FastifyPluginAsyncZod =
                       codEvidenciaDemandada: z.number(),
                     })
                   ),
+                  relatorio_gerenciadora: z
+                    .array(
+                      z.object({
+                        codRelGer: z.number(),
+                        caminhoArquivo: z.string(),
+                        dataUpload: z.coerce.date(),
+                      })
+                    )
+                    .nullable(),
                 })
               ),
             }),
@@ -89,6 +101,15 @@ export const listarEvidenciasAvaliadasRoute: FastifyPluginAsyncZod =
                         evidencia.codEvidenciaDemandada ?? 0,
                     }))
                   : [],
+                relatorio_gerenciadora: Array.isArray(
+                  marco.relatorio_gerenciadora
+                )
+                  ? marco.relatorio_gerenciadora.map(relatorio => ({
+                      codRelGer: relatorio.codRelGer ?? 0,
+                      caminhoArquivo: relatorio.caminhoArquivo ?? '',
+                      dataUpload: relatorio.dataUpload ?? new Date(0),
+                    }))
+                  : null,
               }))
             : [],
         }

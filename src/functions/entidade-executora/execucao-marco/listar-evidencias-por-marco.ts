@@ -9,28 +9,37 @@ export async function listarEvidenciasPorMarco({
   codProjeto,
   codExecucaoMarco,
 }: ListarEvidenciasParams) {
-  const evidencias = await prisma.evidencia_apresentada.findMany({
+  const execucao = await prisma.execucao_marco.findUnique({
     where: {
-      execucao_marco: {
-        codProjeto,
-        codExecucaoMarco,
-      },
+      codExecucaoMarco,
+      codProjeto,
     },
     select: {
-      codEvidenciaApresentada: true,
-      caminhoArquivo: true,
-      dataUpload: true,
-      codEvidenciaDemandada: true,
-      execucao_marco: {
+      codExecucaoMarco: true,
+      descricao: true,
+      dataConclusaoEfetiva: true,
+      bc_statusValidacaoCBH: true,
+
+      evidencia_apresentada: {
         select: {
-          dataConclusaoEfetiva: true,
+          codEvidenciaApresentada: true,
+          caminhoArquivo: true,
+          dataUpload: true,
+          codEvidenciaDemandada: true,
         },
+        orderBy: { dataUpload: 'desc' },
       },
-    },
-    orderBy: {
-      dataUpload: 'desc',
+
+      relatorio_gerenciadora: {
+        select: {
+          codRelGer: true,
+          caminhoArquivo: true,
+          dataUpload: true,
+        },
+        orderBy: { dataUpload: 'desc' },
+      },
     },
   })
 
-  return evidencias
+  return execucao
 }

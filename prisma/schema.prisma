@@ -58,13 +58,14 @@ model entidadeexecutora {
 }
 
 model entidade_gerenciadora {
-  codEntGer  Int       @id @default(autoincrement())
-  nome       String    @db.VarChar(255)
-  cnpjcpf    String    @db.VarChar(255)
-  contato    String    @db.VarChar(255)
-  codUsuario Int
-  usuario    usuario   @relation(fields: [codUsuario], references: [codUsuario], map: "entidadegerenciadora_ibfk_1")
-  projeto    projeto[]
+  codEntGer              Int                      @id @default(autoincrement())
+  nome                   String                   @db.VarChar(255)
+  cnpjcpf                String                   @db.VarChar(255)
+  contato                String                   @db.VarChar(255)
+  codUsuario             Int
+  usuario                usuario                  @relation(fields: [codUsuario], references: [codUsuario], map: "entidadegerenciadora_ibfk_1")
+  projeto                projeto[]
+  relatorio_gerenciadora relatorio_gerenciadora[]
 
   @@index([codUsuario], map: "codUsuario")
 }
@@ -82,6 +83,16 @@ model evidencia_apresentada {
   @@index([codExecucaoMarco], map: "codExecucaoMarco")
 }
 
+model relatorio_gerenciadora {
+  codRelGer             Int                   @id @default(autoincrement())
+  caminhoArquivo        String                @db.VarChar(255)
+  dataUpload            DateTime              @db.DateTime(0)
+  codExecucaoMarco      Int
+  codEntGer             Int
+  execucao_marco        execucao_marco        @relation(fields: [codExecucaoMarco], references: [codExecucaoMarco], map: "relatorio_gerenciadora_ibfk_1")
+  entidade_gerenciadora entidade_gerenciadora @relation(fields: [codEntGer], references: [codEntGer], map: "relatorio_gerenciadora_ibfk_2")
+}
+
 model evidencia_demandada {
   codEvidenciaDemandada Int                     @id @default(autoincrement())
   descricao             String                  @db.VarChar(255)
@@ -94,21 +105,22 @@ model evidencia_demandada {
 }
 
 model execucao_marco {
-  codExecucaoMarco      Int                                   @id @default(autoincrement())
-  descricao             String?                               @db.VarChar(255)
-  descrDetAjustes       String?                               @db.VarChar(255)
-  bc_statusValidacaoCBH execucao_marco_bc_statusValidacaoCBH?
-  codAvaliador          Int?
-  codMarcoRecomendado   Int
-  codProjeto            Int
-  valorEstimado         Float?                                @db.Float
-  dataConclusaoEfetiva  DateTime?                             @db.Date
-  dataConclusaoPrevista DateTime?                             @db.Date
-  evidencia_apresentada evidencia_apresentada[]
-  marco_recomendado     marco_recomendado                     @relation(fields: [codMarcoRecomendado], references: [codMarcoRecomendado], map: "execucao_marco_ibfk_2")
-  projeto               projeto                               @relation(fields: [codProjeto], references: [codProjeto], map: "execucao_marco_ibfk_3")
-  pagto_marco_concluido pagto_marco_concluido[]
-  pagto_servico         pagto_servico[]
+  codExecucaoMarco       Int                                   @id @default(autoincrement())
+  descricao              String?                               @db.VarChar(255)
+  descrDetAjustes        String?                               @db.VarChar(255)
+  bc_statusValidacaoCBH  execucao_marco_bc_statusValidacaoCBH?
+  codAvaliador           Int?
+  codMarcoRecomendado    Int
+  codProjeto             Int
+  valorEstimado          Float?                                @db.Float
+  dataConclusaoEfetiva   DateTime?                             @db.Date
+  dataConclusaoPrevista  DateTime?                             @db.Date
+  evidencia_apresentada  evidencia_apresentada[]
+  marco_recomendado      marco_recomendado                     @relation(fields: [codMarcoRecomendado], references: [codMarcoRecomendado], map: "execucao_marco_ibfk_2")
+  projeto                projeto                               @relation(fields: [codProjeto], references: [codProjeto], map: "execucao_marco_ibfk_3")
+  pagto_marco_concluido  pagto_marco_concluido[]
+  pagto_servico          pagto_servico[]
+  relatorio_gerenciadora relatorio_gerenciadora[]
 
   @@unique([codProjeto, codMarcoRecomendado], name: "codProjeto_codMarcoRecomendado")
   @@index([codAvaliador], map: "codAvaliador")

@@ -13,6 +13,7 @@ import {
 import path from 'node:path'
 import fastifyMultipart from '@fastify/multipart'
 import fastifyStatic from '@fastify/static'
+import { buscarEntGerPorCodUsuarioRoute } from './routes/auth/buscar-ent-ger-por-codUsuario-route'
 import { buscarInvestidorPorCodUsuarioRoute } from './routes/auth/buscar-investidor-por-codUsuario-route'
 import { cadastrarEntidadeDelegatariaTecnicaRoute } from './routes/auth/cadastrar-ent-del-tec'
 import { cadastrarEntidadeExecutoraRoute } from './routes/auth/cadastrar-entidade-executora-route'
@@ -21,7 +22,7 @@ import { cadastrarInvestidorRoute } from './routes/auth/cadastrar-investidor-rou
 import { listarEntExecsRoute } from './routes/auth/listar-entExecs-route'
 import { listarEntGersRoute } from './routes/auth/listar-entGers-route'
 import { loginRoute } from './routes/auth/login-route'
-import { listarEvidenciasSubmetidasRoute } from './routes/ent-del-tec/analise-evidencia/listar-evidencias-submetidas-route'
+import { listarMarcosCompletosRoute } from './routes/ent-del-tec/analise-evidencia/listar-marcos-completos-route'
 import { listarProjetosComEvidenciasRoute } from './routes/ent-del-tec/analise-evidencia/listar-projetos-com-evidencias-route'
 import { validarEvidenciasRoute } from './routes/ent-del-tec/analise-evidencia/validar-evidencias-route'
 import { listarAportesRoute } from './routes/ent-del-tec/aporte/listar-aportes-route'
@@ -49,6 +50,8 @@ import { atualizarPropriedadeRoute } from './routes/ent-del-tec/propriedade/atua
 import { criarPropriedadeRoute } from './routes/ent-del-tec/propriedade/criar-propriedade-route'
 import { deletarPropriedadeRoute } from './routes/ent-del-tec/propriedade/deletar-propriedade-route'
 import { listarPropriedadesRoute } from './routes/ent-del-tec/propriedade/listar-propriedades-route'
+import { listarEvidenciasSubmetidasRoute } from './routes/ent-ger/listar-evidencias-submetidas-route'
+import { uploadRelatorioRoute } from './routes/ent-ger/upload-relatorio-route'
 import { buscarProjetoExecutavelRoute } from './routes/entidade-executora/execucao-marco/buscar-projeto-executavel-route'
 import { buscarSaldoDisponivelRoute } from './routes/entidade-executora/execucao-marco/buscar-saldo-disponivel-route'
 import { excluirEvidenciaRoute } from './routes/entidade-executora/execucao-marco/excluir-evidencia-route'
@@ -122,6 +125,7 @@ app.register(cadastrarInvestidorRoute)
 app.register(cadastrarEntidadeDelegatariaTecnicaRoute)
 app.register(cadastrarEntidadeGerenciadoraRoute)
 app.register(loginRoute)
+app.register(buscarEntGerPorCodUsuarioRoute)
 // Projetos
 app.register(listarTiposProjetoRoute)
 app.register(listarDetalhesModeloRoute)
@@ -136,6 +140,7 @@ app.register(delegarEntExecEntGerRoute)
 // Evidências
 app.register(listarProjetosAprovadosRoute)
 app.register(uploadEvidenciaRoute)
+app.register(uploadRelatorioRoute)
 app.register(listarEvidenciasRoute)
 // TODO : Usar rota de buscarProjeto no futuro, ao invés disso
 app.register(buscarProjetoExecutavelRoute)
@@ -144,6 +149,7 @@ app.register(excluirEvidenciaRoute)
 app.register(validarEvidenciasRoute)
 app.register(listarEvidenciasSubmetidasRoute)
 app.register(listarProjetosComEvidenciasRoute)
+app.register(listarMarcosCompletosRoute)
 app.register(listarEvidenciasAvaliadasRoute)
 
 // Microbacia

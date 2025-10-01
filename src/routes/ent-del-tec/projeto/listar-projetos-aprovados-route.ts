@@ -11,41 +11,41 @@ export const listarProjetosAprovadosRoute: FastifyPluginAsyncZod =
         preHandler: verificarPermissao([
           Perfil.ENT_DEL_TEC,
           Perfil.ENTIDADE_EXECUTORA,
+          Perfil.ENT_GER,
         ]),
         schema: {
-          summary: 'Listar projetos aprovados por entidade executora',
+          summary: 'Listar projetos aprovados por entidade',
           tags: ['Projeto'],
+          // O schema de resposta agora reflete a estrutura de dados limpa e formatada
           response: {
             200: z.array(
-              z.object({
-                codProjeto: z.number(),
-                titulo: z.string(),
-                objetivo: z.string(),
-                acoes: z.string(),
-                cronograma: z.string(),
-                orcamento: z.number(),
-                dataSubmissao: z.coerce.date().nullable(),
-                codPropriedade: z.number().nullable(),
-                CodMicroBacia: z.number(),
-                CodEntExec: z.number(),
-                tipo_projeto: z.object({
-                  codTipoProjeto: z.number(),
-                  nome: z.string(),
-                  descricao: z.string(),
-                  execucao_marcos: z.array(
-                    z.object({
-                      codMarcoRecomendado: z.number(),
-                      descricao: z.string(),
-                      valorEstimado: z.number(),
-                      dataConclusaoPrevista: z.coerce.date(),
-                    })
-                  ),
-                }),
-                microbacia: z.object({
-                  codMicroBacia: z.number(),
-                  nome: z.string(),
-                }),
-              })
+              z
+                .object({
+                  codProjeto: z.number(),
+                  titulo: z.string().nullable(),
+                  // ... outros campos do projeto
+                  orcamento: z.number().nullable(),
+                  dataSubmissao: z.coerce.date().nullable(),
+                  entidadeexecutora: z.object({ nome: z.string() }).nullable(),
+                  entidade_gerenciadora: z
+                    .object({ nome: z.string() })
+                    .nullable(),
+                  tipo_projeto: z.object({
+                    codTipoProjeto: z.number(),
+                    nome: z.string(),
+                    descricao: z.string(),
+                    // A resposta final terá um array 'execucao_marcos' achatado e filtrado
+                    execucao_marcos: z.array(
+                      z.object({
+                        codMarcoRecomendado: z.number(),
+                        descricao: z.string(),
+                        valorEstimado: z.number(),
+                        dataConclusaoPrevista: z.coerce.date(),
+                      })
+                    ),
+                  }),
+                })
+                .passthrough() // Permite outros campos não definidos no schema
             ),
             404: z.object({
               error: z.string(),
@@ -54,32 +54,29 @@ export const listarProjetosAprovadosRoute: FastifyPluginAsyncZod =
         },
       },
       async (request, reply) => {
-        const { codUsuario } = request.user as { codUsuario: number }
+        const { codUsuario, perfil } = request.user as {
+          codUsuario: number
+          perfil: string
+        }
         if (!codUsuario) {
           return reply.status(401).send({ error: 'Usuário não autenticado' })
         }
 
         try {
-          const projetos = await listarProjetosAprovados({ codUsuario })
+          // 1. Busca os dados "crus" da sua function
+          const projetos = await listarProjetosAprovados({ codUsuario, perfil })
 
+          // --- PONTO DA CORREÇÃO ---
+          // 2. Transforma os dados para o formato que o frontend precisa
           const formattedProjetos = projetos.map(proj => ({
-            codProjeto: proj.codProjeto,
-            titulo: proj.titulo ?? '',
-            objetivo: proj.objetivo ?? '',
-            acoes: proj.acoes ?? '',
-            cronograma: proj.cronograma ?? '',
-            orcamento: proj.orcamento ?? 0,
-            dataSubmissao: proj.dataSubmissao ?? null,
-            codPropriedade: proj.codPropriedade ?? null,
-            CodMicroBacia: proj.CodMicroBacia ?? 0,
-            CodEntExec: proj.CodEntExec ?? 0,
+            ...proj, // Copia todos os campos base do projeto
             tipo_projeto: {
-              codTipoProjeto: proj.tipo_projeto?.codTipoProjeto ?? 0,
-              nome: proj.tipo_projeto?.nome ?? '',
-              descricao: proj.tipo_projeto?.descricao ?? '',
+              ...proj.tipo_projeto, // Copia os campos de tipo_projeto
+              // Cria o array 'execucao_marcos' filtrando e achatando os dados
               execucao_marcos:
                 proj.tipo_projeto?.marco_recomendado?.flatMap(marco =>
                   marco.execucao_marco
+                    // AQUI ESTÁ O FILTRO: pega apenas marcos deste projeto
                     .filter(execucao => execucao.codProjeto === proj.codProjeto)
                     .map(m => ({
                       codMarcoRecomendado: marco.codMarcoRecomendado,
@@ -90,12 +87,9 @@ export const listarProjetosAprovadosRoute: FastifyPluginAsyncZod =
                     }))
                 ) ?? [],
             },
-            microbacia: {
-              codMicroBacia: proj.microbacia?.CodMicroBacia ?? 0,
-              nome: proj.microbacia?.Nome ?? '',
-            },
           }))
 
+          // 3. Envia os dados já formatados e limpos
           return reply.status(200).send(formattedProjetos)
           // biome-ignore lint/suspicious/noExplicitAny: <explanation>
         } catch (error: any) {

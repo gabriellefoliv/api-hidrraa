@@ -8,7 +8,10 @@ export const buscarProjetoExecutavelRoute: FastifyPluginAsyncZod =
     app.get(
       '/api/projetos/:codProjeto/executavel',
       {
-        preHandler: verificarPermissao(Perfil.ENTIDADE_EXECUTORA),
+        preHandler: verificarPermissao([
+          Perfil.ENTIDADE_EXECUTORA,
+          Perfil.ENT_GER,
+        ]),
         schema: {
           summary: 'Buscar projeto executável por id',
           tags: ['Projeto'],

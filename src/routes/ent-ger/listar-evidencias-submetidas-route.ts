@@ -1,16 +1,16 @@
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import z from 'zod'
-import { listarEvidenciasSubmetidas } from '../../../functions/ent-del-tec/analise-evidencia/listar-evidencias-submetidas'
-import { Perfil, verificarPermissao } from '../../../middlewares/auth'
+import { listarEvidenciasSubmetidas } from '../../functions/ent-ger/listar-evidencias-submetidas'
+import { Perfil, verificarPermissao } from '../../middlewares/auth'
 
 export const listarEvidenciasSubmetidasRoute: FastifyPluginAsyncZod =
   async app => {
     app.get(
-      '/api/evidencias/:codProjeto/submetidas',
+      '/api/evidencias/:codProjeto/submetidas/:codExecucaoMarco',
       {
         preHandler: verificarPermissao([
-          Perfil.ENT_DEL_TEC,
           Perfil.ENTIDADE_EXECUTORA,
+          Perfil.ENT_GER,
         ]),
         schema: {
           summary:
@@ -18,6 +18,7 @@ export const listarEvidenciasSubmetidasRoute: FastifyPluginAsyncZod =
           tags: ['Evidência'],
           params: z.object({
             codProjeto: z.coerce.number(),
+            codExecucaoMarco: z.coerce.number(),
           }),
           response: {
             200: z.array(
@@ -34,15 +35,25 @@ export const listarEvidenciasSubmetidasRoute: FastifyPluginAsyncZod =
                     codEvidenciaDemandada: z.number(),
                   })
                 ),
+                relatorio_gerenciadora: z.array(
+                  z.object({
+                    codRelGer: z.number(),
+                    caminhoArquivo: z.string(),
+                    dataUpload: z.coerce.date(),
+                  })
+                ),
               })
             ),
           },
         },
       },
       async (request, reply) => {
-        const { codProjeto } = request.params
+        const { codProjeto, codExecucaoMarco } = request.params
 
-        const execucoes = await listarEvidenciasSubmetidas({ codProjeto })
+        const execucoes = await listarEvidenciasSubmetidas({
+          codProjeto,
+          codExecucaoMarco,
+        })
 
         const formattedExecucoes = execucoes.map(execucao => ({
           ...execucao,

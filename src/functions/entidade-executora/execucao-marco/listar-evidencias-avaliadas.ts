@@ -42,6 +42,16 @@ export function listarEvidenciasAvaliadas({
               dataUpload: 'desc',
             },
           },
+          relatorio_gerenciadora: {
+            select: {
+              codRelGer: true,
+              caminhoArquivo: true,
+              dataUpload: true,
+            },
+            orderBy: {
+              dataUpload: 'desc',
+            },
+          },
         },
         orderBy: {
           dataConclusaoEfetiva: 'desc',
