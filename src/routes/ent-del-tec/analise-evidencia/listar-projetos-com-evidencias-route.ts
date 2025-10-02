@@ -8,7 +8,10 @@ export const listarProjetosComEvidenciasRoute: FastifyPluginAsyncZod =
     app.get(
       '/api/projetos-com-evidencias',
       {
-        preHandler: verificarPermissao(Perfil.ENT_DEL_TEC),
+        preHandler: verificarPermissao([
+          Perfil.ENT_DEL_TEC,
+          Perfil.ENT_DEL_FIN,
+        ]),
         schema: {
           summary: 'Listar projetos com evidências submetidas',
           tags: ['Evidências'],

@@ -6,6 +6,7 @@ export enum Perfil {
   ENT_DEL_TEC = 'ent_del_tec',
   INVESTIDOR = 'investidor',
   ENT_GER = 'entidade_gerenciadora',
+  ENT_DEL_FIN = 'ent_del_fin',
 }
 
 // Middleware simples de verificação de autenticação

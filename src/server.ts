@@ -15,6 +15,7 @@ import fastifyMultipart from '@fastify/multipart'
 import fastifyStatic from '@fastify/static'
 import { buscarEntGerPorCodUsuarioRoute } from './routes/auth/buscar-ent-ger-por-codUsuario-route'
 import { buscarInvestidorPorCodUsuarioRoute } from './routes/auth/buscar-investidor-por-codUsuario-route'
+import { cadastrarEntidadeDelegatariaFinanceiraRoute } from './routes/auth/cadastrar-ent-del-fin-route'
 import { cadastrarEntidadeDelegatariaTecnicaRoute } from './routes/auth/cadastrar-ent-del-tec'
 import { cadastrarEntidadeExecutoraRoute } from './routes/auth/cadastrar-entidade-executora-route'
 import { cadastrarEntidadeGerenciadoraRoute } from './routes/auth/cadastrar-entidade-gerenciadora-route'
@@ -22,6 +23,7 @@ import { cadastrarInvestidorRoute } from './routes/auth/cadastrar-investidor-rou
 import { listarEntExecsRoute } from './routes/auth/listar-entExecs-route'
 import { listarEntGersRoute } from './routes/auth/listar-entGers-route'
 import { loginRoute } from './routes/auth/login-route'
+import { listarProjetosComSolicitacoesRoute } from './routes/ent-del-fin/listar-projetos-com-solicitacoes-route'
 import { listarMarcosCompletosRoute } from './routes/ent-del-tec/analise-evidencia/listar-marcos-completos-route'
 import { listarProjetosComEvidenciasRoute } from './routes/ent-del-tec/analise-evidencia/listar-projetos-com-evidencias-route'
 import { validarEvidenciasRoute } from './routes/ent-del-tec/analise-evidencia/validar-evidencias-route'
@@ -126,6 +128,7 @@ app.register(cadastrarEntidadeDelegatariaTecnicaRoute)
 app.register(cadastrarEntidadeGerenciadoraRoute)
 app.register(loginRoute)
 app.register(buscarEntGerPorCodUsuarioRoute)
+app.register(cadastrarEntidadeDelegatariaFinanceiraRoute)
 // Projetos
 app.register(listarTiposProjetoRoute)
 app.register(listarDetalhesModeloRoute)
@@ -182,6 +185,7 @@ app.register(criarPaymentIntentRoute)
 //Financiamento
 app.register(solicitarFinanciamentoRoute)
 app.register(buscarSaldoDisponivelRoute)
+app.register(listarProjetosComSolicitacoesRoute)
 
 app.listen({ port: 3000 }).then(() => {
   console.log('💦 HTTP Server Running!')
