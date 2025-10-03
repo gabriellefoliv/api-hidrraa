@@ -123,6 +123,10 @@ app.register(fastifyStatic, {
   prefix: '/uploads/',
 })
 
+app.head('/health', () => {
+  return 'OK'
+})
+
 // Auth
 app.register(cadastrarEntidadeExecutoraRoute)
 app.register(cadastrarInvestidorRoute)
