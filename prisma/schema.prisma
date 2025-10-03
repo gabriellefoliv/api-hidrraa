@@ -3,14 +3,14 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 model aporte {
   codAporte        Int                    @id @default(autoincrement())
-  dataInvestimento DateTime               @db.DateTime(0)
-  bc_valor         Float                  @db.Float
+  dataInvestimento DateTime
+  bc_valor         Float
   validadoAGEVAP   Boolean                @default(false)
   codInvestidor    Int
   codCBH           Int
@@ -18,8 +18,8 @@ model aporte {
   cbh              cbh                    @relation(fields: [codCBH], references: [codCBH], map: "aporte_ibfk_2")
   transacoes       transacao_blockchain[]
 
-  @@index([codCBH], map: "codCBH")
-  @@index([codInvestidor], map: "codInvestidor")
+  @@index([codCBH], map: "aporte_codCBH_idx")
+  @@index([codInvestidor], map: "aporte_codInvestidor_idx")
 }
 
 model cbh {
@@ -39,7 +39,7 @@ model comite_investido {
   cbh            cbh            @relation(fields: [codCBH], references: [codCBH], map: "comite_investido_ibfk_2")
 
   @@id([codCBH, codInvestidor])
-  @@index([codCBH], map: "codCBH")
+  @@index([codCBH], map: "comite_investido_codCBH_idx")
   @@index([codInvestidor], map: "codInvestidor")
 }
 
@@ -54,7 +54,7 @@ model entidadeexecutora {
   pagto_marco_concluido pagto_marco_concluido[]
   projeto               projeto[]
 
-  @@index([codUsuario], map: "codUsuario")
+  @@index([codUsuario], map: "entidadeexecutora_codUsuario_idx")
 }
 
 model entidade_gerenciadora {
@@ -67,26 +67,26 @@ model entidade_gerenciadora {
   projeto                projeto[]
   relatorio_gerenciadora relatorio_gerenciadora[]
 
-  @@index([codUsuario], map: "codUsuario")
+  @@index([codUsuario], map: "entidade_gerenciadora_codUsuario_idx")
 }
 
 model evidencia_apresentada {
   codEvidenciaApresentada Int                 @id @default(autoincrement())
   caminhoArquivo          String              @db.VarChar(255)
-  dataUpload              DateTime            @db.DateTime(0)
+  dataUpload              DateTime
   codExecucaoMarco        Int
   codEvidenciaDemandada   Int
   execucao_marco          execucao_marco      @relation(fields: [codExecucaoMarco], references: [codExecucaoMarco], map: "evidencia_apresentada_ibfk_1")
   evidencia_demandada     evidencia_demandada @relation(fields: [codEvidenciaDemandada], references: [codEvidenciaDemandada], map: "evidencia_apresentada_ibfk_2")
 
   @@index([codEvidenciaDemandada], map: "codEvidenciaDemandada")
-  @@index([codExecucaoMarco], map: "codExecucaoMarco")
+  @@index([codExecucaoMarco], map: "pagto_marco_concluido_codExecucaoMarco_idx")
 }
 
 model relatorio_gerenciadora {
   codRelGer             Int                   @id @default(autoincrement())
   caminhoArquivo        String                @db.VarChar(255)
-  dataUpload            DateTime              @db.DateTime(0)
+  dataUpload            DateTime
   codExecucaoMarco      Int
   codEntGer             Int
   execucao_marco        execucao_marco        @relation(fields: [codExecucaoMarco], references: [codExecucaoMarco], map: "relatorio_gerenciadora_ibfk_1")
@@ -101,7 +101,7 @@ model evidencia_demandada {
   evidencia_apresentada evidencia_apresentada[]
   marco_recomendado     marco_recomendado       @relation(fields: [codMarcoRecomendado], references: [codMarcoRecomendado], map: "evidencia_demandada_ibfk_1")
 
-  @@index([codMarcoRecomendado], map: "codMarcoRecomendado")
+  @@index([codMarcoRecomendado], map: "evidencia_demandada_codMarcoRecomendado_idx")
 }
 
 model execucao_marco {
@@ -112,7 +112,7 @@ model execucao_marco {
   codAvaliador           Int?
   codMarcoRecomendado    Int
   codProjeto             Int
-  valorEstimado          Float?                                @db.Float
+  valorEstimado          Float?
   dataConclusaoEfetiva   DateTime?                             @db.Date
   dataConclusaoPrevista  DateTime?                             @db.Date
   evidencia_apresentada  evidencia_apresentada[]
@@ -149,7 +149,7 @@ model marco_recomendado {
   execucao_marco      execucao_marco[]
   tipo_projeto        tipo_projeto          @relation(fields: [codTipoProjeto], references: [codTipoProjeto], map: "marco_recomendado_ibfk_1")
 
-  @@index([codTipoProjeto], map: "codTipoProjeto")
+  @@index([codTipoProjeto], map: "marco_recomendado_codTipoProjeto_idx")
 }
 
 model microbacia {
@@ -165,7 +165,7 @@ model microbacia {
 
 model pagto_marco_concluido {
   codPagtoMarco     Int                    @id @default(autoincrement())
-  bc_data           DateTime               @db.DateTime(0)
+  bc_data           DateTime
   bc_valor          Float
   codExecucaoMarco  Int
   codProdutor       Int?
@@ -176,8 +176,8 @@ model pagto_marco_concluido {
   transacoes        transacao_blockchain[]
 
   @@index([CodEntExec], map: "CodEntExec")
-  @@index([codExecucaoMarco], map: "codExecucaoMarco")
-  @@index([codProdutor], map: "codProdutor")
+  @@index([codExecucaoMarco], map: "pagto_marco_concluido_codExecucaoMarco_idx2")
+  @@index([codProdutor], map: "propriedade_codProdutor_idx")
 }
 
 model produtor_rural {
@@ -190,7 +190,7 @@ model produtor_rural {
   cbh                   cbh                     @relation(fields: [codCBH], references: [codCBH], map: "produtor_rural_ibfk_1")
   propriedade           propriedade[]
 
-  @@index([codCBH], map: "codCBH")
+  @@index([codCBH], map: "produtor_rural_codCBH_idx")
 }
 
 model projeto {
@@ -214,7 +214,7 @@ model projeto {
   entidade_gerenciadora entidade_gerenciadora? @relation(fields: [codEntGer], references: [codEntGer], map: "projeto_ibfk_6")
 
   @@index([CodEntExec], map: "CodEntExecutora")
-  @@index([CodMicroBacia], map: "CodMicroBacia")
+  @@index([CodMicroBacia], map: "propriedade_CodMicroBacia_idx")
   @@index([codPropriedade], map: "codPropriedade")
   @@index([codTipoProjeto], map: "codTipoProjeto")
 }
@@ -277,7 +277,7 @@ model pagto_servico {
   docNF            String
   codFornecedor    Int
   codExecucaoMarco Int
-  fornecedor       fornecedor             @relation(fields: [codFornecedor], references: [codFornecedor])
+  fornecedor       fornecedor             @relation(fields: [codFornecedor], references: [codFornecedor], map: "pagto_servico_codFornecedor_fkey2")
   execucao_marco   execucao_marco         @relation(fields: [codExecucaoMarco], references: [codExecucaoMarco], map: "pagto_servico_ibfk_1")
   transacoes       transacao_blockchain[]
 
@@ -297,9 +297,9 @@ model transacao_blockchain {
   codAporte       Int?
   codPagtoServico Int?
   codPagtoMarco   Int?
-  aporte          aporte?                @relation(fields: [codAporte], references: [codAporte])
-  pagtoMarco      pagto_marco_concluido? @relation(fields: [codPagtoMarco], references: [codPagtoMarco])
-  pagtoServico    pagto_servico?         @relation(fields: [codPagtoServico], references: [codPagtoServico])
+  aporte          aporte?                @relation(fields: [codAporte], references: [codAporte], map: "transacao_blockchain_codAporte_fkey1")
+  pagtoMarco      pagto_marco_concluido? @relation(fields: [codPagtoMarco], references: [codPagtoMarco], map: "transacao_blockchain_codPagtoMarco_fkey2")
+  pagtoServico    pagto_servico?         @relation(fields: [codPagtoServico], references: [codPagtoServico], map: "transacao_blockchain_codPagtoServico_fkey3")
 
   @@index([codAporte], map: "transacao_blockchain_codAporte_fkey")
   @@index([codPagtoMarco], map: "transacao_blockchain_codPagtoMarco_fkey")

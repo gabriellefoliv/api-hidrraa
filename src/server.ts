@@ -82,7 +82,7 @@ app.setSerializerCompiler(serializerCompiler)
 app.setValidatorCompiler(validatorCompiler)
 
 app.register(fastifyCors, {
-  origin: 'http://localhost:5173',
+  origin: '*',
   credentials: true,
   allowedHeaders: ['Authorization', 'Content-Type'],
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
