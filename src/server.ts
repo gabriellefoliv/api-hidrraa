@@ -191,6 +191,14 @@ app.register(listarProjetosComSolicitacoesRoute)
 app.register(listarEvidenciasComSolicitacoesRoute)
 app.register(confirmarPagamentoRoute)
 
-app.listen({ port: 3000 }).then(() => {
-  console.log('💦 HTTP Server Running!')
-})
+const port = 3000
+
+app
+  .listen({ port, host: '0.0.0.0' })
+  .then(() => {
+    console.log(`💦 HTTP Server Running on port ${port}!`)
+  })
+  .catch(err => {
+    console.error(err)
+    process.exit(1)
+  })
