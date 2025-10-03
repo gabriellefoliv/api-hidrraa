@@ -11,6 +11,9 @@ export async function listarAportesRealizados({
     where: {
       codInvestidor,
     },
+    include: {
+      transacoes: true,
+    },
     orderBy: {
       dataInvestimento: 'desc',
     },

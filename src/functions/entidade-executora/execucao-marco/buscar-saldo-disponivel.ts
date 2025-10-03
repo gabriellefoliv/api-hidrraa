@@ -7,14 +7,13 @@ interface BuscarSaldoDisponivelParams {
 export async function buscarSaldoDisponivel({
   codProjeto,
 }: BuscarSaldoDisponivelParams) {
-  const [avaliacao, aggregatePagamentos] = await Promise.all([
-    prisma.avaliacao.findFirst({
+  const [projeto, aggregatePagamentos] = await Promise.all([
+    prisma.projeto.findFirst({
       where: {
         codProjeto,
-        bc_aprovado: true,
       },
       select: {
-        bc_valorPagto: true,
+        orcamento: true,
       },
     }),
     prisma.pagto_marco_concluido.aggregate({
@@ -25,13 +24,11 @@ export async function buscarSaldoDisponivel({
         execucao_marco: {
           codProjeto,
         },
-        // Opcional: Adicionar um status para somar apenas pagamentos 'APROVADOS'
-        // status: 'APROVADO'
       },
     }),
   ])
 
-  const valorLiberado = avaliacao?.bc_valorPagto ?? 0
+  const valorLiberado = projeto?.orcamento ?? 0
   const totalJaPago = aggregatePagamentos._sum.bc_valor ?? 0
   const saldoDisponivel = valorLiberado - totalJaPago
 

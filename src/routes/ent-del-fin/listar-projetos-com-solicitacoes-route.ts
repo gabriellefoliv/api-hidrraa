@@ -6,38 +6,47 @@ import { Perfil, verificarPermissao } from '../../middlewares/auth'
 export const listarProjetosComSolicitacoesRoute: FastifyPluginAsyncZod =
   async app => {
     app.get(
-      '/api/pagamentos/projetos-com-solicitacoes',
+      '/api/pagamentos',
       {
-        preHandler: verificarPermissao([Perfil.ENT_DEL_FIN]),
+        preHandler: verificarPermissao([
+          Perfil.ENT_DEL_TEC,
+          Perfil.ENT_DEL_FIN,
+        ]),
         schema: {
-          summary:
-            'Lista projetos que possuem solicitações de pagamento em aberto',
+          summary: 'Listar projetos com solicitações de pagamento',
           tags: ['Pagamentos'],
           response: {
             200: z.array(
               z.object({
                 codProjeto: z.number(),
                 titulo: z.string(),
+                objetivo: z.string(),
+                acoes: z.string(),
+                cronograma: z.string(),
                 orcamento: z.number(),
-                objetivo: z.string().nullable(),
-                acoes: z.string().nullable(),
-                cronograma: z.string().nullable(),
-
-                execucao_marco: z.array(
-                  z.object({
-                    codExecucaoMarco: z.number(),
-                    descricao: z.string(),
-                    valorEstimado: z.number(),
-                    dataConclusaoEfetiva: z.date().nullable(),
-                    pagto_marco_concluido: z.array(
-                      z.object({
-                        codPagtoMarco: z.number(),
-                        CodEntExec: z.number(),
-                        bc_data: z.date().nullable(),
-                      })
-                    ),
-                  })
-                ),
+                codPropriedade: z.number(),
+                CodMicroBacia: z.number(),
+                dataSubmissao: z.date(),
+                tipo_projeto: z.object({
+                  codTipoProjeto: z.number(),
+                  nome: z.string(),
+                  descricao: z.string(),
+                  execucao_marcos: z.array(
+                    z.object({
+                      descricao: z.string(),
+                      valorEstimado: z.number(),
+                      dataConclusaoPrevista: z.date(),
+                    })
+                  ),
+                }),
+                microbacia: z.object({
+                  CodMicroBacia: z.number(),
+                  nome: z.string(),
+                }),
+                entidadeexecutora: z.object({
+                  codEntidadeExecutora: z.number(),
+                  nome: z.string(),
+                }),
               })
             ),
             500: z.object({
@@ -49,34 +58,52 @@ export const listarProjetosComSolicitacoesRoute: FastifyPluginAsyncZod =
       async (request, reply) => {
         try {
           const projetos = await listarProjetosComSolicitacoes()
-          const formattedProjetos = projetos.map(proj => ({
+          // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+          const formatted = projetos.map((proj: any) => ({
             codProjeto: proj.codProjeto,
             titulo: proj.titulo ?? '',
+            objetivo: proj.objetivo ?? '',
+            acoes: proj.acoes ?? '',
+            cronograma: proj.cronograma ?? '',
             orcamento: proj.orcamento ?? 0,
-            objetivo: proj.objetivo ?? null,
-            acoes: proj.acoes ?? null,
-            cronograma: proj.cronograma ?? null,
-            execucao_marco: Array.isArray(proj.execucao_marco)
-              ? proj.execucao_marco.map(marco => ({
-                  codExecucaoMarco: marco.codExecucaoMarco,
-                  descricao: marco.descricao ?? '',
-                  valorEstimado: marco.valorEstimado ?? 0,
-                  dataConclusaoEfetiva: marco.dataConclusaoEfetiva ?? null,
-                  pagto_marco_concluido: Array.isArray(
-                    marco.pagto_marco_concluido
+            codPropriedade: proj.codPropriedade ?? 0,
+            CodMicroBacia: proj.CodMicroBacia ?? 0,
+            dataSubmissao: proj.dataSubmissao ?? new Date(0),
+            tipo_projeto: {
+              codTipoProjeto: proj.tipo_projeto?.codTipoProjeto ?? 0,
+              nome: proj.tipo_projeto?.nome ?? '',
+              descricao: proj.tipo_projeto?.descricao ?? '',
+              execucao_marcos: Array.isArray(
+                proj.tipo_projeto?.marco_recomendado
+              )
+                ? // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+                  proj.tipo_projeto.marco_recomendado.flatMap((marco: any) =>
+                    Array.isArray(marco.execucao_marco)
+                      ? // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+                        marco.execucao_marco.map((em: any) => ({
+                          descricao: em.descricao ?? '',
+                          valorEstimado: em.valorEstimado ?? 0,
+                          dataConclusaoPrevista: em.dataConclusaoPrevista
+                            ? new Date(em.dataConclusaoPrevista)
+                            : new Date(0),
+                        }))
+                      : []
                   )
-                    ? marco.pagto_marco_concluido.map(pm => ({
-                        codPagtoMarco: pm.codPagtoMarco,
-                        CodEntExec: pm.CodEntExec ?? 0,
-                        bc_data: pm.bc_data ?? null,
-                      }))
-                    : [],
-                }))
-              : [],
+                : [],
+            },
+            microbacia: {
+              CodMicroBacia: proj.microbacia?.CodMicroBacia ?? 0,
+              nome: proj.microbacia?.nome ?? '',
+            },
+            entidadeexecutora: {
+              codEntidadeExecutora:
+                proj.entidadeexecutora?.codEntidadeExecutora ?? 0,
+              nome: proj.entidadeexecutora?.nome ?? '',
+            },
           }))
-          return reply.status(200).send(formattedProjetos)
+          return reply.status(200).send(formatted)
         } catch (error) {
-          return reply.status(500).send({ error: (error as Error).message })
+          return reply.status(500).send({ error: 'Erro ao listar projetos' })
         }
       }
     )

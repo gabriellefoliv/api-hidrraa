@@ -23,6 +23,8 @@ import { cadastrarInvestidorRoute } from './routes/auth/cadastrar-investidor-rou
 import { listarEntExecsRoute } from './routes/auth/listar-entExecs-route'
 import { listarEntGersRoute } from './routes/auth/listar-entGers-route'
 import { loginRoute } from './routes/auth/login-route'
+import { confirmarPagamentoRoute } from './routes/ent-del-fin/confirmar-pagamento-de-marco-route'
+import { listarEvidenciasComSolicitacoesRoute } from './routes/ent-del-fin/listar-evidencias-com-solicitacoes-route'
 import { listarProjetosComSolicitacoesRoute } from './routes/ent-del-fin/listar-projetos-com-solicitacoes-route'
 import { listarMarcosCompletosRoute } from './routes/ent-del-tec/analise-evidencia/listar-marcos-completos-route'
 import { listarProjetosComEvidenciasRoute } from './routes/ent-del-tec/analise-evidencia/listar-projetos-com-evidencias-route'
@@ -186,6 +188,8 @@ app.register(criarPaymentIntentRoute)
 app.register(solicitarFinanciamentoRoute)
 app.register(buscarSaldoDisponivelRoute)
 app.register(listarProjetosComSolicitacoesRoute)
+app.register(listarEvidenciasComSolicitacoesRoute)
+app.register(confirmarPagamentoRoute)
 
 app.listen({ port: 3000 }).then(() => {
   console.log('💦 HTTP Server Running!')

@@ -3,6 +3,7 @@ import Stripe from 'stripe'
 import z from 'zod'
 import { env } from '../../env'
 import { realizarAporte } from '../../functions/investidor/realizar-aporte'
+import { registrarAporteBlockchain } from '../../functions/investidor/registrar-aporte-blockchain'
 import { Perfil, verificarPermissao } from '../../middlewares/auth'
 
 const stripe = new Stripe(env.STRIPE_SECRET_KEY)
@@ -81,11 +82,16 @@ export const realizarAporteRoute: FastifyPluginAsyncZod = async app => {
       }
 
       try {
-        // This function is now correctly called after payment confirmation
         const { aporteId } = await realizarAporte({
           codUsuario,
           bc_valor,
         })
+        const { transactionId } = await registrarAporteBlockchain({
+          codUsuario,
+          bc_valor,
+          aporteId,
+        })
+
         return reply.status(201).send({ aporteId })
       } catch (error) {
         return reply.status(409).send({ error: (error as Error).message })

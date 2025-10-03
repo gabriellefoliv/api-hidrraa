@@ -11,6 +11,7 @@ export const listarEvidenciasAvaliadasRoute: FastifyPluginAsyncZod =
         preHandler: verificarPermissao([
           Perfil.ENTIDADE_EXECUTORA,
           Perfil.ENT_GER,
+          Perfil.ENT_DEL_FIN,
         ]),
         schema: {
           summary:

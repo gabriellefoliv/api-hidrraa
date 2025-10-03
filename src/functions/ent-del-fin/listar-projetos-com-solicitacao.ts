@@ -1,44 +1,56 @@
 import prisma from '../../lib/prisma'
 
 export async function listarProjetosComSolicitacoes() {
-  return prisma.projeto.findMany({
+  const projetos = await prisma.projeto.findMany({
     where: {
       execucao_marco: {
         some: {
+          dataConclusaoEfetiva: {
+            not: null,
+          },
           pagto_marco_concluido: {
             some: {},
           },
         },
       },
+      titulo: { not: null },
+      objetivo: { not: null },
+      acoes: { not: null },
+      cronograma: { not: null },
     },
-    select: {
-      codProjeto: true,
-      titulo: true,
-      orcamento: true,
-      objetivo: true,
-      acoes: true,
-      cronograma: true,
-
-      execucao_marco: {
-        where: {
-          pagto_marco_concluido: {
-            some: {},
-          },
-        },
-        select: {
-          codExecucaoMarco: true,
-          descricao: true,
-          valorEstimado: true,
-          dataConclusaoEfetiva: true,
-          pagto_marco_concluido: {
-            select: {
-              codPagtoMarco: true,
-              CodEntExec: true,
-              bc_data: true,
+    include: {
+      tipo_projeto: {
+        include: {
+          marco_recomendado: {
+            include: {
+              execucao_marco: true,
             },
           },
         },
       },
+      microbacia: true,
+      entidadeexecutora: true,
+    },
+    orderBy: {
+      dataSubmissao: 'desc',
     },
   })
+
+  // Filtrar execucao_marco para conter apenas os que pertencem ao projeto correto
+  const projetosFiltrados = projetos.map(projeto => ({
+    ...projeto,
+    tipo_projeto: {
+      ...projeto.tipo_projeto,
+      marco_recomendado: projeto.tipo_projeto.marco_recomendado.map(marco => ({
+        ...marco,
+        execucao_marco: marco.execucao_marco.filter(
+          execucao => execucao.codProjeto === projeto.codProjeto
+        ),
+      })),
+    },
+    microbacia: projeto.microbacia,
+    entidadeexecutora: projeto.entidadeexecutora,
+  }))
+
+  return projetosFiltrados
 }

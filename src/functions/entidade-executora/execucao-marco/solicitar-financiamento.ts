@@ -23,10 +23,10 @@ export async function solicitarFinanciamento({
     })
     if (!marco) throw new Error('Marco não encontrado.')
 
-    // Somar pagamentos já solicitados/aprovados
+    // Somar pagamentos já solicitados/aprovados PARA ESTE MARCO
     const aggregatePagamentos = await tx.pagto_marco_concluido.aggregate({
       _sum: { bc_valor: true },
-      where: { execucao_marco: { codProjeto: marco.codProjeto } },
+      where: { codExecucaoMarco },
     })
 
     const totalJaPago = aggregatePagamentos._sum.bc_valor ?? 0
@@ -34,7 +34,9 @@ export async function solicitarFinanciamento({
 
     if (valorSolicitado > saldoDisponivel) {
       throw new Error(
-        `Valor solicitado (R$ ${valorSolicitado.toFixed(2)}) excede o saldo disponível.`
+        `Valor solicitado (R$ ${valorSolicitado.toFixed(
+          2
+        )}) excede o saldo disponível do marco (R$ ${saldoDisponivel.toFixed(2)}).`
       )
     }
 
