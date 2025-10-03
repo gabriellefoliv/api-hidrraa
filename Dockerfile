@@ -10,8 +10,6 @@ COPY . .
 
 RUN npx prisma generate
 
-RUN npx prisma migrate deploy
-
 EXPOSE 3000
 
-CMD ["npx", "tsx", "src/server.ts"]
+CMD npx prisma migrate deploy && npx tsx src/server.ts
