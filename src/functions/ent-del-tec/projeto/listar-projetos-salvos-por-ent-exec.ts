@@ -32,6 +32,7 @@ export async function listarProjetosSalvosPorEntExec() {
         acoes: projeto.acoes,
         cronograma: projeto.cronograma,
         orcamento: projeto.orcamento,
+        caminhoArquivo: projeto.caminhoArquivo,
         codPropriedade: projeto.codPropriedade,
         CodMicroBacia: projeto.CodMicroBacia,
         tipo_projeto: {

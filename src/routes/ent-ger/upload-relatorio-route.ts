@@ -32,9 +32,9 @@ export const uploadRelatorioRoute: FastifyPluginAsync = async app => {
           const fileName = `${fileId}${ext}`
           const uploadDir = path.resolve(
             'uploads',
+            'laudos_gerenciadora',
             String(codProjeto),
-            String(codExecucaoMarco),
-            'relatorios'
+            String(codExecucaoMarco)
           )
           await fs.promises.mkdir(uploadDir, { recursive: true })
           const filePath = path.join(uploadDir, fileName)

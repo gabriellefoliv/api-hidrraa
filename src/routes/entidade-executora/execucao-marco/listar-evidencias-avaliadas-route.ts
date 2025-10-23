@@ -27,6 +27,7 @@ export const listarEvidenciasAvaliadasRoute: FastifyPluginAsyncZod =
               cronograma: z.string().nullable(),
               acoes: z.string().nullable(),
               orcamento: z.string().nullable(),
+              caminhoArquivo: z.string().nullable(),
               dataSubmissao: z.coerce.date().nullable(),
               execucao_marco: z.array(
                 z.object({
@@ -77,6 +78,7 @@ export const listarEvidenciasAvaliadasRoute: FastifyPluginAsyncZod =
           objetivo: projeto.objetivo ?? '',
           cronograma: projeto.cronograma ?? null,
           acoes: projeto.acoes ?? null,
+          caminhoArquivo: projeto.caminhoArquivo ?? null,
           orcamento:
             projeto.orcamento !== null && projeto.orcamento !== undefined
               ? String(projeto.orcamento)

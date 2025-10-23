@@ -20,6 +20,7 @@ export const listarProjetosSalvosRoute: FastifyPluginAsyncZod = async app => {
               acoes: z.string(),
               cronograma: z.string(),
               orcamento: z.number(),
+              caminhoArquivo: z.string().nullable(),
               codPropriedade: z.number().nullable(),
               CodMicroBacia: z.number(),
               tipo_projeto: z.object({
@@ -55,6 +56,7 @@ export const listarProjetosSalvosRoute: FastifyPluginAsyncZod = async app => {
           objetivo: proj.objetivo ?? '',
           acoes: proj.acoes ?? '',
           cronograma: proj.cronograma ?? '',
+          caminhoArquivo: proj.caminhoArquivo ?? null,
           orcamento: proj.orcamento ?? 0,
           codPropriedade: proj.codPropriedade ?? null,
           CodMicroBacia: proj.CodMicroBacia ?? 0,

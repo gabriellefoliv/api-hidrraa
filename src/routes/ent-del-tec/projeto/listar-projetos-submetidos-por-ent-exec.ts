@@ -23,6 +23,7 @@ export const listarProjetosSubmetidosPorEntExecRoute: FastifyPluginAsyncZod =
                 orcamento: z.number(),
                 dataSubmissao: z.coerce.date().nullable(),
                 codPropriedade: z.number().nullable(),
+                caminhoArquivo: z.string().nullable(),
                 CodMicroBacia: z.number(),
                 entidadeexecutora: z
                   .object({
@@ -72,6 +73,7 @@ export const listarProjetosSubmetidosPorEntExecRoute: FastifyPluginAsyncZod =
             orcamento: proj.orcamento ?? 0,
             dataSubmissao: proj.dataSubmissao ?? null,
             codPropriedade: proj.codPropriedade ?? null,
+            caminhoArquivo: proj.caminhoArquivo ?? null,
             CodMicroBacia: proj.CodMicroBacia ?? 0,
             entidadeexecutora: proj.entidadeexecutora
               ? {

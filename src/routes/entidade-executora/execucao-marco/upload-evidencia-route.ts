@@ -35,6 +35,7 @@ export const uploadEvidenciaRoute: FastifyPluginAsync = async app => {
           const fileName = `${fileId}${ext}`
           const uploadDir = path.resolve(
             'uploads',
+            'evidencias_executora',
             String(codProjeto),
             String(codExecucaoMarco),
             tipo

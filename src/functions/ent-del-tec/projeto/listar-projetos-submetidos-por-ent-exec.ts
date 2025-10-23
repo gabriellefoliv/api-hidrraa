@@ -39,6 +39,7 @@ export async function listarProjetosSubmetidosPorEntExec() {
         cronograma: projeto.cronograma,
         orcamento: projeto.orcamento,
         dataSubmissao: projeto.dataSubmissao,
+        caminhoArquivo: projeto.caminhoArquivo,
         codPropriedade: projeto.codPropriedade,
         CodMicroBacia: projeto.CodMicroBacia,
         entidadeexecutora: projeto.entidadeexecutora

@@ -9,6 +9,7 @@ interface CriarProjetoParams {
   codPropriedade: number
   codTipoProjeto: number
   CodMicroBacia: number
+  caminhoArquivo: string
   marcos: {
     codMarcoRecomendado: number
     descricao: string
@@ -28,6 +29,7 @@ export async function criarProjeto(params: CriarProjetoParams) {
     codPropriedade,
     codTipoProjeto,
     CodMicroBacia,
+    caminhoArquivo,
     marcos,
   } = params
 
@@ -38,6 +40,7 @@ export async function criarProjeto(params: CriarProjetoParams) {
       acoes: acoes ?? '',
       cronograma: cronograma ?? '',
       orcamento: orcamento ?? 0,
+      caminhoArquivo: caminhoArquivo ?? '',
       codPropriedade,
       codTipoProjeto,
       CodMicroBacia,

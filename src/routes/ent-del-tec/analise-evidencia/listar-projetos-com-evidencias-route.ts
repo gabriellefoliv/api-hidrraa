@@ -26,6 +26,7 @@ export const listarProjetosComEvidenciasRoute: FastifyPluginAsyncZod =
                 orcamento: z.number(),
                 codPropriedade: z.number(),
                 CodMicroBacia: z.number(),
+                caminhoArquivo: z.string().nullable(),
                 dataSubmissao: z.date(),
                 tipo_projeto: z.object({
                   codTipoProjeto: z.number(),
@@ -66,6 +67,7 @@ export const listarProjetosComEvidenciasRoute: FastifyPluginAsyncZod =
             acoes: proj.acoes ?? '',
             cronograma: proj.cronograma ?? '',
             orcamento: proj.orcamento ?? 0,
+            caminhoArquivo: proj.caminhoArquivo ?? null,
             codPropriedade: proj.codPropriedade ?? 0,
             CodMicroBacia: proj.CodMicroBacia ?? 0,
             dataSubmissao: proj.dataSubmissao ?? new Date(0),

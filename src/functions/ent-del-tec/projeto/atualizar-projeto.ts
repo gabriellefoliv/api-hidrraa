@@ -10,6 +10,7 @@ interface AtualizarProjetoParams {
   codPropriedade?: number
   codTipoProjeto?: number
   CodMicroBacia?: number
+  caminhoArquivo?: string
   marcos?: {
     codExecucaoMarco?: number
     codMarcoRecomendado: number
@@ -28,6 +29,7 @@ export async function atualizarProjeto(params: AtualizarProjetoParams) {
     acoes,
     cronograma,
     orcamento,
+    caminhoArquivo,
     codPropriedade,
     codTipoProjeto,
     CodMicroBacia,
@@ -43,6 +45,7 @@ export async function atualizarProjeto(params: AtualizarProjetoParams) {
       ...(acoes !== undefined && { acoes }),
       ...(cronograma !== undefined && { cronograma }),
       ...(orcamento !== undefined && { orcamento }),
+      ...(caminhoArquivo !== undefined && { caminhoArquivo }),
       ...(codPropriedade !== undefined && { codPropriedade }),
       ...(codTipoProjeto !== undefined && { codTipoProjeto }),
       ...(CodMicroBacia !== undefined && { CodMicroBacia }),

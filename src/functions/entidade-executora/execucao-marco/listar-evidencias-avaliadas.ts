@@ -18,6 +18,7 @@ export function listarEvidenciasAvaliadas({
       acoes: true,
       orcamento: true,
       dataSubmissao: true,
+      caminhoArquivo: true,
       execucao_marco: {
         where: {
           evidencia_apresentada: {

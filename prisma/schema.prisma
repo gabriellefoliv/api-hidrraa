@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
@@ -199,6 +199,7 @@ model projeto {
   objetivo              String?                @db.VarChar(255)
   acoes                 String?                @db.VarChar(255)
   cronograma            String?                @db.VarChar(255)
+  caminhoArquivo        String?                @db.VarChar(255)
   orcamento             Float?
   codPropriedade        Int?
   codTipoProjeto        Int
