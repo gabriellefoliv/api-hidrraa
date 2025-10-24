@@ -14,7 +14,7 @@ export function listarEvidenciasComSolicitacoes({
         some: {
           bc_statusValidacaoCBH: 'APROVADO',
           evidencia_apresentada: { some: {} },
-          pagto_marco_concluido: { some: {} }, // garante que traga execuções com pagamento
+          pagto_marco_concluido: { some: {} },
         },
       },
     },
@@ -72,6 +72,15 @@ export function listarEvidenciasComSolicitacoes({
                 },
               },
             },
+          },
+          pagto_servico: {
+            select: {
+              codPagtoServico: true,
+              valor: true,
+              docNF: true,
+              data: true,
+            },
+            orderBy: { data: 'asc' },
           },
         },
         orderBy: { dataConclusaoEfetiva: 'desc' },

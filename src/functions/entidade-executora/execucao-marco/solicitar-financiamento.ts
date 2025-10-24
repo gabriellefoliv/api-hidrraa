@@ -1,14 +1,28 @@
 import prisma from '../../../lib/prisma'
 
+interface ServicoPagamento {
+  valor: number
+  docNFPath: string
+}
+
 export async function solicitarFinanciamento({
   codExecucaoMarco,
-  valorSolicitado,
   codUsuario,
+  valorSolicitado,
+  servicos,
 }: {
   codExecucaoMarco: number
-  valorSolicitado: number
   codUsuario: number
+  valorSolicitado: number
+  servicos: ServicoPagamento[]
 }) {
+  if (valorSolicitado <= 0) {
+    throw new Error('O valor solicitado deve ser maior que zero.')
+  }
+  if (!servicos || servicos.length === 0) {
+    throw new Error('Nenhuma nota fiscal (serviço) foi fornecida.')
+  }
+
   return prisma.$transaction(async tx => {
     const entExec = await tx.entidadeexecutora.findFirst({
       where: { codUsuario },
@@ -23,7 +37,6 @@ export async function solicitarFinanciamento({
     })
     if (!marco) throw new Error('Marco não encontrado.')
 
-    // Somar pagamentos já solicitados/aprovados PARA ESTE MARCO
     const aggregatePagamentos = await tx.pagto_marco_concluido.aggregate({
       _sum: { bc_valor: true },
       where: { codExecucaoMarco },
@@ -36,7 +49,9 @@ export async function solicitarFinanciamento({
       throw new Error(
         `Valor solicitado (R$ ${valorSolicitado.toFixed(
           2
-        )}) excede o saldo disponível do marco (R$ ${saldoDisponivel.toFixed(2)}).`
+        )}) excede o saldo disponível do marco (R$ ${saldoDisponivel.toFixed(
+          2
+        )}).`
       )
     }
 
@@ -47,9 +62,26 @@ export async function solicitarFinanciamento({
         CodEntExec: entExec.codEntExec,
         bc_data: new Date(),
       },
-      select: { codPagtoMarco: true },
+      select: {
+        codPagtoMarco: true,
+        execucao_marco: { select: { codProjeto: true } },
+      },
     })
 
-    return novaSolicitacao
+    const servicosData = servicos.map(s => ({
+      codExecucaoMarco,
+      valor: s.valor,
+      docNF: s.docNFPath,
+      data: new Date(),
+    }))
+
+    await tx.pagto_servico.createMany({
+      data: servicosData,
+    })
+
+    return {
+      ...novaSolicitacao,
+      codProjeto: novaSolicitacao.execucao_marco.codProjeto,
+    }
   })
 }

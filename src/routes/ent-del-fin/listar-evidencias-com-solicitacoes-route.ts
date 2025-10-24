@@ -3,6 +3,13 @@ import z from 'zod'
 import { listarEvidenciasComSolicitacoes } from '../../functions/ent-del-fin/listar-evidencias-com-solicitacoes'
 import { Perfil, verificarPermissao } from '../../middlewares/auth'
 
+const pagtoServicoSchema = z.object({
+  codPagtoServico: z.number(),
+  valor: z.number(),
+  docNF: z.string(),
+  data: z.coerce.date(),
+})
+
 export const listarEvidenciasComSolicitacoesRoute: FastifyPluginAsyncZod =
   async app => {
     app.get(
@@ -74,6 +81,7 @@ export const listarEvidenciasComSolicitacoesRoute: FastifyPluginAsyncZod =
                           .optional(),
                       })
                     ),
+                    pagto_servico: z.array(pagtoServicoSchema),
                   })
                 )
                 .nullable(),
@@ -141,6 +149,13 @@ export const listarEvidenciasComSolicitacoesRoute: FastifyPluginAsyncZod =
                       valor: tx.valor ?? 0,
                       data: tx.data ?? new Date(0),
                     })) ?? [],
+                })) ?? [],
+              pagto_servico:
+                marco.pagto_servico?.map(servico => ({
+                  codPagtoServico: servico.codPagtoServico ?? 0,
+                  valor: servico.valor ?? 0,
+                  docNF: servico.docNF ?? '',
+                  data: servico.data ?? new Date(0),
                 })) ?? [],
             })) ?? [],
         }

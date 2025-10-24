@@ -276,9 +276,9 @@ model pagto_servico {
   data             DateTime
   valor            Float
   docNF            String
-  codFornecedor    Int
+  codFornecedor    Int?
   codExecucaoMarco Int
-  fornecedor       fornecedor             @relation(fields: [codFornecedor], references: [codFornecedor], map: "pagto_servico_codFornecedor_fkey2")
+  fornecedor       fornecedor?            @relation(fields: [codFornecedor], references: [codFornecedor], map: "pagto_servico_codFornecedor_fkey2")
   execucao_marco   execucao_marco         @relation(fields: [codExecucaoMarco], references: [codExecucaoMarco], map: "pagto_servico_ibfk_1")
   transacoes       transacao_blockchain[]
 
