@@ -38,6 +38,7 @@ export function listarEvidenciasComSolicitacoes({
           bc_statusValidacaoCBH: true,
           descrDetAjustes: true,
           dataConclusaoEfetiva: true,
+          caminhoArquivo: true,
           evidencia_apresentada: {
             select: {
               codEvidenciaApresentada: true,

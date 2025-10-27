@@ -44,6 +44,7 @@ export const listarEvidenciasComSolicitacoesRoute: FastifyPluginAsyncZod =
                     bc_statusValidacaoCBH: z.string().nullable(),
                     descrDetAjustes: z.string().nullable(),
                     dataConclusaoEfetiva: z.coerce.date().nullable(),
+                    caminhoArquivo: z.string().nullable(),
                     evidencia_apresentada: z.array(
                       z.object({
                         codEvidenciaApresentada: z.number(),
@@ -119,6 +120,7 @@ export const listarEvidenciasComSolicitacoesRoute: FastifyPluginAsyncZod =
               bc_statusValidacaoCBH: marco.bc_statusValidacaoCBH ?? null,
               descrDetAjustes: marco.descrDetAjustes ?? null,
               dataConclusaoEfetiva: marco.dataConclusaoEfetiva ?? null,
+              caminhoArquivo: marco.caminhoArquivo ?? null,
               evidencia_apresentada: marco.evidencia_apresentada.map(
                 evidencia => ({
                   codEvidenciaApresentada:

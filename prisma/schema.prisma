@@ -112,6 +112,7 @@ model execucao_marco {
   codAvaliador           Int?
   codMarcoRecomendado    Int
   codProjeto             Int
+  caminhoArquivo         String?                               @db.VarChar(255)
   valorEstimado          Float?
   dataConclusaoEfetiva   DateTime?                             @db.Date
   dataConclusaoPrevista  DateTime?                             @db.Date
