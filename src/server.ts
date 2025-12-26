@@ -13,6 +13,7 @@ import {
 import path from 'node:path'
 import fastifyMultipart from '@fastify/multipart'
 import fastifyStatic from '@fastify/static'
+import fastifyRawBody from 'fastify-raw-body'
 import { buscarEntGerPorCodUsuarioRoute } from './routes/auth/buscar-ent-ger-por-codUsuario-route'
 import { buscarInvestidorPorCodUsuarioRoute } from './routes/auth/buscar-investidor-por-codUsuario-route'
 import { cadastrarEntidadeDelegatariaFinanceiraRoute } from './routes/auth/cadastrar-ent-del-fin-route'
@@ -24,6 +25,10 @@ import { listarEntExecsRoute } from './routes/auth/listar-entExecs-route'
 import { listarEntGersRoute } from './routes/auth/listar-entGers-route'
 import { loginRoute } from './routes/auth/login-route'
 import { confirmarPagamentoRoute } from './routes/ent-del-fin/confirmar-pagamento-de-marco-route'
+import { getSaldosAportesRoute } from './routes/ent-del-fin/get-saldos-aportes-route'
+import { confirmarPagamentoComAlocacaoRoute } from './routes/ent-del-fin/confirmar-pagamento-com-alocacao-route'
+import { getTransacaoPagamentoRoute } from './routes/ent-del-fin/get-transacao-pagamento-route'
+import { getRastreabilidadeAporteRoute } from './routes/investidor/get-rastreabilidade-aporte-route'
 import { listarEvidenciasComSolicitacoesRoute } from './routes/ent-del-fin/listar-evidencias-com-solicitacoes-route'
 import { listarProjetosComSolicitacoesRoute } from './routes/ent-del-fin/listar-projetos-com-solicitacoes-route'
 import { listarMarcosCompletosRoute } from './routes/ent-del-tec/analise-evidencia/listar-marcos-completos-route'
@@ -123,6 +128,12 @@ app.register(fastifyStatic, {
   prefix: '/uploads/',
 })
 
+app.register(fastifyRawBody, {
+  field: 'rawBody',
+  global: false,
+  routes: ['/api/aportes'],
+})
+
 app.head('/health', () => {
   return 'OK'
 })
@@ -194,6 +205,10 @@ app.register(buscarSaldoDisponivelRoute)
 app.register(listarProjetosComSolicitacoesRoute)
 app.register(listarEvidenciasComSolicitacoesRoute)
 app.register(confirmarPagamentoRoute)
+app.register(getSaldosAportesRoute)
+app.register(confirmarPagamentoComAlocacaoRoute)
+app.register(getTransacaoPagamentoRoute)
+app.register(getRastreabilidadeAporteRoute)
 
 const port = 3000
 

@@ -17,9 +17,24 @@ model aporte {
   investidor_esg   investidor_esg         @relation(fields: [codInvestidor], references: [codInvestidor], map: "aporte_ibfk_1")
   cbh              cbh                    @relation(fields: [codCBH], references: [codCBH], map: "aporte_ibfk_2")
   transacoes       transacao_blockchain[]
+  alocacoes        alocacao_recurso[]
 
   @@index([codCBH], map: "aporte_codCBH_idx")
   @@index([codInvestidor], map: "aporte_codInvestidor_idx")
+}
+
+model alocacao_recurso {
+  codAlocacao Int      @id @default(autoincrement())
+  codAporte   Int
+  codProjeto  Int
+  valor       Float
+  data        DateTime
+  txHash      String?  @db.VarChar(255) // Hash/Sequence Number da Hedera
+  aporte      aporte   @relation(fields: [codAporte], references: [codAporte], map: "alocacao_recurso_ibfk_1")
+  projeto     projeto  @relation(fields: [codProjeto], references: [codProjeto], map: "alocacao_recurso_ibfk_2")
+
+  @@index([codAporte], map: "alocacao_recurso_codAporte_idx")
+  @@index([codProjeto], map: "alocacao_recurso_codProjeto_idx")
 }
 
 model cbh {
@@ -209,6 +224,7 @@ model projeto {
   CodMicroBacia         Int?
   dataSubmissao         DateTime?              @db.Date
   execucao_marco        execucao_marco[]
+  alocacoes             alocacao_recurso[]
   tipo_projeto          tipo_projeto           @relation(fields: [codTipoProjeto], references: [codTipoProjeto], map: "projeto_ibfk_1")
   propriedade           propriedade?           @relation(fields: [codPropriedade], references: [codPropriedade], onDelete: Restrict, map: "projeto_ibfk_2")
   microbacia            microbacia?            @relation(fields: [CodMicroBacia], references: [CodMicroBacia], onDelete: Restrict, map: "projeto_ibfk_4")
@@ -291,6 +307,7 @@ model transacao_blockchain {
   codTransacao    Int                    @id @default(autoincrement())
   tipo            TransacaoTipo
   hash            String
+  explorerUrl     String?
   valor           Float
   data            DateTime
   origemWallet    String?

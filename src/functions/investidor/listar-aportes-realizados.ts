@@ -1,13 +1,13 @@
 import prisma from '../../lib/prisma'
 
-interface ListarAportesRealizadosParams {
+interface ListarAportesProps {
   codInvestidor: number
 }
 
 export async function listarAportesRealizados({
   codInvestidor,
-}: ListarAportesRealizadosParams) {
-  return await prisma.aporte.findMany({
+}: ListarAportesProps) {
+  const aportes = await prisma.aporte.findMany({
     where: {
       codInvestidor,
     },
@@ -18,4 +18,6 @@ export async function listarAportesRealizados({
       dataInvestimento: 'desc',
     },
   })
+
+  return aportes
 }

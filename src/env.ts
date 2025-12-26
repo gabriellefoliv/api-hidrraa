@@ -11,6 +11,7 @@ const envSchema = z.object({
   HEDERA_ACCOUNT_ID: z.string().min(1),
   HEDERA_PRIVATE_KEY: z.string().min(1),
   HEDERA_TOPIC_ID: z.string().min(1),
+  HEDERA_TOKEN_ID: z.string().min(1),
 })
 
 export const env = envSchema.parse(process.env)
