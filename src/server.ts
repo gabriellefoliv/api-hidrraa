@@ -1,7 +1,6 @@
 import fastifyCors from '@fastify/cors'
 import fastifyJwt from '@fastify/jwt'
 import fastifySwagger from '@fastify/swagger'
-import fastifySwaggerUi from '@fastify/swagger-ui'
 import fastify from 'fastify'
 import {
   type ZodTypeProvider,
@@ -14,66 +13,16 @@ import path from 'node:path'
 import fastifyMultipart from '@fastify/multipart'
 import fastifyStatic from '@fastify/static'
 import fastifyRawBody from 'fastify-raw-body'
-import { buscarEntGerPorCodUsuarioRoute } from './routes/auth/buscar-ent-ger-por-codUsuario-route'
-import { buscarInvestidorPorCodUsuarioRoute } from './routes/auth/buscar-investidor-por-codUsuario-route'
-import { cadastrarEntidadeDelegatariaFinanceiraRoute } from './routes/auth/cadastrar-ent-del-fin-route'
-import { cadastrarEntidadeDelegatariaTecnicaRoute } from './routes/auth/cadastrar-ent-del-tec'
-import { cadastrarEntidadeExecutoraRoute } from './routes/auth/cadastrar-entidade-executora-route'
-import { cadastrarEntidadeGerenciadoraRoute } from './routes/auth/cadastrar-entidade-gerenciadora-route'
-import { cadastrarInvestidorRoute } from './routes/auth/cadastrar-investidor-route'
-import { listarEntExecsRoute } from './routes/auth/listar-entExecs-route'
-import { listarEntGersRoute } from './routes/auth/listar-entGers-route'
-import { loginRoute } from './routes/auth/login-route'
-import { confirmarPagamentoRoute } from './routes/ent-del-fin/confirmar-pagamento-de-marco-route'
-import { getSaldosAportesRoute } from './routes/ent-del-fin/get-saldos-aportes-route'
-import { confirmarPagamentoComAlocacaoRoute } from './routes/ent-del-fin/confirmar-pagamento-com-alocacao-route'
-import { getTransacaoPagamentoRoute } from './routes/ent-del-fin/get-transacao-pagamento-route'
-import { getRastreabilidadeAporteRoute } from './routes/investidor/get-rastreabilidade-aporte-route'
-import { listarEvidenciasComSolicitacoesRoute } from './routes/ent-del-fin/listar-evidencias-com-solicitacoes-route'
-import { listarProjetosComSolicitacoesRoute } from './routes/ent-del-fin/listar-projetos-com-solicitacoes-route'
-import { listarMarcosCompletosRoute } from './routes/ent-del-tec/analise-evidencia/listar-marcos-completos-route'
-import { listarProjetosComEvidenciasRoute } from './routes/ent-del-tec/analise-evidencia/listar-projetos-com-evidencias-route'
-import { validarEvidenciasRoute } from './routes/ent-del-tec/analise-evidencia/validar-evidencias-route'
-import { listarAportesRoute } from './routes/ent-del-tec/aporte/listar-aportes-route'
-import { validarAporteRoute } from './routes/ent-del-tec/aporte/validar-aporte-route'
-import { atualizarMicrobaciaRoute } from './routes/ent-del-tec/microbacia/atualizar-microbacia-route'
-import { criarMicrobaciaRoute } from './routes/ent-del-tec/microbacia/criar-microbacia-route'
-import { deletarMicrobaciaRoute } from './routes/ent-del-tec/microbacia/deletar-microbacia-route'
-import { listarMicrobaciasRoute } from './routes/ent-del-tec/microbacia/listar-microbacias-route'
-import { atualizarProdutorRuralRoute } from './routes/ent-del-tec/produtor-rural/atualizar-produtor-rural-route'
-import { criarProdutorRuralRoute } from './routes/ent-del-tec/produtor-rural/criar-produtor-rural-route'
-import { deletarProdutorRuralRoute } from './routes/ent-del-tec/produtor-rural/deletar-produtor-rural-route'
-import { listarProdutoresRuraisRoute } from './routes/ent-del-tec/produtor-rural/listar-produtores-rurais-route'
-import { atualizarProjetoRoute } from './routes/ent-del-tec/projeto/atualizar-projeto-route'
-import { buscarProjetoRoute } from './routes/ent-del-tec/projeto/buscar-projeto-route'
-import { criarProjetoRoute } from './routes/ent-del-tec/projeto/criar-projeto-route'
-import { delegarEntExecEntGerRoute } from './routes/ent-del-tec/projeto/delegar-entExec-entGer-route'
-import { excluirProjetoRoute } from './routes/ent-del-tec/projeto/excluir-projeto-route'
-import { listarDetalhesModeloRoute } from './routes/ent-del-tec/projeto/listar-detalhes-modelo-route'
-import { listarProjetosAprovadosRoute } from './routes/ent-del-tec/projeto/listar-projetos-aprovados-route'
-import { listarProjetosSalvosRoute } from './routes/ent-del-tec/projeto/listar-projetos-salvos-por-ent-exec-route'
-import { listarProjetosSubmetidosPorEntExecRoute } from './routes/ent-del-tec/projeto/listar-projetos-submetidos-por-ent-exec'
-import { listarTiposProjetoRoute } from './routes/ent-del-tec/projeto/listar-tipo-projetos-route'
-import { submeterProjetoRoute } from './routes/ent-del-tec/projeto/submeter-projeto-route'
-import { atualizarPropriedadeRoute } from './routes/ent-del-tec/propriedade/atualizar-propriedade-route'
-import { criarPropriedadeRoute } from './routes/ent-del-tec/propriedade/criar-propriedade-route'
-import { deletarPropriedadeRoute } from './routes/ent-del-tec/propriedade/deletar-propriedade-route'
-import { listarPropriedadesRoute } from './routes/ent-del-tec/propriedade/listar-propriedades-route'
-import { listarEvidenciasSubmetidasRoute } from './routes/ent-ger/listar-evidencias-submetidas-route'
-import { uploadRelatorioRoute } from './routes/ent-ger/upload-relatorio-route'
-import { buscarProjetoExecutavelRoute } from './routes/entidade-executora/execucao-marco/buscar-projeto-executavel-route'
-import { buscarSaldoDisponivelRoute } from './routes/entidade-executora/execucao-marco/buscar-saldo-disponivel-route'
-import { excluirEvidenciaRoute } from './routes/entidade-executora/execucao-marco/excluir-evidencia-route'
-import { listarEvidenciasAvaliadasRoute } from './routes/entidade-executora/execucao-marco/listar-evidencias-avaliadas-route'
-import { listarEvidenciasRoute } from './routes/entidade-executora/execucao-marco/listar-evidencias-por-marco-route'
-import { solicitarFinanciamentoRoute } from './routes/entidade-executora/execucao-marco/solicitar-financiamento-route'
-import { submeterEvidenciasRoute } from './routes/entidade-executora/execucao-marco/submeter-evidencias'
-import { uploadEvidenciaRoute } from './routes/entidade-executora/execucao-marco/upload-evidencia-route'
-import { listarAportesRealizadosRoute } from './routes/investidor/listar-aportes-realizados-route'
-import {
-  criarPaymentIntentRoute,
-  realizarAporteRoute,
-} from './routes/investidor/realizar-aporte-route'
+import { authRoutes } from './modules/auth/auth.routes'
+import { pagamentoRoutes } from './modules/pagamento/pagamento.routes'
+import { analiseEvidenciaRoutes } from './modules/analise-evidencia/analise-evidencia.routes'
+import { microbaciaRoutes } from './modules/microbacia/microbacia.routes'
+import { produtorRuralRoutes } from './modules/produtor-rural/produtor-rural.routes'
+import { projetoRoutes } from './modules/projeto/projeto.routes'
+import { propriedadeRoutes } from './modules/propriedade/propriedade.routes'
+import { relatorioRoutes } from './modules/relatorio/relatorio.routes'
+import { execucaoMarcoRoutes } from './modules/execucao-marco/execucao-marco.routes'
+import { aporteRoutes } from './modules/aporte/aporte.routes'
 
 export interface JwtPayload {
   codUsuario: number
@@ -118,6 +67,7 @@ app.register(import('@scalar/fastify-api-reference'), {
 })
 
 app.register(fastifyMultipart, {
+  attachFieldsToBody: true,
   limits: {
     fileSize: 40 * 1024 * 1024, // Limite de 40MB por arquivo
   },
@@ -138,77 +88,17 @@ app.head('/health', () => {
   return 'OK'
 })
 
-// Auth
-app.register(cadastrarEntidadeExecutoraRoute)
-app.register(cadastrarInvestidorRoute)
-app.register(cadastrarEntidadeDelegatariaTecnicaRoute)
-app.register(cadastrarEntidadeGerenciadoraRoute)
-app.register(loginRoute)
-app.register(buscarEntGerPorCodUsuarioRoute)
-app.register(cadastrarEntidadeDelegatariaFinanceiraRoute)
-// Projetos
-app.register(listarTiposProjetoRoute)
-app.register(listarDetalhesModeloRoute)
-app.register(criarProjetoRoute)
-app.register(submeterProjetoRoute)
-app.register(atualizarProjetoRoute)
-app.register(listarProjetosSubmetidosPorEntExecRoute)
-app.register(listarProjetosSalvosRoute)
-app.register(buscarProjetoRoute)
-app.register(excluirProjetoRoute)
-app.register(delegarEntExecEntGerRoute)
-// Evidências
-app.register(listarProjetosAprovadosRoute)
-app.register(uploadEvidenciaRoute)
-app.register(uploadRelatorioRoute)
-app.register(listarEvidenciasRoute)
-// TODO : Usar rota de buscarProjeto no futuro, ao invés disso
-app.register(buscarProjetoExecutavelRoute)
-app.register(submeterEvidenciasRoute)
-app.register(excluirEvidenciaRoute)
-app.register(validarEvidenciasRoute)
-app.register(listarEvidenciasSubmetidasRoute)
-app.register(listarProjetosComEvidenciasRoute)
-app.register(listarMarcosCompletosRoute)
-app.register(listarEvidenciasAvaliadasRoute)
+app.register(authRoutes)
+app.register(projetoRoutes)
+app.register(analiseEvidenciaRoutes)
+app.register(relatorioRoutes)
+app.register(execucaoMarcoRoutes)
+app.register(microbaciaRoutes)
+app.register(propriedadeRoutes)
+app.register(produtorRuralRoutes)
+app.register(aporteRoutes)
+app.register(pagamentoRoutes)
 
-// Microbacia
-app.register(criarMicrobaciaRoute)
-app.register(listarMicrobaciasRoute)
-app.register(atualizarMicrobaciaRoute)
-app.register(deletarMicrobaciaRoute)
-// Propriedade
-app.register(criarPropriedadeRoute)
-app.register(listarPropriedadesRoute)
-app.register(atualizarPropriedadeRoute)
-app.register(deletarPropriedadeRoute)
-// Produtor Rural
-app.register(criarProdutorRuralRoute)
-app.register(listarProdutoresRuraisRoute)
-app.register(atualizarProdutorRuralRoute)
-app.register(deletarProdutorRuralRoute)
-
-app.register(listarEntExecsRoute)
-app.register(listarEntGersRoute)
-app.register(buscarInvestidorPorCodUsuarioRoute)
-
-//Aportes
-app.register(realizarAporteRoute)
-app.register(listarAportesRealizadosRoute)
-app.register(validarAporteRoute)
-app.register(listarAportesRoute)
-app.register(criarPaymentIntentRoute)
-
-//Financiamento
-app.register(solicitarFinanciamentoRoute)
-app.register(buscarSaldoDisponivelRoute)
-app.register(listarProjetosComSolicitacoesRoute)
-app.register(listarEvidenciasComSolicitacoesRoute)
-app.register(confirmarPagamentoRoute)
-app.register(getSaldosAportesRoute)
-app.register(confirmarPagamentoComAlocacaoRoute)
-app.register(getTransacaoPagamentoRoute)
-app.register(getRastreabilidadeAporteRoute)
 
 const port = 3000
 
