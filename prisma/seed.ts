@@ -1,4 +1,5 @@
 import prisma from '../src/lib/prisma'
+import bcrypt from 'bcrypt'
 
 async function main() {
   // ----------------------------------------------------------------
@@ -505,8 +506,53 @@ async function main() {
     ],
   })
 
+  // ----------------------------------------------------------------
+  // 4. USUÁRIOS
+  // ----------------------------------------------------------------
+  const senhaPadrao = await bcrypt.hash('123456', 10)
+
+  await prisma.usuario.createMany({
+    data: [
+      {
+        nome: 'Entidade Delegatária Técnica',
+        email: 'entDelTec@teste.com',
+        senha: senhaPadrao,
+        codCBH: 1,
+        Perfil: 'ent_del_tec',
+      },
+      {
+        nome: 'Entidade Delegatária Financeira',
+        email: 'entDelFin@teste.com',
+        senha: senhaPadrao,
+        codCBH: 1,
+        Perfil: 'ent_del_fin',
+      },
+      {
+        nome: 'Investidor',
+        email: 'investidor@teste.com',
+        senha: senhaPadrao,
+        codCBH: 1,
+        Perfil: 'investidor',
+      },
+      {
+        nome: 'Entidade Executora',
+        email: 'entExec@teste.com',
+        senha: senhaPadrao,
+        codCBH: 1,
+        Perfil: 'entidade_executora',
+      },
+      {
+        nome: 'Entidade Gerenciadora',
+        email: 'entGer@teste.com',
+        senha: senhaPadrao,
+        codCBH: 1,
+        Perfil: 'ent_ger',
+      },
+    ],
+  })
+
   console.log(
-    'Seed completo inserido com sucesso! Todos os tipos de projeto foram detalhados.'
+    'Seed completo inserido com sucesso! Todos os tipos de projeto foram detalhados e usuários criados.'
   )
 }
 

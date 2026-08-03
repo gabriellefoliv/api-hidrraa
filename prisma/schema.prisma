@@ -11,6 +11,7 @@ model aporte {
   codAporte        Int                    @id @default(autoincrement())
   dataInvestimento DateTime
   bc_valor         Float
+  serialNumber     Int?                   // NFT Serial Number (Hedera)
   validadoAGEVAP   Boolean                @default(false)
   codInvestidor    Int
   codCBH           Int

@@ -5,7 +5,7 @@ export enum Perfil {
   ENTIDADE_EXECUTORA = 'entidade_executora',
   ENT_DEL_TEC = 'ent_del_tec',
   INVESTIDOR = 'investidor',
-  ENT_GER = 'entidade_gerenciadora',
+  ENT_GER = 'ent_ger',
   ENT_DEL_FIN = 'ent_del_fin',
 }
 
